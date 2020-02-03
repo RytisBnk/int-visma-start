@@ -1,10 +1,6 @@
 package lt.visma.starter.service;
 
-import org.springframework.stereotype.Service;
-
-@Service
-public class BasicService {
-    public String getData() {
-        return "Sample text";
-    }
+public interface BasicService {
+    String getData();
+    String writeData(String data);
 }
