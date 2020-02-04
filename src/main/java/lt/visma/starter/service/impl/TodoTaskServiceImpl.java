@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TodoTaskServiceImpl implements TodoTaskService {
@@ -24,7 +25,8 @@ public class TodoTaskServiceImpl implements TodoTaskService {
 
     @Override
     public TodoTask getOne(int id) {
-        return todoTaskRepository.findOne(id);
+        Optional<TodoTask> todoTask = todoTaskRepository.findById(id);
+        return todoTask.orElse(null);
     }
 
     @Override
