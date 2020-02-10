@@ -1,17 +1,15 @@
 package lt.visma.starter.service.impl;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import lt.visma.starter.service.BankingAuthenticationService;
+import lt.visma.starter.service.RovolutAuthenticationService;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class BankingAuthServiceImpl implements BankingAuthenticationService {
+public class RovolutAuthServiceImpl implements RovolutAuthenticationService {
     private final String key = "-----BEGIN RSA PRIVATE KEY-----\n" +
             "MIICXAIBAAKBgQCj8P4z/Q8BeBcBsNa8mwRn3eslliegr1HNPYTbnd90354Pv/tL\n" +
             "XphAQ/zbD0rk8YUFjv8UMqrPtCi0vaxXokQV6fXwRLSE+UIaPVhw/n3o+xnjbMhI\n" +

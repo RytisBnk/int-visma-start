@@ -1,6 +1,6 @@
 package lt.visma.starter.service.impl;
 
-import lt.visma.starter.service.BankingAccountsService;
+import lt.visma.starter.service.RevolutAccountsService;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -10,7 +10,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 @Service
-public class BankingAccountServiceImpl implements BankingAccountsService {
+public class RevolutAccountServiceImpl implements RevolutAccountsService {
     @Override
     public String getAccounts(String accessToken) {
         URL requestUrl = null;
