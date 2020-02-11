@@ -1,5 +1,6 @@
 package lt.visma.starter.controller;
 
+import lt.visma.starter.model.RevolutAccessToken;
 import lt.visma.starter.service.RevolutAccountsService;
 import lt.visma.starter.service.RovolutAuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,5 +29,10 @@ public class BankingIntegrationController {
     @RequestMapping(method = RequestMethod.GET, value = "/jwt-token")
     public String getJwtToken() {
         return rovolutAuthenticationService.getJWTToken();
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/access-token", produces = "application/json")
+    public String getRevolutAccessToken() {
+        return rovolutAuthenticationService.getAccessToken();
     }
 }
