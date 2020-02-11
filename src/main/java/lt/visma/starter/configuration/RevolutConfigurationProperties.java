@@ -10,6 +10,15 @@ public class RevolutConfigurationProperties {
     private String authorisationCode;
     private String privateKeyFilepath;
     private String apiURL;
+    private String refreshToken;
+
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
 
     public String getApiURL() {
         return apiURL;

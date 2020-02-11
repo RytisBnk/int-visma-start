@@ -67,10 +67,6 @@ public class RovolutAuthServiceImpl implements RovolutAuthenticationService {
 
     @Override
     public RevolutAccessToken getAccessToken() {
-        WebClient client = WebClient.builder()
-                .baseUrl(configurationProperties.getApiURL())
-                .build();
-
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
         params.add("code", configurationProperties.getAuthorisationCode());
@@ -78,14 +74,33 @@ public class RovolutAuthServiceImpl implements RovolutAuthenticationService {
         params.add("client_assertion_type", "urn:ietf:params:oauth:client-assertion-type:jwt-bearer");
         params.add("client_assertion", getJWTToken());
 
+        return sendAuthenticationRequest(params);
+    }
+
+    @Override
+    public RevolutAccessToken refreshAccessToken() {
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("grant_type", "refresh_token");
+        params.add("refresh_token", configurationProperties.getRefreshToken());
+        params.add("client_id", configurationProperties.getClientId());
+        params.add("client_assertion_type", "urn:ietf:params:oauth:client-assertion-type:jwt-bearer");
+        params.add("client_assertion", getJWTToken());
+
+        return sendAuthenticationRequest(params);
+    }
+
+    private RevolutAccessToken sendAuthenticationRequest(MultiValueMap<String, String> requestBody) {
+        WebClient client = WebClient.builder()
+                .baseUrl(configurationProperties.getApiURL())
+                .build();
         WebClient.RequestHeadersSpec<?> request = client
                 .post()
                 .uri("/auth/token")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .accept(MediaType.APPLICATION_JSON)
-                .body(BodyInserters.fromFormData(params));
-
+                .body(BodyInserters.fromFormData(requestBody));
         ClientResponse response = request.exchange().block();
+
         if (response == null) {
             throw new GenericException();
         }

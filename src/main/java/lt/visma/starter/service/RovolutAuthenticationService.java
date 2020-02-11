@@ -5,4 +5,5 @@ import lt.visma.starter.model.RevolutAccessToken;
 public interface RovolutAuthenticationService {
     String getJWTToken();
     RevolutAccessToken getAccessToken();
+    RevolutAccessToken refreshAccessToken();
 }

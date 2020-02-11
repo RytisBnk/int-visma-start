@@ -35,4 +35,9 @@ public class BankingIntegrationController {
     public RevolutAccessToken getRevolutAccessToken() {
         return rovolutAuthenticationService.getAccessToken();
     }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/access-token/refresh")
+    public RevolutAccessToken refreshAccessToken() {
+        return rovolutAuthenticationService.refreshAccessToken();
+    }
 }
