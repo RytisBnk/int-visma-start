@@ -32,7 +32,7 @@ public class BankingIntegrationController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/access-token", produces = "application/json")
-    public String getRevolutAccessToken() {
+    public RevolutAccessToken getRevolutAccessToken() {
         return rovolutAuthenticationService.getAccessToken();
     }
 }

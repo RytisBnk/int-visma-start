@@ -1,17 +1,22 @@
 package lt.visma.starter.service.impl;
 
+import com.google.gson.Gson;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lt.visma.starter.configuration.RevolutConfigurationProperties;
+import lt.visma.starter.exception.AuthenticationFailedException;
+import lt.visma.starter.exception.GenericException;
 import lt.visma.starter.model.RevolutAccessToken;
+import lt.visma.starter.model.RevolutApiError;
 import lt.visma.starter.service.RovolutAuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.IOException;
@@ -62,7 +67,7 @@ public class RovolutAuthServiceImpl implements RovolutAuthenticationService {
     }
 
     @Override
-    public String getAccessToken() {
+    public RevolutAccessToken getAccessToken() {
         WebClient client = WebClient.builder()
                 .baseUrl(configurationProperties.getApiURL())
                 .build();
@@ -81,6 +86,16 @@ public class RovolutAuthServiceImpl implements RovolutAuthenticationService {
                 .accept(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromFormData(params));
 
-        return Objects.requireNonNull(request.exchange().block()).bodyToMono(String.class).block();
+        ClientResponse response = request.exchange().block();
+        if (response == null) {
+            throw new GenericException();
+        }
+        if (response.statusCode() == HttpStatus.OK) {
+            return response.bodyToMono(RevolutAccessToken.class).block();
+        }
+        else {
+            RevolutApiError apiError = response.bodyToMono(RevolutApiError.class).block();
+            throw new AuthenticationFailedException(apiError != null ? apiError.getError_description() : "");
+        }
     }
 }
