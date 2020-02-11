@@ -1,7 +1,10 @@
 package lt.visma.starter.service;
 
-import java.util.Map;
+import lt.visma.starter.model.RevolutAccessToken;
+import lt.visma.starter.model.RevolutAccount;
+
+import java.util.List;
 
 public interface RevolutAccountsService {
-    String getAccounts(String accessToken);
+    List<RevolutAccount> getAccounts(RevolutAccessToken accessToken);
 }
