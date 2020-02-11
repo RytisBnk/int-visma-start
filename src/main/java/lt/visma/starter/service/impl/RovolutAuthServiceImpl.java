@@ -27,7 +27,6 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.spec.*;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 @Service
 public class RovolutAuthServiceImpl implements RovolutAuthenticationService {
@@ -46,7 +45,7 @@ public class RovolutAuthServiceImpl implements RovolutAuthenticationService {
         try {
             keyBytes = Files.readAllBytes(Paths.get(configurationProperties.getPrivateKeyFilepath()));
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new GenericException();
         }
         try {
             KeyFactory kf = KeyFactory.getInstance("RSA");
@@ -56,13 +55,9 @@ public class RovolutAuthServiceImpl implements RovolutAuthenticationService {
                     .setClaims(claims)
                     .signWith(SignatureAlgorithm.RS256, privateKey)
                     .compact();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (InvalidKeySpecException e) {
-            e.printStackTrace();
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            throw new GenericException();
         }
-
-        return null;
     }
 
     @Override
