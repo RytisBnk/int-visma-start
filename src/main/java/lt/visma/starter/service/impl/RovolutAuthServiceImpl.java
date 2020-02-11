@@ -1,6 +1,5 @@
 package lt.visma.starter.service.impl;
 
-import com.google.gson.Gson;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lt.visma.starter.configuration.RevolutConfigurationProperties;
