@@ -9,14 +9,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "/v1/banking")
-public class BankingIntegrationController {
+@RequestMapping(value = "/v1/banking/revolut")
+public class RevolutBankingController {
     private RevolutAccountsService revolutAccountsService;
     private RovolutAuthenticationService rovolutAuthenticationService;
 
     @Autowired
-    public BankingIntegrationController(RevolutAccountsService revolutAccountsService,
-                                        RovolutAuthenticationService rovolutAuthenticationService) {
+    public RevolutBankingController(RevolutAccountsService revolutAccountsService,
+                                    RovolutAuthenticationService rovolutAuthenticationService) {
         this.revolutAccountsService = revolutAccountsService;
         this.rovolutAuthenticationService = rovolutAuthenticationService;
     }
@@ -26,17 +26,17 @@ public class BankingIntegrationController {
         return revolutAccountsService.getAccounts("oa_sand_vsfMyVDZ71P0bTeZ5uJGJb5ODogo6EwtlfmEIdoqQOc");
     }
 
-    @GetMapping(value = "/jwt-token")
+    @GetMapping(value = "/auth/jwt-token")
     public String getJwtToken() {
         return rovolutAuthenticationService.getJWTToken();
     }
 
-    @GetMapping(value = "/access-token", produces = "application/json")
+    @GetMapping(value = "/auth/access-token", produces = "application/json")
     public RevolutAccessToken getRevolutAccessToken() {
         return rovolutAuthenticationService.getAccessToken();
     }
 
-    @GetMapping(value = "/access-token/refresh")
+    @GetMapping(value = "auth/access-token/refresh")
     public RevolutAccessToken refreshAccessToken() {
         return rovolutAuthenticationService.refreshAccessToken();
     }
