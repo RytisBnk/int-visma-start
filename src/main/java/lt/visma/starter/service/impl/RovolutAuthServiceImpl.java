@@ -90,8 +90,8 @@ public class RovolutAuthServiceImpl implements RovolutAuthenticationService {
         ClientResponse response = httpRequestService.httpPostRequest(
                 configurationProperties.getApiURL(),
                 "/auth/token",
-                new LinkedMultiValueMap<String, String>(),
-                new LinkedMultiValueMap<String, String>(),
+                null,
+                null,
                 requestBody,
                 MediaType.APPLICATION_FORM_URLENCODED
         );
