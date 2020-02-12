@@ -41,6 +41,7 @@ public class HttpRequestServiceImpl implements HttpRequestService {
                 .post()
                 .uri(uriBuilder -> uriBuilder.path(resource).queryParams(queryParameters).build())
                 .accept(MediaType.APPLICATION_JSON)
+                .headers(httpHeaders -> httpHeaders.addAll(headers))
                 .contentType(contentType)
                 .body(BodyInserters.fromValue(requestBody));
         return request.exchange().block();

@@ -1,7 +1,7 @@
 package lt.visma.starter.service;
 
-import lt.visma.starter.model.RevolutAccessToken;
-import lt.visma.starter.model.RevolutAccount;
+import lt.visma.starter.model.revolut.RevolutAccessToken;
+import lt.visma.starter.model.revolut.RevolutAccount;
 
 import java.util.List;
 

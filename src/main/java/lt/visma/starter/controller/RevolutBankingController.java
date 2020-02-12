@@ -1,7 +1,7 @@
 package lt.visma.starter.controller;
 
-import lt.visma.starter.model.RevolutAccessToken;
-import lt.visma.starter.model.RevolutAccount;
+import lt.visma.starter.model.revolut.RevolutAccessToken;
+import lt.visma.starter.model.revolut.RevolutAccount;
 import lt.visma.starter.service.RevolutAccountsService;
 import lt.visma.starter.service.RovolutAuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;

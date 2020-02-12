@@ -1,6 +1,6 @@
 package lt.visma.starter.service;
 
-import lt.visma.starter.model.RevolutAccessToken;
+import lt.visma.starter.model.revolut.RevolutAccessToken;
 
 public interface RovolutAuthenticationService {
     String getJWTToken();
