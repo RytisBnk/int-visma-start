@@ -64,7 +64,7 @@ public class RovolutAuthServiceImpl implements RovolutAuthenticationService {
 
     @Override
     public RevolutAccessToken getAccessToken() {
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        MultiValueMap<String, Object> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
         params.add("code", configurationProperties.getAuthorisationCode());
         params.add("client_id", configurationProperties.getClientId());
@@ -76,7 +76,7 @@ public class RovolutAuthServiceImpl implements RovolutAuthenticationService {
 
     @Override
     public RevolutAccessToken refreshAccessToken() {
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        MultiValueMap<String, Object> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "refresh_token");
         params.add("refresh_token", configurationProperties.getRefreshToken());
         params.add("client_id", configurationProperties.getClientId());
@@ -86,7 +86,7 @@ public class RovolutAuthServiceImpl implements RovolutAuthenticationService {
         return sendAuthenticationRequest(params);
     }
 
-    private RevolutAccessToken sendAuthenticationRequest(MultiValueMap<String, String> requestBody) {
+    private RevolutAccessToken sendAuthenticationRequest(Object requestBody) {
         ClientResponse response = httpRequestService.httpPostRequest(
                 configurationProperties.getApiURL(),
                 "/auth/token",

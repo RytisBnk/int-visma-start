@@ -33,7 +33,7 @@ public class HttpRequestServiceImpl implements HttpRequestService {
                                           String resource,
                                           MultiValueMap<String, String> queryParameters,
                                           MultiValueMap<String, String> headers,
-                                          MultiValueMap<String, String> requestBody,
+                                          Object requestBody,
                                           MediaType contentType) {
         WebClient client = WebClient.builder().baseUrl(baseUrl).build();
 
@@ -42,7 +42,7 @@ public class HttpRequestServiceImpl implements HttpRequestService {
                 .uri(uriBuilder -> uriBuilder.path(resource).queryParams(queryParameters).build())
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(contentType)
-                .body(BodyInserters.fromFormData(requestBody));
+                .body(BodyInserters.fromValue(requestBody));
         return request.exchange().block();
     }
 }

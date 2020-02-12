@@ -13,6 +13,6 @@ public interface HttpRequestService {
                                    String resource,
                                    MultiValueMap<String, String> queryParameters,
                                    MultiValueMap<String, String> headers,
-                                   MultiValueMap<String, String> requestBody,
+                                   Object requestBody,
                                    MediaType contentType);
 }
