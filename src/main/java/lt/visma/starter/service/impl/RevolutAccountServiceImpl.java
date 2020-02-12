@@ -6,13 +6,14 @@ import lt.visma.starter.exception.GenericException;
 import lt.visma.starter.model.RevolutAccessToken;
 import lt.visma.starter.model.RevolutAccount;
 import lt.visma.starter.model.RevolutApiError;
+import lt.visma.starter.service.HttpRequestService;
 import lt.visma.starter.service.RevolutAccountsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.ClientResponse;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,19 +24,19 @@ public class RevolutAccountServiceImpl implements RevolutAccountsService {
     @Autowired
     private RevolutConfigurationProperties configurationProperties;
 
+    @Autowired
+    private HttpRequestService httpRequestService;
+
     @Override
     public List<RevolutAccount> getAccounts(RevolutAccessToken accessToken) {
-        WebClient client = WebClient.builder()
-                .baseUrl(configurationProperties.getApiURL())
-                .build();
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.add("Authorization", "Bearer " + accessToken.getAccess_token());
 
-        ClientResponse response = client
-                .get()
-                .uri("/accounts")
-                .header("Authorization", "Bearer " + accessToken.getAccess_token())
-                .accept(MediaType.APPLICATION_JSON)
-                .exchange()
-                .block();
+        ClientResponse response = httpRequestService.httpGetRequest(
+                configurationProperties.getApiURL(),
+                "/accounts",
+                headers
+        );
 
         if (response == null) {
             throw new GenericException();
