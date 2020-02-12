@@ -1,7 +1,5 @@
 package lt.visma.starter.model.swedbank;
 
-import java.util.List;
-
 public class ConsentRequest {
     private Access access;
     private boolean combinedServiceIndicator;

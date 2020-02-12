@@ -2,9 +2,7 @@ package lt.visma.starter.service.impl;
 
 import lt.visma.starter.configuration.SwedbankConfigurationProperties;
 import lt.visma.starter.exception.GenericException;
-import lt.visma.starter.model.swedbank.Access;
-import lt.visma.starter.model.swedbank.ConsentRequest;
-import lt.visma.starter.model.swedbank.ConsentResponse;
+import lt.visma.starter.model.swedbank.*;
 import lt.visma.starter.service.HttpRequestService;
 import lt.visma.starter.service.ServerTimeService;
 import lt.visma.starter.service.SwedbankAccountsService;
@@ -14,6 +12,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.ClientResponse;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 @Service
 public class SwedbankAccountsServiceImpl implements SwedbankAccountsService {
@@ -55,5 +57,32 @@ public class SwedbankAccountsServiceImpl implements SwedbankAccountsService {
             throw new GenericException();
         }
         return response.bodyToMono(ConsentResponse.class).block();
+    }
+
+    @Override
+    public AccountsListResponse getUserAccounts(String consentId, String accessToken) {
+        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+        queryParams.add("bic", "SANDLT22");
+        queryParams.add("app-id", configurationProperties.getClientId());
+
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.add("PSU-ID", "HardcodedID1");
+        headers.add("Date", serverTimeService.getCurrentServerTimeAsString());
+        headers.add("X-Request-ID", "HardcodedID");
+        headers.add("Consent-ID", consentId);
+        headers.add("PSU-User-Agent", "User agent");
+        headers.add("PSU-IP-Address", "1.1.1.1");
+        headers.add("Authorization", "Bearer " + accessToken);
+
+        ClientResponse response = httpRequestService.httpGetRequest(
+                configurationProperties.getApiUrl(),
+                "/sandbox/v2/accounts",
+                queryParams,
+                headers
+        );
+        if (response == null) {
+            throw new GenericException();
+        }
+        return response.bodyToMono(AccountsListResponse.class).block();
     }
 }
