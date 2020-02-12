@@ -61,4 +61,28 @@ public class SwedbankAuthServiceImpl implements SwedBankAuthenticationService {
         }
         return response.bodyToMono(DecoupledAuthResponse.class).block();
     }
+
+    @Override
+    public AuthorizationCodeResponse getAuthorisationCode(String authoriseId) {
+        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+        queryParams.add("bic", "SANDLT22");
+        queryParams.add("client_id", configurationProperties.getClientId());
+
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.add("Date", serverTimeService.getCurrentServerTimeAsString());
+        headers.add("X-Request-ID", "HardcodedRequestID1");
+        headers.add("PSU-ID", "HardcodedID1");
+
+        ClientResponse response = httpRequestService.httpGetRequest(
+                configurationProperties.getApiUrl(),
+                "/psd2/authorize-decoupled/authorize/" + authoriseId,
+                queryParams,
+                headers
+        );
+
+        if (response == null) {
+            throw new GenericException();
+        }
+        return response.bodyToMono(AuthorizationCodeResponse.class).block();
+    }
 }
