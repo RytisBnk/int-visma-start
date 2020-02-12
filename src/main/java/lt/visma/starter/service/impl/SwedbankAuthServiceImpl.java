@@ -26,11 +26,32 @@ public class SwedbankAuthServiceImpl implements SwedBankAuthenticationService {
 
     @Override
     public TokenResponse getAccessToken() {
-        return null;
+        DecoupledAuthResponse authResponse = getAuthorizationID();
+        AuthorizationCodeResponse authorizationCodeResponse =
+                getAuthorisationCode(authResponse.getAuthorizeId());
+
+        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+        queryParams.add("client_id", configurationProperties.getClientId());
+        queryParams.add("client_secret", configurationProperties.getClientSecret());
+        queryParams.add("grant_type", "authorization_code");
+        queryParams.add("code", authorizationCodeResponse.getAuthorizationCode());
+        queryParams.add("redirect_uri", configurationProperties.getRedirectUrl());
+
+        ClientResponse response = httpRequestService.httpPostRequest(
+                configurationProperties.getApiUrl(),
+                "/psd2/token",
+                queryParams,
+                new LinkedMultiValueMap<>(),
+                null,
+                MediaType.APPLICATION_FORM_URLENCODED
+        );
+        if (response == null) {
+            throw new GenericException();
+        }
+        return response.bodyToMono(TokenResponse.class).block();
     }
 
-    @Override
-    public DecoupledAuthResponse getAuthorizationID() {
+    private DecoupledAuthResponse getAuthorizationID() {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("bic", "SANDLT22");
 
@@ -62,8 +83,7 @@ public class SwedbankAuthServiceImpl implements SwedBankAuthenticationService {
         return response.bodyToMono(DecoupledAuthResponse.class).block();
     }
 
-    @Override
-    public AuthorizationCodeResponse getAuthorisationCode(String authoriseId) {
+    private AuthorizationCodeResponse getAuthorisationCode(String authoriseId) {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("bic", "SANDLT22");
         queryParams.add("client_id", configurationProperties.getClientId());
