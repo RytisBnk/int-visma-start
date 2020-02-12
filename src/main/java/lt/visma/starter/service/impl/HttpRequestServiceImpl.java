@@ -39,7 +39,7 @@ public class HttpRequestServiceImpl implements HttpRequestService {
 
         WebClient.RequestHeadersSpec<?> request = client
                 .post()
-                .uri(resource)
+                .uri(uriBuilder -> uriBuilder.path(resource).queryParams(queryParameters).build())
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(contentType)
                 .body(BodyInserters.fromFormData(requestBody));
