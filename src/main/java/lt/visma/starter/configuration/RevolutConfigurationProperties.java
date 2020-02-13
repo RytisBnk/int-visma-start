@@ -11,6 +11,33 @@ public class RevolutConfigurationProperties {
     private String privateKeyFilepath;
     private String apiURL;
     private String refreshToken;
+    private String iss;
+    private String aud;
+    private String clientAssertionType;
+
+    public String getClientAssertionType() {
+        return clientAssertionType;
+    }
+
+    public void setClientAssertionType(String clientAssertionType) {
+        this.clientAssertionType = clientAssertionType;
+    }
+
+    public String getIss() {
+        return iss;
+    }
+
+    public void setIss(String iss) {
+        this.iss = iss;
+    }
+
+    public String getAud() {
+        return aud;
+    }
+
+    public void setAud(String aud) {
+        this.aud = aud;
+    }
 
     public String getRefreshToken() {
         return refreshToken;

@@ -41,10 +41,9 @@ public class RovolutAuthServiceImpl implements RovolutAuthenticationService {
     @Override
     public String getJWTToken() {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("iss", "revolut-jwt-sandbox.glitch.me");
-        claims.put("aud", "https://revolut.com");
+        claims.put("iss", configurationProperties.getIss());
+        claims.put("aud", configurationProperties.getAud());
         claims.put("sub", configurationProperties.getClientId());
-
 
         byte[] keyBytes;
         try {
@@ -71,7 +70,7 @@ public class RovolutAuthServiceImpl implements RovolutAuthenticationService {
         params.add("grant_type", "authorization_code");
         params.add("code", configurationProperties.getAuthorisationCode());
         params.add("client_id", configurationProperties.getClientId());
-        params.add("client_assertion_type", "urn:ietf:params:oauth:client-assertion-type:jwt-bearer");
+        params.add("client_assertion_type", configurationProperties.getClientAssertionType());
         params.add("client_assertion", getJWTToken());
 
         return sendAuthenticationRequest(params);
@@ -83,7 +82,7 @@ public class RovolutAuthServiceImpl implements RovolutAuthenticationService {
         params.add("grant_type", "refresh_token");
         params.add("refresh_token", configurationProperties.getRefreshToken());
         params.add("client_id", configurationProperties.getClientId());
-        params.add("client_assertion_type", "urn:ietf:params:oauth:client-assertion-type:jwt-bearer");
+        params.add("client_assertion_type", configurationProperties.getClientAssertionType());
         params.add("client_assertion", getJWTToken());
 
         return sendAuthenticationRequest(params);
