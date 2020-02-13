@@ -1,11 +1,11 @@
 package lt.visma.starter.exception;
 
-import lt.visma.starter.model.swedbank.ResponseError;
+import lt.visma.starter.model.revolut.ResponseError;
 
-public class SwedbankApiException extends RuntimeException {
+public class RevolutApiException extends RuntimeException {
     private final ResponseError responseError;
 
-    public SwedbankApiException(ResponseError responseError) {
+    public RevolutApiException(ResponseError responseError) {
         this.responseError = responseError;
     }
 

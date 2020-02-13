@@ -1,6 +1,6 @@
 package lt.visma.starter.model.revolut;
 
-public class RevolutApiError {
+public class ResponseError {
     private String error;
     private String error_description;
 

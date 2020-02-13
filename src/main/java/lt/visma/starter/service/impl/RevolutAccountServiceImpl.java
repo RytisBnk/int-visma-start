@@ -1,11 +1,11 @@
 package lt.visma.starter.service.impl;
 
 import lt.visma.starter.configuration.RevolutConfigurationProperties;
-import lt.visma.starter.exception.AuthenticationFailedException;
 import lt.visma.starter.exception.GenericException;
+import lt.visma.starter.exception.RevolutApiException;
 import lt.visma.starter.model.revolut.RevolutAccessToken;
 import lt.visma.starter.model.revolut.RevolutAccount;
-import lt.visma.starter.model.revolut.RevolutApiError;
+import lt.visma.starter.model.revolut.ResponseError;
 import lt.visma.starter.service.HttpRequestService;
 import lt.visma.starter.service.RevolutAccountsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,8 +50,8 @@ public class RevolutAccountServiceImpl implements RevolutAccountsService {
             return accounts != null ? Arrays.asList(accounts) : new ArrayList<>();
         }
         else {
-            RevolutApiError apiError = response.bodyToMono(RevolutApiError.class).block();
-            throw new AuthenticationFailedException(apiError != null ? apiError.getError_description() : "");
+            ResponseError apiError = response.bodyToMono(ResponseError.class).block();
+            throw new RevolutApiException(apiError);
         }
     }
 }
