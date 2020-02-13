@@ -65,25 +65,25 @@ public class RovolutAuthServiceImpl implements RovolutAuthenticationService {
     }
 
     @Override
-    public RevolutAccessToken getAccessToken() {
+    public RevolutAccessToken getAccessToken(String jwtToken) {
         MultiValueMap<String, Object> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
         params.add("code", configurationProperties.getAuthorisationCode());
         params.add("client_id", configurationProperties.getClientId());
         params.add("client_assertion_type", configurationProperties.getClientAssertionType());
-        params.add("client_assertion", getJWTToken());
+        params.add("client_assertion", jwtToken);
 
         return sendAuthenticationRequest(params);
     }
 
     @Override
-    public RevolutAccessToken refreshAccessToken() {
+    public RevolutAccessToken refreshAccessToken(String jwtToken) {
         MultiValueMap<String, Object> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "refresh_token");
         params.add("refresh_token", configurationProperties.getRefreshToken());
         params.add("client_id", configurationProperties.getClientId());
         params.add("client_assertion_type", configurationProperties.getClientAssertionType());
-        params.add("client_assertion", getJWTToken());
+        params.add("client_assertion", jwtToken);
 
         return sendAuthenticationRequest(params);
     }

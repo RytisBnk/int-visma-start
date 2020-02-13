@@ -36,7 +36,13 @@ public class RevolutBankingController {
 
     @GetMapping(value = "/accounts", produces = "application/json")
     public ResponseEntity<List<RevolutAccount>> getListOfAccounts() {
-        RevolutAccessToken accessToken = rovolutAuthenticationService.refreshAccessToken();
+        String jwtToken = rovolutAuthenticationService.getJWTToken();
+        RevolutAccessToken accessToken = rovolutAuthenticationService.refreshAccessToken(jwtToken);
         return new ResponseEntity<>(revolutAccountsService.getAccounts(accessToken), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/jwt-token")
+    public ResponseEntity<String> getJwtToken() {
+        return new ResponseEntity<>(rovolutAuthenticationService.getJWTToken(), HttpStatus.OK);
     }
 }
