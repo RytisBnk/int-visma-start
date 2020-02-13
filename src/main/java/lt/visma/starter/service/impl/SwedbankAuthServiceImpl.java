@@ -13,6 +13,8 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.ClientResponse;
 
+import java.util.UUID;
+
 @Service
 public class SwedbankAuthServiceImpl implements SwedBankAuthenticationService {
     private SwedbankConfigurationProperties configurationProperties;
@@ -59,7 +61,7 @@ public class SwedbankAuthServiceImpl implements SwedBankAuthenticationService {
 
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
         headers.add("Date", serverTimeService.getCurrentServerTimeAsString());
-        headers.add("X-Request-ID", "HardcodedRequestID1");
+        headers.add("X-Request-ID", UUID.randomUUID().toString());
         headers.add("PSU-ID", "HardcodedID1");
 
         DecoupledAuthRequest requestBody = new DecoupledAuthRequest(
@@ -92,7 +94,7 @@ public class SwedbankAuthServiceImpl implements SwedBankAuthenticationService {
 
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
         headers.add("Date", serverTimeService.getCurrentServerTimeAsString());
-        headers.add("X-Request-ID", "HardcodedRequestID1");
+        headers.add("X-Request-ID", UUID.randomUUID().toString());
         headers.add("PSU-ID", "HardcodedID1");
 
         ClientResponse response = httpRequestService.httpGetRequest(

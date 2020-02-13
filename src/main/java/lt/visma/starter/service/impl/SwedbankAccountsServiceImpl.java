@@ -15,6 +15,8 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.ClientResponse;
 
+import java.util.UUID;
+
 @Service
 public class SwedbankAccountsServiceImpl implements SwedbankAccountsService {
     private SwedbankConfigurationProperties configurationProperties;
@@ -37,7 +39,7 @@ public class SwedbankAccountsServiceImpl implements SwedbankAccountsService {
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
         headers.add("Authorization", "Bearer " + accessToken);
         headers.add("Date", serverTimeService.getCurrentServerTimeAsString());
-        headers.add("X-Request-ID", "HardcodedID");
+        headers.add("X-Request-ID", UUID.randomUUID().toString());
         headers.add("PSU-IP-Address", "1.1.1.1");
         headers.add("PSU-User-Agent", "User agent");
 
@@ -71,7 +73,7 @@ public class SwedbankAccountsServiceImpl implements SwedbankAccountsService {
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
         headers.add("PSU-ID", "HardcodedID1");
         headers.add("Date", serverTimeService.getCurrentServerTimeAsString());
-        headers.add("X-Request-ID", "HardcodedID");
+        headers.add("X-Request-ID", UUID.randomUUID().toString());
         headers.add("Consent-ID", consentId);
         headers.add("PSU-User-Agent", "User agent");
         headers.add("PSU-IP-Address", "1.1.1.1");
