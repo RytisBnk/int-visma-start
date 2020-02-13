@@ -29,8 +29,8 @@ public class SwedbankAuthServiceImpl implements SwedBankAuthenticationService {
     }
 
     @Override
-    public TokenResponse getAccessToken(String psuID) {
-        DecoupledAuthResponse authResponse = getAuthorizationID(psuID);
+    public TokenResponse getAccessToken(String psuID, String scaMethod) {
+        DecoupledAuthResponse authResponse = getAuthorizationID(psuID, scaMethod);
         AuthorizationCodeResponse authorizationCodeResponse =
                 getAuthorisationCode(authResponse.getAuthorizeId(), psuID);
 
@@ -55,7 +55,7 @@ public class SwedbankAuthServiceImpl implements SwedBankAuthenticationService {
         return response.bodyToMono(TokenResponse.class).block();
     }
 
-    private DecoupledAuthResponse getAuthorizationID(String psuID) {
+    private DecoupledAuthResponse getAuthorizationID(String psuID, String scaMethod) {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("bic", configurationProperties.getBic());
 
@@ -65,7 +65,7 @@ public class SwedbankAuthServiceImpl implements SwedBankAuthenticationService {
         headers.add("PSU-ID", psuID);
 
         DecoupledAuthRequest requestBody = new DecoupledAuthRequest(
-                "SMART_ID",
+                scaMethod,
                 configurationProperties.getClientId(),
                 new PSUData(configurationProperties.getBic(), psuID, null),
                 configurationProperties.getRedirectUrl(),
