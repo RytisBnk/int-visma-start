@@ -1,6 +1,6 @@
 package lt.visma.starter.controller;
 
-import lt.visma.starter.exception.SwedbankApiError;
+import lt.visma.starter.exception.SwedbankApiException;
 import lt.visma.starter.model.swedbank.*;
 import lt.visma.starter.service.SwedBankAuthenticationService;
 import lt.visma.starter.service.SwedbankAccountsService;
@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/v1/swedbank")
 @RestController
 public class SwedbankBankingController {
-    @ExceptionHandler({SwedbankApiError.class})
-    private ResponseEntity<ResponseError> handleException(SwedbankApiError error) {
+    @ExceptionHandler({SwedbankApiException.class})
+    private ResponseEntity<ResponseError> handleException(SwedbankApiException error) {
         return new ResponseEntity<>(error.getResponseError(), HttpStatus.BAD_REQUEST);
     }
 

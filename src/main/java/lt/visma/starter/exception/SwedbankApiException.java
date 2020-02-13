@@ -2,10 +2,10 @@ package lt.visma.starter.exception;
 
 import lt.visma.starter.model.swedbank.ResponseError;
 
-public class SwedbankApiError extends RuntimeException {
+public class SwedbankApiException extends RuntimeException {
     private ResponseError responseError;
 
-    public SwedbankApiError(ResponseError responseError) {
+    public SwedbankApiException(ResponseError responseError) {
         this.responseError = responseError;
     }
 
