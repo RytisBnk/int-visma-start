@@ -2,20 +2,18 @@ package lt.visma.starter.service.impl;
 
 import lt.visma.starter.configuration.SwedbankConfigurationProperties;
 import lt.visma.starter.exception.GenericException;
+import lt.visma.starter.exception.SwedbankApiError;
 import lt.visma.starter.model.swedbank.*;
 import lt.visma.starter.service.HttpRequestService;
 import lt.visma.starter.service.ServerTimeService;
 import lt.visma.starter.service.SwedbankAccountsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.ClientResponse;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
 
 @Service
 public class SwedbankAccountsServiceImpl implements SwedbankAccountsService {
@@ -56,6 +54,9 @@ public class SwedbankAccountsServiceImpl implements SwedbankAccountsService {
         if (response == null) {
             throw new GenericException();
         }
+        if (response.statusCode() == HttpStatus.BAD_REQUEST) {
+            throw new SwedbankApiError(response.bodyToMono(ResponseError.class).block());
+        }
         return response.bodyToMono(ConsentResponse.class).block();
     }
 
@@ -82,6 +83,10 @@ public class SwedbankAccountsServiceImpl implements SwedbankAccountsService {
         );
         if (response == null) {
             throw new GenericException();
+        }
+        if (response.statusCode() == HttpStatus.BAD_REQUEST) {
+            ResponseError responseError = response.bodyToMono(ResponseError.class).block();
+            throw new SwedbankApiError(responseError);
         }
         return response.bodyToMono(AccountsListResponse.class).block();
     }
