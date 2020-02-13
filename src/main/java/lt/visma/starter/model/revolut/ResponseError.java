@@ -1,8 +1,11 @@
 package lt.visma.starter.model.revolut;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+
 public class ResponseError {
     private String error;
-    private String error_description;
+    @JsonAlias({"error_description"})
+    private String errorDescription;
 
     public String getError() {
         return error;
@@ -12,11 +15,11 @@ public class ResponseError {
         this.error = error;
     }
 
-    public String getError_description() {
-        return error_description;
+    public String getErrorDescription() {
+        return errorDescription;
     }
 
-    public void setError_description(String error_description) {
-        this.error_description = error_description;
+    public void setErrorDescription(String errorDescription) {
+        this.errorDescription = errorDescription;
     }
 }

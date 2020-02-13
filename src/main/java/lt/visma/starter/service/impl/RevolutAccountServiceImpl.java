@@ -33,7 +33,7 @@ public class RevolutAccountServiceImpl implements RevolutAccountsService {
     @Override
     public List<RevolutAccount> getAccounts(RevolutAccessToken accessToken) {
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        headers.add("Authorization", "Bearer " + accessToken.getAccess_token());
+        headers.add("Authorization", "Bearer " + accessToken.getAccessToken());
 
         ClientResponse response = httpRequestService.httpGetRequest(
                 configurationProperties.getApiURL(),
