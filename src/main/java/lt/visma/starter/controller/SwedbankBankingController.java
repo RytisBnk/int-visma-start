@@ -33,16 +33,21 @@ public class SwedbankBankingController {
     }
 
     @GetMapping(value = "/consent")
-    public ResponseEntity<Object> getuserConsent() {
+    public ResponseEntity<Object> getuserConsent(@RequestHeader("User-Agent") String psuUserAgent,
+                                                 @RequestHeader("Host") String psuIPAddress) {
         TokenResponse tokenResponse = swedBankAuthenticationService.getAccessToken();
-        ConsentResponse consentResponse = swedbankAccountsService.getUserConsent(tokenResponse.getAccessToken());
+        ConsentResponse consentResponse = swedbankAccountsService
+                .getUserConsent(tokenResponse.getAccessToken(), psuUserAgent, psuIPAddress);
         return new ResponseEntity<>(consentResponse, HttpStatus.OK);
     }
 
     @GetMapping(value = "/accounts")
-    public ResponseEntity<Object> getUserAccounts(@RequestParam("consent-id") String consentId) {
+    public ResponseEntity<Object> getUserAccounts(@RequestParam("consent-id") String consentId,
+                                                  @RequestHeader("User-Agent") String psuUserAgent,
+                                                  @RequestHeader("Host") String psuIPAddress) {
         TokenResponse tokenResponse = swedBankAuthenticationService.getAccessToken();
-        AccountsListResponse swedbankAccounts = swedbankAccountsService.getUserAccounts(consentId, tokenResponse.getAccessToken());
+        AccountsListResponse swedbankAccounts = swedbankAccountsService
+                .getUserAccounts(consentId, tokenResponse.getAccessToken(), psuUserAgent, psuIPAddress);
         return new ResponseEntity<>(swedbankAccounts, HttpStatus.OK);
     }
 }

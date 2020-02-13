@@ -31,7 +31,7 @@ public class SwedbankAccountsServiceImpl implements SwedbankAccountsService {
     }
 
     @Override
-    public ConsentResponse getUserConsent(String accessToken) {
+    public ConsentResponse getUserConsent(String accessToken, String psuUserAgent, String psuIP) {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("bic", "SANDLT22");
         queryParams.add("app-id", configurationProperties.getClientId());
@@ -40,8 +40,8 @@ public class SwedbankAccountsServiceImpl implements SwedbankAccountsService {
         headers.add("Authorization", "Bearer " + accessToken);
         headers.add("Date", serverTimeService.getCurrentServerTimeAsString());
         headers.add("X-Request-ID", UUID.randomUUID().toString());
-        headers.add("PSU-IP-Address", "1.1.1.1");
-        headers.add("PSU-User-Agent", "User agent");
+        headers.add("PSU-IP-Address", psuIP);
+        headers.add("PSU-User-Agent", psuUserAgent);
 
         Access access = new Access(null, "allAccounts", null, null);
         ConsentRequest requestBody = new ConsentRequest(access,
@@ -65,7 +65,7 @@ public class SwedbankAccountsServiceImpl implements SwedbankAccountsService {
     }
 
     @Override
-    public AccountsListResponse getUserAccounts(String consentId, String accessToken) {
+    public AccountsListResponse getUserAccounts(String consentId, String accessToken, String psuUserAgent, String psuIP) {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("bic", "SANDLT22");
         queryParams.add("app-id", configurationProperties.getClientId());
@@ -75,8 +75,8 @@ public class SwedbankAccountsServiceImpl implements SwedbankAccountsService {
         headers.add("Date", serverTimeService.getCurrentServerTimeAsString());
         headers.add("X-Request-ID", UUID.randomUUID().toString());
         headers.add("Consent-ID", consentId);
-        headers.add("PSU-User-Agent", "User agent");
-        headers.add("PSU-IP-Address", "1.1.1.1");
+        headers.add("PSU-User-Agent", psuUserAgent);
+        headers.add("PSU-IP-Address", psuIP);
         headers.add("Authorization", "Bearer " + accessToken);
 
         ClientResponse response = httpRequestService.httpGetRequest(
