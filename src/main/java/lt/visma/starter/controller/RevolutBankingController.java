@@ -5,6 +5,8 @@ import lt.visma.starter.model.revolut.RevolutAccount;
 import lt.visma.starter.service.RevolutAccountsService;
 import lt.visma.starter.service.RovolutAuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,23 +27,8 @@ public class RevolutBankingController {
     }
 
     @GetMapping(value = "/accounts", produces = "application/json")
-    public List<RevolutAccount> getListOfAccounts() {
+    public ResponseEntity<List<RevolutAccount>> getListOfAccounts() {
         RevolutAccessToken accessToken = rovolutAuthenticationService.refreshAccessToken();
-        return revolutAccountsService.getAccounts(accessToken);
-    }
-
-    @GetMapping(value = "/auth/jwt-token")
-    public String getJwtToken() {
-        return rovolutAuthenticationService.getJWTToken();
-    }
-
-    @GetMapping(value = "/auth/access-token", produces = "application/json")
-    public RevolutAccessToken getRevolutAccessToken() {
-        return rovolutAuthenticationService.getAccessToken();
-    }
-
-    @GetMapping(value = "/auth/access-token/refresh")
-    public RevolutAccessToken refreshAccessToken() {
-        return rovolutAuthenticationService.refreshAccessToken();
+        return new ResponseEntity<>(revolutAccountsService.getAccounts(accessToken), HttpStatus.OK);
     }
 }
