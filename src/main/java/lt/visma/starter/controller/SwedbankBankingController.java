@@ -17,11 +17,14 @@ public class SwedbankBankingController {
         return new ResponseEntity<>(error.getResponseError(), HttpStatus.BAD_REQUEST);
     }
 
-    @Autowired
     private SwedBankAuthenticationService swedBankAuthenticationService;
+    private SwedbankAccountsService swedbankAccountsService;
 
     @Autowired
-    private SwedbankAccountsService swedbankAccountsService;
+    public SwedbankBankingController(SwedBankAuthenticationService swedBankAuthenticationService, SwedbankAccountsService swedbankAccountsService) {
+        this.swedBankAuthenticationService = swedBankAuthenticationService;
+        this.swedbankAccountsService = swedbankAccountsService;
+    }
 
     @GetMapping(value = "/access-token")
     public ResponseEntity<TokenResponse> getAccessToken() {

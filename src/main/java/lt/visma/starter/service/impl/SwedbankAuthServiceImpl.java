@@ -15,14 +15,16 @@ import org.springframework.web.reactive.function.client.ClientResponse;
 
 @Service
 public class SwedbankAuthServiceImpl implements SwedBankAuthenticationService {
-    @Autowired
     private SwedbankConfigurationProperties configurationProperties;
-
-    @Autowired
     private HttpRequestService httpRequestService;
+    private ServerTimeService serverTimeService;
 
     @Autowired
-    private ServerTimeService serverTimeService;
+    public SwedbankAuthServiceImpl(SwedbankConfigurationProperties configurationProperties, HttpRequestService httpRequestService, ServerTimeService serverTimeService) {
+        this.configurationProperties = configurationProperties;
+        this.httpRequestService = httpRequestService;
+        this.serverTimeService = serverTimeService;
+    }
 
     @Override
     public TokenResponse getAccessToken() {

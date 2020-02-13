@@ -29,11 +29,14 @@ import java.util.Map;
 
 @Service
 public class RovolutAuthServiceImpl implements RovolutAuthenticationService {
-    @Autowired
     private RevolutConfigurationProperties configurationProperties;
+    private HttpRequestService httpRequestService;
 
     @Autowired
-    private HttpRequestService httpRequestService;
+    public RovolutAuthServiceImpl(RevolutConfigurationProperties configurationProperties, HttpRequestService httpRequestService) {
+        this.configurationProperties = configurationProperties;
+        this.httpRequestService = httpRequestService;
+    }
 
     @Override
     public String getJWTToken() {
@@ -43,7 +46,7 @@ public class RovolutAuthServiceImpl implements RovolutAuthenticationService {
         claims.put("sub", configurationProperties.getClientId());
 
 
-        byte[] keyBytes = new byte[0];
+        byte[] keyBytes;
         try {
             keyBytes = Files.readAllBytes(Paths.get(configurationProperties.getPrivateKeyFilepath()));
         } catch (IOException e) {

@@ -17,14 +17,16 @@ import org.springframework.web.reactive.function.client.ClientResponse;
 
 @Service
 public class SwedbankAccountsServiceImpl implements SwedbankAccountsService {
-    @Autowired
     private SwedbankConfigurationProperties configurationProperties;
-
-    @Autowired
     private HttpRequestService httpRequestService;
+    private ServerTimeService serverTimeService;
 
     @Autowired
-    private ServerTimeService serverTimeService;
+    public SwedbankAccountsServiceImpl(SwedbankConfigurationProperties configurationProperties, HttpRequestService httpRequestService, ServerTimeService serverTimeService) {
+        this.configurationProperties = configurationProperties;
+        this.httpRequestService = httpRequestService;
+        this.serverTimeService = serverTimeService;
+    }
 
     @Override
     public ConsentResponse getUserConsent(String accessToken) {

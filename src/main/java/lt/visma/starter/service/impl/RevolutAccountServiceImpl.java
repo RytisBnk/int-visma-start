@@ -21,11 +21,14 @@ import java.util.List;
 
 @Service
 public class RevolutAccountServiceImpl implements RevolutAccountsService {
-    @Autowired
     private RevolutConfigurationProperties configurationProperties;
+    private HttpRequestService httpRequestService;
 
     @Autowired
-    private HttpRequestService httpRequestService;
+    public RevolutAccountServiceImpl(RevolutConfigurationProperties configurationProperties, HttpRequestService httpRequestService) {
+        this.configurationProperties = configurationProperties;
+        this.httpRequestService = httpRequestService;
+    }
 
     @Override
     public List<RevolutAccount> getAccounts(RevolutAccessToken accessToken) {
