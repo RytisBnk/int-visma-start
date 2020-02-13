@@ -33,7 +33,7 @@ public class SwedbankAccountsServiceImpl implements SwedbankAccountsService {
     @Override
     public ConsentResponse getUserConsent(String accessToken, String psuUserAgent, String psuIP) {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-        queryParams.add("bic", "SANDLT22");
+        queryParams.add("bic", configurationProperties.getBic());
         queryParams.add("app-id", configurationProperties.getClientId());
 
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
@@ -49,7 +49,7 @@ public class SwedbankAccountsServiceImpl implements SwedbankAccountsService {
 
         ClientResponse response = httpRequestService.httpPostRequest(
                 configurationProperties.getApiUrl(),
-                "/sandbox/v2/consents",
+                configurationProperties.getConsentsEndpointUrl(),
                 queryParams,
                 headers,
                 requestBody,
@@ -65,13 +65,13 @@ public class SwedbankAccountsServiceImpl implements SwedbankAccountsService {
     }
 
     @Override
-    public AccountsListResponse getUserAccounts(String consentId, String accessToken, String psuUserAgent, String psuIP) {
+    public AccountsListResponse getUserAccounts(String consentId, String accessToken, String psuUserAgent, String psuIP, String psuID) {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-        queryParams.add("bic", "SANDLT22");
+        queryParams.add("bic", configurationProperties.getBic());
         queryParams.add("app-id", configurationProperties.getClientId());
 
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        headers.add("PSU-ID", "HardcodedID1");
+        headers.add("PSU-ID", psuID);
         headers.add("Date", serverTimeService.getCurrentServerTimeAsString());
         headers.add("X-Request-ID", UUID.randomUUID().toString());
         headers.add("Consent-ID", consentId);
@@ -81,7 +81,7 @@ public class SwedbankAccountsServiceImpl implements SwedbankAccountsService {
 
         ClientResponse response = httpRequestService.httpGetRequest(
                 configurationProperties.getApiUrl(),
-                "/sandbox/v2/accounts",
+                configurationProperties.getAccountsEndpointUrl(),
                 queryParams,
                 headers
         );

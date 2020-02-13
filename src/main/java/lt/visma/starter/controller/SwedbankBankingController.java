@@ -27,15 +27,16 @@ public class SwedbankBankingController {
     }
 
     @GetMapping(value = "/access-token")
-    public ResponseEntity<TokenResponse> getAccessToken() {
-        TokenResponse tokenResponse = swedBankAuthenticationService.getAccessToken();
+    public ResponseEntity<TokenResponse> getAccessToken(@RequestHeader("PSU-ID") String psuID) {
+        TokenResponse tokenResponse = swedBankAuthenticationService.getAccessToken(psuID);
         return new ResponseEntity<>(tokenResponse, HttpStatus.OK);
     }
 
     @GetMapping(value = "/consent")
-    public ResponseEntity<Object> getuserConsent(@RequestHeader("User-Agent") String psuUserAgent,
-                                                 @RequestHeader("Host") String psuIPAddress) {
-        TokenResponse tokenResponse = swedBankAuthenticationService.getAccessToken();
+    public ResponseEntity<Object> getUserConsent(@RequestHeader("User-Agent") String psuUserAgent,
+                                                 @RequestHeader("Host") String psuIPAddress,
+                                                 @RequestHeader("PSU-ID") String psuID) {
+        TokenResponse tokenResponse = swedBankAuthenticationService.getAccessToken(psuID);
         ConsentResponse consentResponse = swedbankAccountsService
                 .getUserConsent(tokenResponse.getAccessToken(), psuUserAgent, psuIPAddress);
         return new ResponseEntity<>(consentResponse, HttpStatus.OK);
@@ -44,10 +45,11 @@ public class SwedbankBankingController {
     @GetMapping(value = "/accounts")
     public ResponseEntity<Object> getUserAccounts(@RequestParam("consent-id") String consentId,
                                                   @RequestHeader("User-Agent") String psuUserAgent,
-                                                  @RequestHeader("Host") String psuIPAddress) {
-        TokenResponse tokenResponse = swedBankAuthenticationService.getAccessToken();
+                                                  @RequestHeader("Host") String psuIPAddress,
+                                                  @RequestHeader("PSU-ID") String psuID) {
+        TokenResponse tokenResponse = swedBankAuthenticationService.getAccessToken(psuID);
         AccountsListResponse swedbankAccounts = swedbankAccountsService
-                .getUserAccounts(consentId, tokenResponse.getAccessToken(), psuUserAgent, psuIPAddress);
+                .getUserAccounts(consentId, tokenResponse.getAccessToken(), psuUserAgent, psuIPAddress, psuID);
         return new ResponseEntity<>(swedbankAccounts, HttpStatus.OK);
     }
 }

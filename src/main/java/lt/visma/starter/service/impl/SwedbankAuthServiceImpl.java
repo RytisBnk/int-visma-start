@@ -29,10 +29,10 @@ public class SwedbankAuthServiceImpl implements SwedBankAuthenticationService {
     }
 
     @Override
-    public TokenResponse getAccessToken() {
-        DecoupledAuthResponse authResponse = getAuthorizationID();
+    public TokenResponse getAccessToken(String psuID) {
+        DecoupledAuthResponse authResponse = getAuthorizationID(psuID);
         AuthorizationCodeResponse authorizationCodeResponse =
-                getAuthorisationCode(authResponse.getAuthorizeId());
+                getAuthorisationCode(authResponse.getAuthorizeId(), psuID);
 
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("client_id", configurationProperties.getClientId());
@@ -43,7 +43,7 @@ public class SwedbankAuthServiceImpl implements SwedBankAuthenticationService {
 
         ClientResponse response = httpRequestService.httpPostRequest(
                 configurationProperties.getApiUrl(),
-                "/psd2/token",
+                configurationProperties.getTokenEndpointUrl(),
                 queryParams,
                 new LinkedMultiValueMap<>(),
                 null,
@@ -55,26 +55,26 @@ public class SwedbankAuthServiceImpl implements SwedBankAuthenticationService {
         return response.bodyToMono(TokenResponse.class).block();
     }
 
-    private DecoupledAuthResponse getAuthorizationID() {
+    private DecoupledAuthResponse getAuthorizationID(String psuID) {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-        queryParams.add("bic", "SANDLT22");
+        queryParams.add("bic", configurationProperties.getBic());
 
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
         headers.add("Date", serverTimeService.getCurrentServerTimeAsString());
         headers.add("X-Request-ID", UUID.randomUUID().toString());
-        headers.add("PSU-ID", "HardcodedID1");
+        headers.add("PSU-ID", psuID);
 
         DecoupledAuthRequest requestBody = new DecoupledAuthRequest(
                 "SMART_ID",
                 configurationProperties.getClientId(),
-                new PSUData("SANDLT22", "HardcodedID1", null),
+                new PSUData(configurationProperties.getBic(), psuID, null),
                 configurationProperties.getRedirectUrl(),
                 AccessScope.PSD2sandbox
         );
 
         ClientResponse response = httpRequestService.httpPostRequest(
                 configurationProperties.getApiUrl(),
-                "/psd2/authorize-decoupled",
+                configurationProperties.getAuthenticationEndpointUrl(),
                 queryParams,
                 headers,
                 requestBody,
@@ -87,19 +87,19 @@ public class SwedbankAuthServiceImpl implements SwedBankAuthenticationService {
         return response.bodyToMono(DecoupledAuthResponse.class).block();
     }
 
-    private AuthorizationCodeResponse getAuthorisationCode(String authoriseId) {
+    private AuthorizationCodeResponse getAuthorisationCode(String authoriseId, String psuID) {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-        queryParams.add("bic", "SANDLT22");
+        queryParams.add("bic", configurationProperties.getBic());
         queryParams.add("client_id", configurationProperties.getClientId());
 
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
         headers.add("Date", serverTimeService.getCurrentServerTimeAsString());
         headers.add("X-Request-ID", UUID.randomUUID().toString());
-        headers.add("PSU-ID", "HardcodedID1");
+        headers.add("PSU-ID", psuID);
 
         ClientResponse response = httpRequestService.httpGetRequest(
                 configurationProperties.getApiUrl(),
-                "/psd2/authorize-decoupled/authorize/" + authoriseId,
+                configurationProperties.getAuthenticationEndpointUrl() + "/authorize/" + authoriseId,
                 queryParams,
                 headers
         );

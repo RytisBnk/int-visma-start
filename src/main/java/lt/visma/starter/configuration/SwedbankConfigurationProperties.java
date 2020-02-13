@@ -10,6 +10,51 @@ public class SwedbankConfigurationProperties {
     private String clientId;
     private String clientSecret;
     private String redirectUrl;
+    private String bic;
+    private String consentsEndpointUrl;
+    private String accountsEndpointUrl;
+    private String authenticationEndpointUrl;
+    private String tokenEndpointUrl;
+
+    public String getConsentsEndpointUrl() {
+        return consentsEndpointUrl;
+    }
+
+    public void setConsentsEndpointUrl(String consentsEndpointUrl) {
+        this.consentsEndpointUrl = consentsEndpointUrl;
+    }
+
+    public String getAccountsEndpointUrl() {
+        return accountsEndpointUrl;
+    }
+
+    public void setAccountsEndpointUrl(String accountsEndpointUrl) {
+        this.accountsEndpointUrl = accountsEndpointUrl;
+    }
+
+    public String getAuthenticationEndpointUrl() {
+        return authenticationEndpointUrl;
+    }
+
+    public void setAuthenticationEndpointUrl(String authenticationEndpointUrl) {
+        this.authenticationEndpointUrl = authenticationEndpointUrl;
+    }
+
+    public String getTokenEndpointUrl() {
+        return tokenEndpointUrl;
+    }
+
+    public void setTokenEndpointUrl(String tokenEndpointUrl) {
+        this.tokenEndpointUrl = tokenEndpointUrl;
+    }
+
+    public String getBic() {
+        return bic;
+    }
+
+    public void setBic(String bic) {
+        this.bic = bic;
+    }
 
     public String getApiUrl() {
         return apiUrl;
