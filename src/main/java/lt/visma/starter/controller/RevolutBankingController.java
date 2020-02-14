@@ -45,4 +45,11 @@ public class RevolutBankingController {
     public ResponseEntity<String> getJwtToken() {
         return new ResponseEntity<>(rovolutAuthenticationService.getJWTToken(), HttpStatus.OK);
     }
+
+    @GetMapping(value = "/access-token")
+    public ResponseEntity<RevolutAccessToken> getRefreshedAccessToken() {
+        String jwtToken = rovolutAuthenticationService.getJWTToken();
+        RevolutAccessToken accessToken = rovolutAuthenticationService.refreshAccessToken(jwtToken);
+        return new ResponseEntity<>(accessToken, HttpStatus.OK);
+    }
 }
