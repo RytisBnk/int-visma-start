@@ -37,7 +37,7 @@ public class RevolutAccountServiceImpl implements RevolutAccountsService {
 
         ClientResponse response = httpRequestService.httpGetRequest(
                 configurationProperties.getApiURL(),
-                "/accounts",
+                configurationProperties.getAccountsEndpointUrl(),
                 null,
                 headers
         );

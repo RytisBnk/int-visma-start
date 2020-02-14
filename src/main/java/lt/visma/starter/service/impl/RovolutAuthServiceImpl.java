@@ -91,7 +91,7 @@ public class RovolutAuthServiceImpl implements RovolutAuthenticationService {
     private RevolutAccessToken sendAuthenticationRequest(Object requestBody) {
         ClientResponse response = httpRequestService.httpPostRequest(
                 configurationProperties.getApiURL(),
-                "/auth/token",
+                configurationProperties.getAuthenticationEndpointUrl(),
                 null,
                 new LinkedMultiValueMap<>(),
                 requestBody,

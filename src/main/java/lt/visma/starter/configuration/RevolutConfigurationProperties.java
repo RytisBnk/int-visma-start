@@ -14,6 +14,24 @@ public class RevolutConfigurationProperties {
     private String iss;
     private String aud;
     private String clientAssertionType;
+    private String authenticationEndpointUrl;
+    private String accountsEndpointUrl;
+
+    public String getAuthenticationEndpointUrl() {
+        return authenticationEndpointUrl;
+    }
+
+    public void setAuthenticationEndpointUrl(String authenticationEndpointUrl) {
+        this.authenticationEndpointUrl = authenticationEndpointUrl;
+    }
+
+    public String getAccountsEndpointUrl() {
+        return accountsEndpointUrl;
+    }
+
+    public void setAccountsEndpointUrl(String accountsEndpointUrl) {
+        this.accountsEndpointUrl = accountsEndpointUrl;
+    }
 
     public String getClientAssertionType() {
         return clientAssertionType;
