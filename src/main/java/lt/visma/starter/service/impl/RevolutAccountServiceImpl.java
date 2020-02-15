@@ -1,6 +1,7 @@
 package lt.visma.starter.service.impl;
 
 import lt.visma.starter.configuration.RevolutConfigurationProperties;
+import lt.visma.starter.exception.ApiException;
 import lt.visma.starter.exception.GenericException;
 import lt.visma.starter.exception.RevolutApiException;
 import lt.visma.starter.model.revolut.RevolutAccessToken;
@@ -31,7 +32,7 @@ public class RevolutAccountServiceImpl implements RevolutAccountsService {
     }
 
     @Override
-    public List<RevolutAccount> getAccounts(RevolutAccessToken accessToken) {
+    public List<RevolutAccount> getAccounts(RevolutAccessToken accessToken) throws GenericException, ApiException {
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
         headers.add("Authorization", "Bearer " + accessToken.getAccessToken());
 

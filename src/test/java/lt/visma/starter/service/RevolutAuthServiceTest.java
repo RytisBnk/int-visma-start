@@ -1,6 +1,8 @@
 package lt.visma.starter.service;
 
 import lt.visma.starter.configuration.RevolutConfigurationProperties;
+import lt.visma.starter.exception.ApiException;
+import lt.visma.starter.exception.GenericException;
 import lt.visma.starter.model.revolut.RevolutAccessToken;
 import lt.visma.starter.service.impl.HttpRequestServiceImpl;
 import lt.visma.starter.service.impl.RovolutAuthServiceImpl;
@@ -25,7 +27,7 @@ public class RevolutAuthServiceTest {
     private RovolutAuthenticationService revolutAuthenticationService;
 
     @Test
-    public void testJwtValidity() {
+    public void testJwtValidity() throws GenericException {
         when(configurationProperties.getAud()).thenReturn("https://example.com");
         when(configurationProperties.getIss()).thenReturn("test.com");
         when(configurationProperties.getClientId()).thenReturn("AAAA");
@@ -36,7 +38,7 @@ public class RevolutAuthServiceTest {
     }
 
     @Test
-    public void testAccessTokenRefreshing() {
+    public void testAccessTokenRefreshing() throws GenericException, ApiException {
         when(configurationProperties.getClientId()).thenReturn("izrqy076tTOfJt0AbLdKUqc231xlMUbe5MNbdO9lRwM");
         when(configurationProperties.getClientAssertionType()).thenReturn("urn:ietf:params:oauth:client-assertion-type:jwt-bearer");
         when(configurationProperties.getRefreshToken()).thenReturn("oa_sand_iPcIWTe-OgYbOj-p48RN1Y7uGUrlc3y3c-3LIg0eRYs");

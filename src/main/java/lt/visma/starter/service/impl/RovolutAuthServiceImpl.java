@@ -3,6 +3,7 @@ package lt.visma.starter.service.impl;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lt.visma.starter.configuration.RevolutConfigurationProperties;
+import lt.visma.starter.exception.ApiException;
 import lt.visma.starter.exception.GenericException;
 import lt.visma.starter.exception.RevolutApiException;
 import lt.visma.starter.model.revolut.RevolutAccessToken;
@@ -39,7 +40,7 @@ public class RovolutAuthServiceImpl implements RovolutAuthenticationService {
     }
 
     @Override
-    public String getJWTToken() {
+    public String getJWTToken() throws GenericException {
         Map<String, Object> claims = new HashMap<>();
         claims.put("iss", configurationProperties.getIss());
         claims.put("aud", configurationProperties.getAud());
@@ -65,7 +66,7 @@ public class RovolutAuthServiceImpl implements RovolutAuthenticationService {
     }
 
     @Override
-    public RevolutAccessToken getAccessToken(String jwtToken) {
+    public RevolutAccessToken getAccessToken(String jwtToken) throws GenericException, ApiException {
         MultiValueMap<String, Object> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
         params.add("code", configurationProperties.getAuthorisationCode());
@@ -77,7 +78,7 @@ public class RovolutAuthServiceImpl implements RovolutAuthenticationService {
     }
 
     @Override
-    public RevolutAccessToken refreshAccessToken(String jwtToken) {
+    public RevolutAccessToken refreshAccessToken(String jwtToken) throws GenericException, ApiException {
         MultiValueMap<String, Object> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "refresh_token");
         params.add("refresh_token", configurationProperties.getRefreshToken());
@@ -88,7 +89,7 @@ public class RovolutAuthServiceImpl implements RovolutAuthenticationService {
         return sendAuthenticationRequest(params);
     }
 
-    private RevolutAccessToken sendAuthenticationRequest(Object requestBody) {
+    private RevolutAccessToken sendAuthenticationRequest(Object requestBody) throws GenericException, ApiException {
         ClientResponse response = httpRequestService.httpPostRequest(
                 configurationProperties.getApiURL(),
                 configurationProperties.getAuthenticationEndpointUrl(),

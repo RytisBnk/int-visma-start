@@ -31,7 +31,7 @@ public class SwedbankAccountsServiceImpl implements SwedbankAccountsService {
     }
 
     @Override
-    public ConsentResponse getUserConsent(String accessToken, String psuUserAgent, String psuIP) {
+    public ConsentResponse getUserConsent(String accessToken, String psuUserAgent, String psuIP) throws GenericException, SwedbankApiException {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("bic", configurationProperties.getBic());
         queryParams.add("app-id", configurationProperties.getClientId());
@@ -65,7 +65,8 @@ public class SwedbankAccountsServiceImpl implements SwedbankAccountsService {
     }
 
     @Override
-    public AccountsListResponse getUserAccounts(String consentId, String accessToken, String psuUserAgent, String psuIP, String psuID) {
+    public AccountsListResponse getUserAccounts(String consentId, String accessToken, String psuUserAgent, String psuIP, String psuID)
+            throws GenericException, SwedbankApiException {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("bic", configurationProperties.getBic());
         queryParams.add("app-id", configurationProperties.getClientId());

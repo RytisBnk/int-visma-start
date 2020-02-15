@@ -1,6 +1,7 @@
 package lt.visma.starter.service.impl;
 
 import lt.visma.starter.configuration.SwedbankConfigurationProperties;
+import lt.visma.starter.exception.ApiException;
 import lt.visma.starter.exception.GenericException;
 import lt.visma.starter.exception.SwedbankApiException;
 import lt.visma.starter.model.swedbank.*;
@@ -31,7 +32,7 @@ public class SwedbankAuthServiceImpl implements SwedBankAuthenticationService {
     }
 
     @Override
-    public TokenResponse getAccessToken(String psuID, String scaMethod) {
+    public TokenResponse getAccessToken(String psuID, String scaMethod) throws GenericException, ApiException {
         DecoupledAuthResponse authResponse = getAuthorizationID(psuID, scaMethod);
         AuthorizationCodeResponse authorizationCodeResponse =
                 getAuthorisationCode(authResponse.getAuthorizeId(), psuID);
@@ -56,7 +57,8 @@ public class SwedbankAuthServiceImpl implements SwedBankAuthenticationService {
         return response.bodyToMono(TokenResponse.class).block();
     }
 
-    private DecoupledAuthResponse getAuthorizationID(String psuID, String scaMethod) {
+    private DecoupledAuthResponse getAuthorizationID(String psuID, String scaMethod)
+            throws GenericException, ApiException {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("bic", configurationProperties.getBic());
 
@@ -86,7 +88,8 @@ public class SwedbankAuthServiceImpl implements SwedBankAuthenticationService {
         return response.bodyToMono(DecoupledAuthResponse.class).block();
     }
 
-    private AuthorizationCodeResponse getAuthorisationCode(String authoriseId, String psuID) {
+    private AuthorizationCodeResponse getAuthorisationCode(String authoriseId, String psuID)
+            throws GenericException, ApiException {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("bic", configurationProperties.getBic());
         queryParams.add("client_id", configurationProperties.getClientId());
@@ -107,7 +110,7 @@ public class SwedbankAuthServiceImpl implements SwedBankAuthenticationService {
         return response.bodyToMono(AuthorizationCodeResponse.class).block();
     }
 
-    private void checkResponseValidity(ClientResponse response) {
+    private void checkResponseValidity(ClientResponse response) throws GenericException, ApiException {
         if (response == null) {
             throw new GenericException();
         }

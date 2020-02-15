@@ -1,5 +1,7 @@
 package lt.visma.starter.controller;
 
+import lt.visma.starter.exception.ApiException;
+import lt.visma.starter.exception.GenericException;
 import lt.visma.starter.exception.RevolutApiException;
 import lt.visma.starter.model.revolut.RevolutAccessToken;
 import lt.visma.starter.model.revolut.RevolutAccount;
@@ -35,14 +37,14 @@ public class RevolutBankingController {
     }
 
     @GetMapping(value = "/accounts", produces = "application/json")
-    public ResponseEntity<List<RevolutAccount>> getListOfAccounts() {
+    public ResponseEntity<List<RevolutAccount>> getListOfAccounts() throws GenericException, ApiException {
         String jwtToken = rovolutAuthenticationService.getJWTToken();
         RevolutAccessToken accessToken = rovolutAuthenticationService.refreshAccessToken(jwtToken);
         return new ResponseEntity<>(revolutAccountsService.getAccounts(accessToken), HttpStatus.OK);
     }
 
     @GetMapping(value = "/jwt-token")
-    public ResponseEntity<String> getJwtToken() {
+    public ResponseEntity<String> getJwtToken() throws GenericException {
         return new ResponseEntity<>(rovolutAuthenticationService.getJWTToken(), HttpStatus.OK);
     }
 }
