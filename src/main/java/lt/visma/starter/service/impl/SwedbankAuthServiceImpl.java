@@ -6,8 +6,8 @@ import lt.visma.starter.exception.GenericException;
 import lt.visma.starter.exception.SwedbankApiException;
 import lt.visma.starter.model.swedbank.*;
 import lt.visma.starter.service.HttpRequestService;
-import lt.visma.starter.service.ServerTimeService;
 import lt.visma.starter.service.SwedBankAuthenticationService;
+import lt.visma.starter.util.TimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,13 +22,11 @@ import java.util.UUID;
 public class SwedbankAuthServiceImpl implements SwedBankAuthenticationService {
     private SwedbankConfigurationProperties configurationProperties;
     private HttpRequestService httpRequestService;
-    private ServerTimeService serverTimeService;
 
     @Autowired
-    public SwedbankAuthServiceImpl(SwedbankConfigurationProperties configurationProperties, HttpRequestService httpRequestService, ServerTimeService serverTimeService) {
+    public SwedbankAuthServiceImpl(SwedbankConfigurationProperties configurationProperties, HttpRequestService httpRequestService) {
         this.configurationProperties = configurationProperties;
         this.httpRequestService = httpRequestService;
-        this.serverTimeService = serverTimeService;
     }
 
     @Override
@@ -63,7 +61,7 @@ public class SwedbankAuthServiceImpl implements SwedBankAuthenticationService {
         queryParams.add("bic", configurationProperties.getBic());
 
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        headers.add("Date", serverTimeService.getCurrentServerTimeAsString());
+        headers.add("Date", TimeUtils.getCurrentServerTimeAsString());
         headers.add("X-Request-ID", UUID.randomUUID().toString());
         headers.add("PSU-ID", psuID);
 
@@ -95,7 +93,7 @@ public class SwedbankAuthServiceImpl implements SwedBankAuthenticationService {
         queryParams.add("client_id", configurationProperties.getClientId());
 
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        headers.add("Date", serverTimeService.getCurrentServerTimeAsString());
+        headers.add("Date", TimeUtils.getCurrentServerTimeAsString());
         headers.add("X-Request-ID", UUID.randomUUID().toString());
         headers.add("PSU-ID", psuID);
 
