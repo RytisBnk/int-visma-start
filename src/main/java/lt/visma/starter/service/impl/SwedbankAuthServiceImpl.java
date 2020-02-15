@@ -35,13 +35,9 @@ public class SwedbankAuthServiceImpl implements SwedBankAuthenticationService {
         AuthorizationCodeResponse authorizationCodeResponse =
                 getAuthorisationCode(authResponse.getAuthorizeId(), psuID);
 
-        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-        queryParams.add("client_id", configurationProperties.getClientId());
-        queryParams.add("client_secret", configurationProperties.getClientSecret());
-        queryParams.add("grant_type", "authorization_code");
-        queryParams.add("code", authorizationCodeResponse.getAuthorizationCode());
-        queryParams.add("redirect_uri", configurationProperties.getRedirectUrl());
-
+        MultiValueMap<String, String> queryParams =
+                getAccessTokenRequestQueryParams(authorizationCodeResponse.getAuthorizationCode())
+;
         ClientResponse response = httpRequestService.httpPostRequest(
                 configurationProperties.getApiUrl(),
                 configurationProperties.getTokenEndpointUrl(),
@@ -51,7 +47,7 @@ public class SwedbankAuthServiceImpl implements SwedBankAuthenticationService {
                 MediaType.APPLICATION_FORM_URLENCODED
         );
 
-        checkResponseValidity(response);
+        checkIfResponseValid(response);
         return response.bodyToMono(TokenResponse.class).block();
     }
 
@@ -60,10 +56,7 @@ public class SwedbankAuthServiceImpl implements SwedBankAuthenticationService {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("bic", configurationProperties.getBic());
 
-        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        headers.add("Date", TimeUtils.getCurrentServerTimeAsString());
-        headers.add("X-Request-ID", UUID.randomUUID().toString());
-        headers.add("PSU-ID", psuID);
+        MultiValueMap<String, String> headers = getStandardHeaders(psuID);
 
         DecoupledAuthRequest requestBody = new DecoupledAuthRequest(
                 scaMethod,
@@ -82,7 +75,7 @@ public class SwedbankAuthServiceImpl implements SwedBankAuthenticationService {
                 MediaType.APPLICATION_JSON
         );
 
-        checkResponseValidity(response);
+        checkIfResponseValid(response);
         return response.bodyToMono(DecoupledAuthResponse.class).block();
     }
 
@@ -92,10 +85,7 @@ public class SwedbankAuthServiceImpl implements SwedBankAuthenticationService {
         queryParams.add("bic", configurationProperties.getBic());
         queryParams.add("client_id", configurationProperties.getClientId());
 
-        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        headers.add("Date", TimeUtils.getCurrentServerTimeAsString());
-        headers.add("X-Request-ID", UUID.randomUUID().toString());
-        headers.add("PSU-ID", psuID);
+        MultiValueMap<String, String> headers = getStandardHeaders(psuID);
 
         ClientResponse response = httpRequestService.httpGetRequest(
                 configurationProperties.getApiUrl(),
@@ -104,11 +94,31 @@ public class SwedbankAuthServiceImpl implements SwedBankAuthenticationService {
                 headers
         );
 
-        checkResponseValidity(response);
+        checkIfResponseValid(response);
         return response.bodyToMono(AuthorizationCodeResponse.class).block();
     }
 
-    private void checkResponseValidity(ClientResponse response) throws GenericException, ApiException {
+    private MultiValueMap<String, String> getAccessTokenRequestQueryParams(String authorisationCode) {
+        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+        queryParams.add("client_id", configurationProperties.getClientId());
+        queryParams.add("client_secret", configurationProperties.getClientSecret());
+        queryParams.add("grant_type", "authorization_code");
+        queryParams.add("code", authorisationCode);
+        queryParams.add("redirect_uri", configurationProperties.getRedirectUrl());
+
+        return queryParams;
+    }
+
+    private MultiValueMap<String, String> getStandardHeaders(String psuID) {
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.add("Date", TimeUtils.getCurrentServerTimeAsString());
+        headers.add("X-Request-ID", UUID.randomUUID().toString());
+        headers.add("PSU-ID", psuID);
+
+        return headers;
+    }
+
+    private void checkIfResponseValid(ClientResponse response) throws GenericException, ApiException {
         if (response == null) {
             throw new GenericException();
         }

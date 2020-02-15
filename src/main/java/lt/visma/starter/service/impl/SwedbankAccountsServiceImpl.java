@@ -1,6 +1,7 @@
 package lt.visma.starter.service.impl;
 
 import lt.visma.starter.configuration.SwedbankConfigurationProperties;
+import lt.visma.starter.exception.ApiException;
 import lt.visma.starter.exception.GenericException;
 import lt.visma.starter.exception.SwedbankApiException;
 import lt.visma.starter.model.swedbank.*;
@@ -29,11 +30,26 @@ public class SwedbankAccountsServiceImpl implements SwedbankAccountsService {
 
     @Override
     public AccountsListResponse getUserAccounts(String consentId, String accessToken, String psuUserAgent, String psuIP, String psuID)
-            throws GenericException, SwedbankApiException {
+            throws GenericException, ApiException {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("bic", configurationProperties.getBic());
         queryParams.add("app-id", configurationProperties.getClientId());
 
+        MultiValueMap<String, String> headers = getRequiredHeaders(accessToken,consentId,psuID,psuUserAgent,psuIP);
+
+        ClientResponse response = httpRequestService.httpGetRequest(
+                configurationProperties.getApiUrl(),
+                configurationProperties.getAccountsEndpointUrl(),
+                queryParams,
+                headers
+        );
+
+        checkIfResponseValid(response);
+
+        return response.bodyToMono(AccountsListResponse.class).block();
+    }
+
+    private MultiValueMap<String, String> getRequiredHeaders(String accessToken, String consentId, String psuID, String psuUserAgent, String psuIP) {
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
         headers.add("PSU-ID", psuID);
         headers.add("Date", TimeUtils.getCurrentServerTimeAsString());
@@ -43,12 +59,10 @@ public class SwedbankAccountsServiceImpl implements SwedbankAccountsService {
         headers.add("PSU-IP-Address", psuIP);
         headers.add("Authorization", "Bearer " + accessToken);
 
-        ClientResponse response = httpRequestService.httpGetRequest(
-                configurationProperties.getApiUrl(),
-                configurationProperties.getAccountsEndpointUrl(),
-                queryParams,
-                headers
-        );
+        return headers;
+    }
+
+    private void checkIfResponseValid(ClientResponse response) throws GenericException, ApiException {
         if (response == null) {
             throw new GenericException();
         }
@@ -56,6 +70,5 @@ public class SwedbankAccountsServiceImpl implements SwedbankAccountsService {
             ResponseError responseError = response.bodyToMono(ResponseError.class).block();
             throw new SwedbankApiException(responseError);
         }
-        return response.bodyToMono(AccountsListResponse.class).block();
     }
 }

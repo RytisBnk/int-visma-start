@@ -67,26 +67,29 @@ public class RovolutAuthServiceImpl implements RovolutAuthenticationService {
 
     @Override
     public RevolutAccessToken getAccessToken(String jwtToken) throws GenericException, ApiException {
-        MultiValueMap<String, Object> params = new LinkedMultiValueMap<>();
+        MultiValueMap<String, Object> params = getStandardHeaders(jwtToken);
         params.add("grant_type", "authorization_code");
         params.add("code", configurationProperties.getAuthorisationCode());
-        params.add("client_id", configurationProperties.getClientId());
-        params.add("client_assertion_type", configurationProperties.getClientAssertionType());
-        params.add("client_assertion", jwtToken);
 
         return sendAuthenticationRequest(params);
     }
 
     @Override
     public RevolutAccessToken refreshAccessToken(String jwtToken) throws GenericException, ApiException {
-        MultiValueMap<String, Object> params = new LinkedMultiValueMap<>();
+        MultiValueMap<String, Object> params = getStandardHeaders(jwtToken);
         params.add("grant_type", "refresh_token");
         params.add("refresh_token", configurationProperties.getRefreshToken());
-        params.add("client_id", configurationProperties.getClientId());
-        params.add("client_assertion_type", configurationProperties.getClientAssertionType());
-        params.add("client_assertion", jwtToken);
 
         return sendAuthenticationRequest(params);
+    }
+
+    private MultiValueMap<String, Object> getStandardHeaders(String jwtToken) {
+        MultiValueMap<String, Object> standardHeaders = new LinkedMultiValueMap<>();
+        standardHeaders.add("client_id", configurationProperties.getClientId());
+        standardHeaders.add("client_assertion_type", configurationProperties.getClientAssertionType());
+        standardHeaders.add("client_assertion", jwtToken);
+
+        return standardHeaders;
     }
 
     private RevolutAccessToken sendAuthenticationRequest(Object requestBody) throws GenericException, ApiException {
