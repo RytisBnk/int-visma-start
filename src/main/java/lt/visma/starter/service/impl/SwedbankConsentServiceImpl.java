@@ -1,14 +1,19 @@
 package lt.visma.starter.service.impl;
 
 import lt.visma.starter.configuration.SwedbankConfigurationProperties;
+import lt.visma.starter.exception.ApiException;
 import lt.visma.starter.exception.GenericException;
 import lt.visma.starter.exception.SwedbankApiException;
-import lt.visma.starter.model.swedbank.*;
+import lt.visma.starter.model.swedbank.Access;
+import lt.visma.starter.model.swedbank.ConsentRequest;
+import lt.visma.starter.model.swedbank.ConsentResponse;
+import lt.visma.starter.model.swedbank.ResponseError;
+import lt.visma.starter.service.ConsentService;
 import lt.visma.starter.service.HttpRequestService;
-import lt.visma.starter.service.SwedbankAccountsService;
 import lt.visma.starter.util.TimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -17,45 +22,47 @@ import org.springframework.web.reactive.function.client.ClientResponse;
 import java.util.UUID;
 
 @Service
-public class SwedbankAccountsServiceImpl implements SwedbankAccountsService {
-    private SwedbankConfigurationProperties configurationProperties;
+public class SwedbankConsentServiceImpl implements ConsentService {
     private HttpRequestService httpRequestService;
+    private SwedbankConfigurationProperties configurationProperties;
 
     @Autowired
-    public SwedbankAccountsServiceImpl(SwedbankConfigurationProperties configurationProperties, HttpRequestService httpRequestService) {
-        this.configurationProperties = configurationProperties;
+    public SwedbankConsentServiceImpl(HttpRequestService httpRequestService, SwedbankConfigurationProperties configurationProperties) {
         this.httpRequestService = httpRequestService;
+        this.configurationProperties = configurationProperties;
     }
 
     @Override
-    public AccountsListResponse getUserAccounts(String consentId, String accessToken, String psuUserAgent, String psuIP, String psuID)
-            throws GenericException, SwedbankApiException {
+    public ConsentResponse createUserConsent(String accessToken, String psuUserAgent, String psuIP) throws GenericException, ApiException {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("bic", configurationProperties.getBic());
         queryParams.add("app-id", configurationProperties.getClientId());
 
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        headers.add("PSU-ID", psuID);
+        headers.add("Authorization", "Bearer " + accessToken);
         headers.add("Date", TimeUtils.getCurrentServerTimeAsString());
         headers.add("X-Request-ID", UUID.randomUUID().toString());
-        headers.add("Consent-ID", consentId);
-        headers.add("PSU-User-Agent", psuUserAgent);
         headers.add("PSU-IP-Address", psuIP);
-        headers.add("Authorization", "Bearer " + accessToken);
+        headers.add("PSU-User-Agent", psuUserAgent);
 
-        ClientResponse response = httpRequestService.httpGetRequest(
+        Access access = new Access(null, "allAccounts", null, null);
+        ConsentRequest requestBody = new ConsentRequest(access,
+                false,0,false, "2020-04-10");
+
+        ClientResponse response = httpRequestService.httpPostRequest(
                 configurationProperties.getApiUrl(),
-                configurationProperties.getAccountsEndpointUrl(),
+                configurationProperties.getConsentsEndpointUrl(),
                 queryParams,
-                headers
+                headers,
+                requestBody,
+                MediaType.APPLICATION_JSON
         );
         if (response == null) {
             throw new GenericException();
         }
         if (response.statusCode() == HttpStatus.BAD_REQUEST) {
-            ResponseError responseError = response.bodyToMono(ResponseError.class).block();
-            throw new SwedbankApiException(responseError);
+            throw new SwedbankApiException(response.bodyToMono(ResponseError.class).block());
         }
-        return response.bodyToMono(AccountsListResponse.class).block();
+        return response.bodyToMono(ConsentResponse.class).block();
     }
 }

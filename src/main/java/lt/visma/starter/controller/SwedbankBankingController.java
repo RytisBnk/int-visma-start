@@ -4,6 +4,7 @@ import lt.visma.starter.exception.ApiException;
 import lt.visma.starter.exception.GenericException;
 import lt.visma.starter.exception.SwedbankApiException;
 import lt.visma.starter.model.swedbank.*;
+import lt.visma.starter.service.ConsentService;
 import lt.visma.starter.service.SwedBankAuthenticationService;
 import lt.visma.starter.service.SwedbankAccountsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +22,15 @@ public class SwedbankBankingController {
 
     private SwedBankAuthenticationService swedBankAuthenticationService;
     private SwedbankAccountsService swedbankAccountsService;
+    private ConsentService consentService;
 
     @Autowired
-    public SwedbankBankingController(SwedBankAuthenticationService swedBankAuthenticationService, SwedbankAccountsService swedbankAccountsService) {
+    public SwedbankBankingController(SwedBankAuthenticationService swedBankAuthenticationService,
+                                     SwedbankAccountsService swedbankAccountsService,
+                                     ConsentService consentService) {
         this.swedBankAuthenticationService = swedBankAuthenticationService;
         this.swedbankAccountsService = swedbankAccountsService;
+        this.consentService = consentService;
     }
 
     @GetMapping(value = "/access-token")
@@ -41,8 +46,8 @@ public class SwedbankBankingController {
                                                  @RequestHeader("PSU-ID") String psuID,
                                                  @RequestHeader("Sca-Method") String scaMethod) throws GenericException, ApiException {
         TokenResponse tokenResponse = swedBankAuthenticationService.getAccessToken(psuID, scaMethod);
-        ConsentResponse consentResponse = swedbankAccountsService
-                .getUserConsent(tokenResponse.getAccessToken(), psuUserAgent, psuIPAddress);
+        ConsentResponse consentResponse = consentService
+                .createUserConsent(tokenResponse.getAccessToken(), psuUserAgent, psuIPAddress);
         return new ResponseEntity<>(consentResponse, HttpStatus.OK);
     }
 
