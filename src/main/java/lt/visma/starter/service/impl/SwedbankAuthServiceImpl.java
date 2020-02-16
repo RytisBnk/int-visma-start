@@ -41,8 +41,8 @@ public class SwedbankAuthServiceImpl implements AuthenticationService {
                 getAuthorisationCode(authResponse.getAuthorizeId(), parameters.get("psuID"));
 
         MultiValueMap<String, String> queryParams =
-                getAccessTokenRequestQueryParams(authorizationCodeResponse.getAuthorizationCode())
-;
+                getAccessTokenRequestQueryParams(authorizationCodeResponse.getAuthorizationCode());
+      
         ClientResponse response = httpRequestService.httpPostRequest(
                 configurationProperties.getApiUrl(),
                 configurationProperties.getTokenEndpointUrl(),
@@ -91,10 +91,6 @@ public class SwedbankAuthServiceImpl implements AuthenticationService {
 
     private AuthorizationCodeResponse getAuthorisationCode(String authoriseId, String psuID)
             throws GenericException, ApiException {
-        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-        queryParams.add("bic", configurationProperties.getBic());
-        queryParams.add("client_id", configurationProperties.getClientId());
-
         MultiValueMap<String, String> headers = getStandardHeaders(psuID);
 
         ClientResponse response = httpRequestService.httpGetRequest(

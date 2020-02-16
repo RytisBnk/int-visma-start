@@ -9,6 +9,7 @@ import lt.visma.starter.model.revolut.RevolutAccount;
 import lt.visma.starter.model.revolut.ResponseError;
 import lt.visma.starter.service.BankingAccountsService;
 import lt.visma.starter.service.HttpRequestService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,6 @@ public class RevolutAccountServiceImpl implements BankingAccountsService {
     private HttpRequestService httpRequestService;
 
     private String[] supportedBanks = new String[] {"REVOGB21"};
-
     @Autowired
     public RevolutAccountServiceImpl(RevolutConfigurationProperties configurationProperties, HttpRequestService httpRequestService) {
         this.configurationProperties = configurationProperties;
@@ -58,7 +58,7 @@ public class RevolutAccountServiceImpl implements BankingAccountsService {
             throw new RevolutApiException(apiError);
         }
     }
-
+  
     @Override
     public boolean supportsBank(String bankCode) {
         return Arrays.asList(supportedBanks).contains(bankCode);
