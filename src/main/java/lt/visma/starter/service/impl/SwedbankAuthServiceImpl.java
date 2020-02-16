@@ -5,8 +5,8 @@ import lt.visma.starter.exception.ApiException;
 import lt.visma.starter.exception.GenericException;
 import lt.visma.starter.exception.SwedbankApiException;
 import lt.visma.starter.model.swedbank.*;
+import lt.visma.starter.service.AuthenticationService;
 import lt.visma.starter.service.HttpRequestService;
-import lt.visma.starter.service.SwedBankAuthenticationService;
 import lt.visma.starter.util.TimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,12 +16,17 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.ClientResponse;
 
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
-public class SwedbankAuthServiceImpl implements SwedBankAuthenticationService {
+public class SwedbankAuthServiceImpl implements AuthenticationService {
     private SwedbankConfigurationProperties configurationProperties;
     private HttpRequestService httpRequestService;
+
+    private String[] supportedBanks = new String[] {"HABALT22", "SANDLT22"};
 
     @Autowired
     public SwedbankAuthServiceImpl(SwedbankConfigurationProperties configurationProperties, HttpRequestService httpRequestService) {
@@ -30,10 +35,10 @@ public class SwedbankAuthServiceImpl implements SwedBankAuthenticationService {
     }
 
     @Override
-    public TokenResponse getAccessToken(String psuID, String scaMethod) throws GenericException, ApiException {
-        DecoupledAuthResponse authResponse = getAuthorizationID(psuID, scaMethod);
+    public String getAccessToken(Map<String, String> parameters) throws GenericException, ApiException {
+        DecoupledAuthResponse authResponse = getAuthorizationID(parameters.get("psuID"), parameters.get("scaMethod"));
         AuthorizationCodeResponse authorizationCodeResponse =
-                getAuthorisationCode(authResponse.getAuthorizeId(), psuID);
+                getAuthorisationCode(authResponse.getAuthorizeId(), parameters.get("psuID"));
 
         MultiValueMap<String, String> queryParams =
                 getAccessTokenRequestQueryParams(authorizationCodeResponse.getAuthorizationCode())
@@ -48,7 +53,12 @@ public class SwedbankAuthServiceImpl implements SwedBankAuthenticationService {
         );
 
         checkIfResponseValid(response);
-        return response.bodyToMono(TokenResponse.class).block();
+        return Objects.requireNonNull(response.bodyToMono(TokenResponse.class).block()).getAccessToken();
+    }
+
+    @Override
+    public boolean supportsBank(String bankCode) {
+        return Arrays.asList(supportedBanks).contains(bankCode);
     }
 
     private DecoupledAuthResponse getAuthorizationID(String psuID, String scaMethod)

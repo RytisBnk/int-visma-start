@@ -3,10 +3,12 @@ package lt.visma.starter.service.impl;
 import lt.visma.starter.configuration.SwedbankConfigurationProperties;
 import lt.visma.starter.exception.ApiException;
 import lt.visma.starter.exception.GenericException;
+import lt.visma.starter.exception.ParameterNotProvidedException;
 import lt.visma.starter.exception.SwedbankApiException;
+import lt.visma.starter.model.BankingAccount;
 import lt.visma.starter.model.swedbank.*;
+import lt.visma.starter.service.BankingAccountsService;
 import lt.visma.starter.service.HttpRequestService;
-import lt.visma.starter.service.SwedbankAccountsService;
 import lt.visma.starter.util.TimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,12 +17,17 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.ClientResponse;
 
-import java.util.UUID;
+import java.util.*;
 
 @Service
-public class SwedbankAccountsServiceImpl implements SwedbankAccountsService {
+public class SwedbankAccountsServiceImpl implements BankingAccountsService {
     private SwedbankConfigurationProperties configurationProperties;
     private HttpRequestService httpRequestService;
+
+    private String[] supportedBanks = new String[] {"SANDLT22", "HABALT22"};
+    private String[] requiredParameters = new String[] {
+            "psuID", "psuIPAddress", "psuUserAgent", "consentID"
+    };
 
     @Autowired
     public SwedbankAccountsServiceImpl(SwedbankConfigurationProperties configurationProperties, HttpRequestService httpRequestService) {
@@ -29,13 +36,13 @@ public class SwedbankAccountsServiceImpl implements SwedbankAccountsService {
     }
 
     @Override
-    public AccountsListResponse getUserAccounts(String consentId, String accessToken, String psuUserAgent, String psuIP, String psuID)
+    public List<BankingAccount> getBankingAccounts(String accessToken, Map<String, String> parameters)
             throws GenericException, ApiException {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("bic", configurationProperties.getBic());
         queryParams.add("app-id", configurationProperties.getClientId());
 
-        MultiValueMap<String, String> headers = getRequiredHeaders(accessToken,consentId,psuID,psuUserAgent,psuIP);
+        MultiValueMap<String, String> headers = getRequiredHeaders(accessToken,parameters);
 
         ClientResponse response = httpRequestService.httpGetRequest(
                 configurationProperties.getApiUrl(),
@@ -45,18 +52,27 @@ public class SwedbankAccountsServiceImpl implements SwedbankAccountsService {
         );
 
         checkIfResponseValid(response);
-
-        return response.bodyToMono(AccountsListResponse.class).block();
+        AccountsListResponse accountsListResponse = response.bodyToMono(AccountsListResponse.class).block();
+        if (accountsListResponse == null) {
+            throw new GenericException();
+        }
+        List<? extends BankingAccount> accounts = accountsListResponse.getAccounts();
+        return (List<BankingAccount>) accounts;
     }
 
-    private MultiValueMap<String, String> getRequiredHeaders(String accessToken, String consentId, String psuID, String psuUserAgent, String psuIP) {
+    @Override
+    public boolean supportsBank(String bankCode) {
+        return Arrays.asList(supportedBanks).contains(bankCode);
+    }
+
+    private MultiValueMap<String, String> getRequiredHeaders(String accessToken, Map<String, String> parameters) {
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        headers.add("PSU-ID", psuID);
+        headers.add("PSU-ID", parameters.get("psuID"));
         headers.add("Date", TimeUtils.getCurrentServerTimeAsString());
         headers.add("X-Request-ID", UUID.randomUUID().toString());
-        headers.add("Consent-ID", consentId);
-        headers.add("PSU-User-Agent", psuUserAgent);
-        headers.add("PSU-IP-Address", psuIP);
+        headers.add("Consent-ID", parameters.get("consentID"));
+        headers.add("PSU-User-Agent", parameters.get("psuUserAgent"));
+        headers.add("PSU-IP-Address", parameters.get("psuIPAddress"));
         headers.add("Authorization", "Bearer " + accessToken);
 
         return headers;

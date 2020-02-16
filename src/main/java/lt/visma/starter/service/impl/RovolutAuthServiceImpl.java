@@ -8,8 +8,8 @@ import lt.visma.starter.exception.GenericException;
 import lt.visma.starter.exception.RevolutApiException;
 import lt.visma.starter.model.revolut.RevolutAccessToken;
 import lt.visma.starter.model.revolut.ResponseError;
+import lt.visma.starter.service.AuthenticationService;
 import lt.visma.starter.service.HttpRequestService;
-import lt.visma.starter.service.RovolutAuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,13 +25,16 @@ import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.spec.*;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class RovolutAuthServiceImpl implements RovolutAuthenticationService {
+public class RovolutAuthServiceImpl implements AuthenticationService {
     private RevolutConfigurationProperties configurationProperties;
     private HttpRequestService httpRequestService;
+
+    private String[] supportedBanks = new String[] {"REVOGB21"};
 
     @Autowired
     public RovolutAuthServiceImpl(RevolutConfigurationProperties configurationProperties, HttpRequestService httpRequestService) {
@@ -40,6 +43,19 @@ public class RovolutAuthServiceImpl implements RovolutAuthenticationService {
     }
 
     @Override
+    public String getAccessToken(Map<String, String> authenticationParams) throws GenericException, ApiException {
+        MultiValueMap<String, Object> params = getStandardHeaders(getJWTToken());
+        params.add("grant_type", "refresh_token");
+        params.add("refresh_token", configurationProperties.getRefreshToken());
+
+        return sendAuthenticationRequest(params).getAccessToken();
+    }
+
+    @Override
+    public boolean supportsBank(String bankCode) {
+        return Arrays.asList(supportedBanks).contains(bankCode);
+    }
+
     public String getJWTToken() throws GenericException {
         Map<String, Object> claims = new HashMap<>();
         claims.put("iss", configurationProperties.getIss());
@@ -63,24 +79,6 @@ public class RovolutAuthServiceImpl implements RovolutAuthenticationService {
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
             throw new GenericException();
         }
-    }
-
-    @Override
-    public RevolutAccessToken getAccessToken(String jwtToken) throws GenericException, ApiException {
-        MultiValueMap<String, Object> params = getStandardHeaders(jwtToken);
-        params.add("grant_type", "authorization_code");
-        params.add("code", configurationProperties.getAuthorisationCode());
-
-        return sendAuthenticationRequest(params);
-    }
-
-    @Override
-    public RevolutAccessToken refreshAccessToken(String jwtToken) throws GenericException, ApiException {
-        MultiValueMap<String, Object> params = getStandardHeaders(jwtToken);
-        params.add("grant_type", "refresh_token");
-        params.add("refresh_token", configurationProperties.getRefreshToken());
-
-        return sendAuthenticationRequest(params);
     }
 
     private MultiValueMap<String, Object> getStandardHeaders(String jwtToken) {

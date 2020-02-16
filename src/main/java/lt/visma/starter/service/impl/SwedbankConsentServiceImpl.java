@@ -19,6 +19,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.ClientResponse;
 
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -33,7 +34,7 @@ public class SwedbankConsentServiceImpl implements ConsentService {
     }
 
     @Override
-    public ConsentResponse createUserConsent(String accessToken, String psuUserAgent, String psuIP) throws GenericException, ApiException {
+    public ConsentResponse createUserConsent(String accessToken, Map<String, String> params) throws GenericException, ApiException {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("bic", configurationProperties.getBic());
         queryParams.add("app-id", configurationProperties.getClientId());
@@ -42,8 +43,8 @@ public class SwedbankConsentServiceImpl implements ConsentService {
         headers.add("Authorization", "Bearer " + accessToken);
         headers.add("Date", TimeUtils.getCurrentServerTimeAsString());
         headers.add("X-Request-ID", UUID.randomUUID().toString());
-        headers.add("PSU-IP-Address", psuIP);
-        headers.add("PSU-User-Agent", psuUserAgent);
+        headers.add("PSU-IP-Address", params.get("psuIPAddress"));
+        headers.add("PSU-User-Agent", params.get("psuUserAgent"));
 
         Access access = new Access(null, "allAccounts", null, null);
         ConsentRequest requestBody = new ConsentRequest(access,

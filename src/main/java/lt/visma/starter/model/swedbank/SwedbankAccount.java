@@ -1,9 +1,10 @@
 package lt.visma.starter.model.swedbank;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lt.visma.starter.model.BankingAccount;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class SwedbankAccount {
+public class SwedbankAccount implements BankingAccount {
     private String cashAccountType;
     private String currency;
     private String iban;
