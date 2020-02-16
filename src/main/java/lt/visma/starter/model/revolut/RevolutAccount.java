@@ -1,8 +1,9 @@
 package lt.visma.starter.model.revolut;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
+import lt.visma.starter.model.BankingAccount;
 
-public class RevolutAccount {
+public class RevolutAccount implements BankingAccount {
     private String id;
     private String name;
     private double balance;

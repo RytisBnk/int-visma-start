@@ -1,13 +1,14 @@
 package lt.visma.starter.service.impl;
 
 import lt.visma.starter.configuration.RevolutConfigurationProperties;
+import lt.visma.starter.exception.ApiException;
 import lt.visma.starter.exception.GenericException;
 import lt.visma.starter.exception.RevolutApiException;
-import lt.visma.starter.model.revolut.RevolutAccessToken;
+import lt.visma.starter.model.BankingAccount;
 import lt.visma.starter.model.revolut.RevolutAccount;
 import lt.visma.starter.model.revolut.ResponseError;
+import lt.visma.starter.service.BankingAccountsService;
 import lt.visma.starter.service.HttpRequestService;
-import lt.visma.starter.service.RevolutAccountsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -18,11 +19,14 @@ import org.springframework.web.reactive.function.client.ClientResponse;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @Service
-public class RevolutAccountServiceImpl implements RevolutAccountsService {
+public class RevolutAccountServiceImpl implements BankingAccountsService {
     private RevolutConfigurationProperties configurationProperties;
     private HttpRequestService httpRequestService;
+
+    private String[] supportedBanks = new String[] {"REVOGB21"};
 
     @Autowired
     public RevolutAccountServiceImpl(RevolutConfigurationProperties configurationProperties, HttpRequestService httpRequestService) {
@@ -31,9 +35,9 @@ public class RevolutAccountServiceImpl implements RevolutAccountsService {
     }
 
     @Override
-    public List<RevolutAccount> getAccounts(RevolutAccessToken accessToken) {
+    public List<BankingAccount> getBankingAccounts(String accessToken, Map<String, String> parameters) throws GenericException, ApiException {
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        headers.add("Authorization", "Bearer " + accessToken.getAccessToken());
+        headers.add("Authorization", "Bearer " + accessToken);
 
         ClientResponse response = httpRequestService.httpGetRequest(
                 configurationProperties.getApiURL(),
@@ -53,5 +57,10 @@ public class RevolutAccountServiceImpl implements RevolutAccountsService {
             ResponseError apiError = response.bodyToMono(ResponseError.class).block();
             throw new RevolutApiException(apiError);
         }
+    }
+
+    @Override
+    public boolean supportsBank(String bankCode) {
+        return Arrays.asList(supportedBanks).contains(bankCode);
     }
 }
