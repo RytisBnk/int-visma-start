@@ -3,7 +3,7 @@ package lt.visma.starter.model.revolut;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lt.visma.starter.model.PaymentRequest;
 
-public class RevolutPaymentRequest extends PaymentRequest {
+public class RevolutPaymentRequest implements PaymentRequest {
     @JsonProperty("request_id")
     private String requestId;
     @JsonProperty("account_id")

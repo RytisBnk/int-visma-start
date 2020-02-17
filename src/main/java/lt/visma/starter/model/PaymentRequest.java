@@ -8,5 +8,5 @@ import lt.visma.starter.model.revolut.RevolutPaymentRequest;
 @JsonSubTypes({
         @JsonSubTypes.Type(value = RevolutPaymentRequest.class, name = "Revolut")
 })
-public abstract class PaymentRequest {
+public interface PaymentRequest {
 }

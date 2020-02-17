@@ -6,7 +6,7 @@ import lt.visma.starter.exception.GenericException;
 import lt.visma.starter.exception.RevolutApiException;
 import lt.visma.starter.model.BankingAccount;
 import lt.visma.starter.model.revolut.RevolutAccount;
-import lt.visma.starter.model.revolut.ResponseError;
+import lt.visma.starter.model.revolut.RevolutResponseError;
 import lt.visma.starter.service.BankingAccountsService;
 import lt.visma.starter.service.HttpRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +54,7 @@ public class RevolutAccountServiceImpl implements BankingAccountsService {
             return accounts != null ? Arrays.asList(accounts) : new ArrayList<>();
         }
         else {
-            ResponseError apiError = response.bodyToMono(ResponseError.class).block();
+            RevolutResponseError apiError = response.bodyToMono(RevolutResponseError.class).block();
             throw new RevolutApiException(apiError);
         }
     }

@@ -1,8 +1,9 @@
 package lt.visma.starter.model.revolut;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
+import lt.visma.starter.model.ResponseError;
 
-public class ResponseError {
+public class RevolutResponseError implements ResponseError {
     private String error;
     @JsonAlias({"error_description"})
     private String errorDescription;

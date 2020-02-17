@@ -1,6 +1,7 @@
 package lt.visma.starter.exception;
 
-import lt.visma.starter.model.revolut.ResponseError;
+import lt.visma.starter.model.ResponseError;
+import lt.visma.starter.model.revolut.RevolutResponseError;
 
 public class RevolutApiException extends ApiException {
     private final ResponseError responseError;

@@ -1,5 +1,7 @@
 package lt.visma.starter.model.revolut;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum PaymentState {
     PENDING("pending"),
     COMPLETED("completed"),
@@ -12,6 +14,7 @@ public enum PaymentState {
         this.text = text;
     }
 
+    @JsonValue
     public String getText() {
         return text;
     }

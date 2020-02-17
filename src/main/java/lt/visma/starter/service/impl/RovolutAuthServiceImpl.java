@@ -7,7 +7,7 @@ import lt.visma.starter.exception.ApiException;
 import lt.visma.starter.exception.GenericException;
 import lt.visma.starter.exception.RevolutApiException;
 import lt.visma.starter.model.revolut.RevolutAccessToken;
-import lt.visma.starter.model.revolut.ResponseError;
+import lt.visma.starter.model.revolut.RevolutResponseError;
 import lt.visma.starter.service.AuthenticationService;
 import lt.visma.starter.service.HttpRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,7 +107,7 @@ public class RovolutAuthServiceImpl implements AuthenticationService {
             return response.bodyToMono(RevolutAccessToken.class).block();
         }
         else {
-            ResponseError apiError = response.bodyToMono(ResponseError.class).block();
+            RevolutResponseError apiError = response.bodyToMono(RevolutResponseError.class).block();
             throw new RevolutApiException(apiError);
         }
     }

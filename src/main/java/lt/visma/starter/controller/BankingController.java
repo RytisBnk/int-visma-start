@@ -2,7 +2,6 @@ package lt.visma.starter.controller;
 
 import lt.visma.starter.exception.*;
 import lt.visma.starter.model.BankingAccount;
-import lt.visma.starter.model.PaymentRequest;
 import lt.visma.starter.model.PaymentResponse;
 import lt.visma.starter.model.revolut.RevolutPaymentRequest;
 import lt.visma.starter.model.swedbank.ConsentResponse;
@@ -73,7 +72,7 @@ public class BankingController {
     }
 
     @PostMapping(value = "/payments", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> createPayment(@RequestParam("bankCode") String bankCode,
+    public ResponseEntity<PaymentResponse> createPayment(@RequestParam("bankCode") String bankCode,
                                                          @RequestBody RevolutPaymentRequest paymentRequest)
             throws BankNotSupportedException, GenericException, ApiException {
         AuthenticationService authenticationService = authenticationServiceFactory.getAuthenticationService(bankCode);
