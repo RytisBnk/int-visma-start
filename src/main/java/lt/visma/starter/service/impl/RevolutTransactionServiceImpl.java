@@ -12,6 +12,7 @@ import lt.visma.starter.model.revolut.RevolutPaymentResponse;
 import lt.visma.starter.model.revolut.RevolutTransaction;
 import lt.visma.starter.service.HttpRequestService;
 import lt.visma.starter.service.TransactionService;
+import lt.visma.starter.util.HTTPUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -42,7 +43,7 @@ public class RevolutTransactionServiceImpl implements TransactionService {
         queryParams.add("to", to);
 
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        headers.add("Authorization", "Bearer " + accessToken);
+        HTTPUtils.addAuthorizationHeader(headers, accessToken);
 
         ClientResponse response = httpRequestService.httpGetRequest(
                 configurationProperties.getApiURL(),
@@ -62,7 +63,7 @@ public class RevolutTransactionServiceImpl implements TransactionService {
     @Override
     public Transaction getTransactionById(String accessToken, String transactionId) throws GenericException, ApiException {
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        headers.add("Authorization", "Bearer " + accessToken);
+        HTTPUtils.addAuthorizationHeader(headers, accessToken);
 
         ClientResponse response = httpRequestService.httpGetRequest(
                 configurationProperties.getApiURL(),
@@ -83,7 +84,7 @@ public class RevolutTransactionServiceImpl implements TransactionService {
         RevolutPaymentResponse revolutPaymentResponse = (RevolutPaymentResponse) paymentResponse;
 
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        headers.add("Authorization", "Bearer " + accessToken);
+        HTTPUtils.addAuthorizationHeader(headers, accessToken);
 
         ClientResponse response = httpRequestService.httpGetRequest(
                 configurationProperties.getApiURL(),

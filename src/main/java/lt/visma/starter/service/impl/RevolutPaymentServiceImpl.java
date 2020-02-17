@@ -12,6 +12,7 @@ import lt.visma.starter.model.revolut.RevolutResponseError;
 import lt.visma.starter.model.revolut.RevolutPaymentRequest;
 import lt.visma.starter.service.HttpRequestService;
 import lt.visma.starter.service.PaymentService;
+import lt.visma.starter.util.HTTPUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -43,7 +44,7 @@ public class RevolutPaymentServiceImpl implements PaymentService {
         revolutPaymentRequest.setRequestId(UUID.randomUUID().toString());
 
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        headers.add("Authorization", "Bearer " + accessToken);
+        HTTPUtils.addAuthorizationHeader(headers, accessToken);
 
         ClientResponse response = httpRequestService.httpPostRequest(
                 configurationProperties.getApiURL(),
