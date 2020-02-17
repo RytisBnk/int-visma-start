@@ -77,27 +77,6 @@ public class RevolutTransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public Transaction getPaymentTransaction(String accessToken, PaymentResponse paymentResponse) throws GenericException, ApiException {
-        if (! (paymentResponse instanceof RevolutPaymentResponse)) {
-            throw new GenericException();
-        }
-        RevolutPaymentResponse revolutPaymentResponse = (RevolutPaymentResponse) paymentResponse;
-
-        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        HTTPUtils.addAuthorizationHeader(headers, accessToken);
-
-        ClientResponse response = httpRequestService.httpGetRequest(
-                configurationProperties.getApiURL(),
-                "/transaction/" + revolutPaymentResponse.getId(),
-                null,
-                headers
-        );
-
-        checkIfResponseValid(response);
-        return response.bodyToMono(RevolutTransaction.class).block();
-    }
-
-    @Override
     public boolean supportsBank(String bankCode) {
         return Arrays.asList(supportedBanks).contains(bankCode);
     }
