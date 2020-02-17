@@ -9,6 +9,7 @@ import lt.visma.starter.model.revolut.RevolutAccount;
 import lt.visma.starter.model.revolut.RevolutResponseError;
 import lt.visma.starter.service.BankingAccountsService;
 import lt.visma.starter.service.HttpRequestService;
+import lt.visma.starter.util.HTTPUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -37,7 +38,7 @@ public class RevolutAccountServiceImpl implements BankingAccountsService {
     @Override
     public List<BankingAccount> getBankingAccounts(String accessToken, Map<String, String> parameters) throws GenericException, ApiException {
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        headers.add("Authorization", "Bearer " + accessToken);
+        HTTPUtils.addAuthorizationHeader(headers, accessToken);
 
         ClientResponse response = httpRequestService.httpGetRequest(
                 configurationProperties.getApiURL(),

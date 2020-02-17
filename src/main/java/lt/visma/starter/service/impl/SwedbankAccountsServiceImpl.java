@@ -9,6 +9,7 @@ import lt.visma.starter.model.BankingAccount;
 import lt.visma.starter.model.swedbank.*;
 import lt.visma.starter.service.BankingAccountsService;
 import lt.visma.starter.service.HttpRequestService;
+import lt.visma.starter.util.HTTPUtils;
 import lt.visma.starter.util.TimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -73,7 +74,7 @@ public class SwedbankAccountsServiceImpl implements BankingAccountsService {
         headers.add("Consent-ID", parameters.get("consentID"));
         headers.add("PSU-User-Agent", parameters.get("psuUserAgent"));
         headers.add("PSU-IP-Address", parameters.get("psuIPAddress"));
-        headers.add("Authorization", "Bearer " + accessToken);
+        HTTPUtils.addAuthorizationHeader(headers, accessToken);
 
         return headers;
     }

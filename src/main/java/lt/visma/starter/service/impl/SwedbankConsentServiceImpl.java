@@ -10,6 +10,7 @@ import lt.visma.starter.model.swedbank.ConsentResponse;
 import lt.visma.starter.model.swedbank.ResponseError;
 import lt.visma.starter.service.ConsentService;
 import lt.visma.starter.service.HttpRequestService;
+import lt.visma.starter.util.HTTPUtils;
 import lt.visma.starter.util.TimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,7 +41,7 @@ public class SwedbankConsentServiceImpl implements ConsentService {
         queryParams.add("app-id", configurationProperties.getClientId());
 
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        headers.add("Authorization", "Bearer " + accessToken);
+        HTTPUtils.addAuthorizationHeader(headers, accessToken);
         headers.add("Date", TimeUtils.getCurrentServerTimeAsString());
         headers.add("X-Request-ID", UUID.randomUUID().toString());
         headers.add("PSU-IP-Address", params.get("psuIPAddress"));

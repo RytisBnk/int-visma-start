@@ -6,7 +6,8 @@ public enum PaymentState {
     PENDING("pending"),
     COMPLETED("completed"),
     DECLINED("declined"),
-    FAILED("failed");
+    FAILED("failed"),
+    REVERTED("reverted");
 
     private String text;
 

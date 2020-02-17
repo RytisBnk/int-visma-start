@@ -3,15 +3,14 @@ package lt.visma.starter.controller;
 import lt.visma.starter.exception.*;
 import lt.visma.starter.model.BankingAccount;
 import lt.visma.starter.model.PaymentResponse;
+import lt.visma.starter.model.Transaction;
 import lt.visma.starter.model.revolut.RevolutPaymentRequest;
 import lt.visma.starter.model.swedbank.ConsentResponse;
-import lt.visma.starter.service.AuthenticationService;
-import lt.visma.starter.service.BankingAccountsService;
-import lt.visma.starter.service.ConsentService;
-import lt.visma.starter.service.PaymentService;
+import lt.visma.starter.service.*;
 import lt.visma.starter.service.factory.AuthenticationServiceFactory;
 import lt.visma.starter.service.factory.BankingAccountsServiceFactory;
 import lt.visma.starter.service.factory.PaymentServiceFactory;
+import lt.visma.starter.service.factory.TransactionServiceFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -29,6 +28,7 @@ public class BankingController {
     private AuthenticationServiceFactory authenticationServiceFactory;
     private ConsentService consentService;
     private PaymentServiceFactory paymentServiceFactory;
+    private TransactionServiceFactory transactionServiceFactory;
 
     @ExceptionHandler({SwedbankApiException.class})
     public ResponseEntity<Object> handleSwedbankErrors(SwedbankApiException exc) {
@@ -44,11 +44,13 @@ public class BankingController {
     public BankingController(BankingAccountsServiceFactory bankingAccountsServiceFactory,
                              AuthenticationServiceFactory authenticationServiceFactory,
                              ConsentService consentService,
-                             PaymentServiceFactory paymentServiceFactory) {
+                             PaymentServiceFactory paymentServiceFactory,
+                             TransactionServiceFactory transactionServiceFactory) {
         this.bankingAccountsServiceFactory = bankingAccountsServiceFactory;
         this.authenticationServiceFactory = authenticationServiceFactory;
         this.consentService = consentService;
         this.paymentServiceFactory = paymentServiceFactory;
+        this.transactionServiceFactory = transactionServiceFactory;
     }
 
     @PostMapping("/accounts")
@@ -72,12 +74,35 @@ public class BankingController {
     }
 
     @PostMapping(value = "/payments", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PaymentResponse> createPayment(@RequestParam("bankCode") String bankCode,
+    public ResponseEntity<Transaction> createPayment(@RequestParam("bankCode") String bankCode,
                                                          @RequestBody RevolutPaymentRequest paymentRequest)
             throws BankNotSupportedException, GenericException, ApiException {
         AuthenticationService authenticationService = authenticationServiceFactory.getAuthenticationService(bankCode);
         PaymentService paymentService = paymentServiceFactory.getPaymentService(bankCode);
+        TransactionService transactionService = transactionServiceFactory.getTransactionService(bankCode);
         String accessToken = authenticationService.getAccessToken(new HashMap<>());
-        return new ResponseEntity<>(paymentService.makePayment(accessToken, paymentRequest), HttpStatus.OK);
+        PaymentResponse paymentResponse = paymentService.makePayment(accessToken, paymentRequest);
+        return new ResponseEntity<>(transactionService.getPaymentTransaction(accessToken, paymentResponse), HttpStatus.OK);
+    }
+
+    @GetMapping("/transactions")
+    public ResponseEntity<List<Transaction>> getTransactions(@RequestParam("bankCode") String bankCode,
+                                                             @RequestParam("from") String from,
+                                                             @RequestParam("to") String to)
+            throws BankNotSupportedException, GenericException, ApiException {
+        AuthenticationService authenticationService = authenticationServiceFactory.getAuthenticationService(bankCode);
+        TransactionService transactionService = transactionServiceFactory.getTransactionService(bankCode);
+        String accessToken = authenticationService.getAccessToken(new HashMap<>());
+        return new ResponseEntity<>(transactionService.getTransactions(accessToken, from, to), HttpStatus.OK);
+    }
+
+    @GetMapping("/transactions/{id}")
+    public ResponseEntity<Transaction> getTransactionById(@PathVariable("id") String id,
+                                                          @RequestParam("bankCode") String bankCode)
+            throws BankNotSupportedException, GenericException, ApiException {
+        AuthenticationService authenticationService = authenticationServiceFactory.getAuthenticationService(bankCode);
+        TransactionService transactionService = transactionServiceFactory.getTransactionService(bankCode);
+        String accessToken = authenticationService.getAccessToken(new HashMap<>());
+        return new ResponseEntity<>(transactionService.getTransactionById(accessToken, id), HttpStatus.OK);
     }
 }
