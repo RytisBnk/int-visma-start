@@ -2,9 +2,9 @@ package lt.visma.starter.controller;
 
 import lt.visma.starter.exception.*;
 import lt.visma.starter.model.BankingAccount;
+import lt.visma.starter.model.PaymentRequest;
 import lt.visma.starter.model.PaymentResponse;
 import lt.visma.starter.model.Transaction;
-import lt.visma.starter.model.revolut.RevolutPaymentRequest;
 import lt.visma.starter.model.swedbank.ConsentResponse;
 import lt.visma.starter.service.*;
 import lt.visma.starter.service.factory.AuthenticationServiceFactory;
@@ -54,7 +54,7 @@ public class BankingController {
     }
 
     @PostMapping("/accounts")
-    public List<BankingAccount> getBankingAccounts(@RequestBody Map<String, String> parameters,
+    public List<BankingAccount> getBankingAccounts(@RequestHeader Map<String, String> parameters,
                                                    @RequestParam String bankCode)
             throws BankNotSupportedException, GenericException, ApiException {
         AuthenticationService authenticationService = authenticationServiceFactory.getAuthenticationService(bankCode);
@@ -65,7 +65,7 @@ public class BankingController {
 
     @PostMapping("/consents")
     public ResponseEntity<ConsentResponse> getSwedbankConsent(@RequestParam String bankCode,
-                                                              @RequestBody Map<String, String> params)
+                                                              @RequestHeader Map<String, String> params)
             throws BankNotSupportedException, GenericException, ApiException {
         AuthenticationService authenticationService = authenticationServiceFactory.getAuthenticationService(bankCode);
         return new ResponseEntity<>(consentService.createUserConsent(
@@ -74,15 +74,14 @@ public class BankingController {
     }
 
     @PostMapping(value = "/payments", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Transaction> createPayment(@RequestParam("bankCode") String bankCode,
-                                                         @RequestBody RevolutPaymentRequest paymentRequest)
+    public ResponseEntity<PaymentResponse> createPayment(@RequestParam("bankCode") String bankCode,
+                                                     @RequestBody PaymentRequest paymentRequest,
+                                                     @RequestHeader Map<String, String> headers)
             throws BankNotSupportedException, GenericException, ApiException {
         AuthenticationService authenticationService = authenticationServiceFactory.getAuthenticationService(bankCode);
         PaymentService paymentService = paymentServiceFactory.getPaymentService(bankCode);
-        TransactionService transactionService = transactionServiceFactory.getTransactionService(bankCode);
-        String accessToken = authenticationService.getAccessToken(new HashMap<>());
-        PaymentResponse paymentResponse = paymentService.makePayment(accessToken, paymentRequest);
-        return new ResponseEntity<>(transactionService.getPaymentTransaction(accessToken, paymentResponse), HttpStatus.OK);
+        String accessToken = authenticationService.getAccessToken(headers);
+        return new ResponseEntity<>(paymentService.makePayment(accessToken, paymentRequest), HttpStatus.OK);
     }
 
     @GetMapping("/transactions")

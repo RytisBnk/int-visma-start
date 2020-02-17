@@ -3,7 +3,6 @@ package lt.visma.starter.service.impl;
 import lt.visma.starter.configuration.SwedbankConfigurationProperties;
 import lt.visma.starter.exception.ApiException;
 import lt.visma.starter.exception.GenericException;
-import lt.visma.starter.exception.ParameterNotProvidedException;
 import lt.visma.starter.exception.SwedbankApiException;
 import lt.visma.starter.model.BankingAccount;
 import lt.visma.starter.model.swedbank.*;
@@ -68,12 +67,12 @@ public class SwedbankAccountsServiceImpl implements BankingAccountsService {
 
     private MultiValueMap<String, String> getRequiredHeaders(String accessToken, Map<String, String> parameters) {
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        headers.add("PSU-ID", parameters.get("psuID"));
+        headers.add("PSU-ID", parameters.get("psu-id"));
         headers.add("Date", TimeUtils.getCurrentServerTimeAsString());
         headers.add("X-Request-ID", UUID.randomUUID().toString());
-        headers.add("Consent-ID", parameters.get("consentID"));
-        headers.add("PSU-User-Agent", parameters.get("psuUserAgent"));
-        headers.add("PSU-IP-Address", parameters.get("psuIPAddress"));
+        headers.add("Consent-ID", parameters.get("consent-id"));
+        headers.add("PSU-User-Agent", parameters.get("user-agent"));
+        headers.add("PSU-IP-Address", parameters.get("host"));
         HTTPUtils.addAuthorizationHeader(headers, accessToken);
 
         return headers;
@@ -84,8 +83,8 @@ public class SwedbankAccountsServiceImpl implements BankingAccountsService {
             throw new GenericException();
         }
         if (response.statusCode() == HttpStatus.BAD_REQUEST) {
-            ResponseError responseError = response.bodyToMono(ResponseError.class).block();
-            throw new SwedbankApiException(responseError);
+            SwedbankResponseError swedbankResponseError = response.bodyToMono(SwedbankResponseError.class).block();
+            throw new SwedbankApiException(swedbankResponseError);
         }
     }
 }

@@ -8,7 +8,6 @@ import lt.visma.starter.model.PaymentRequest;
 import lt.visma.starter.model.PaymentResponse;
 import lt.visma.starter.model.revolut.RevolutApiError;
 import lt.visma.starter.model.revolut.RevolutPaymentResponse;
-import lt.visma.starter.model.revolut.RevolutResponseError;
 import lt.visma.starter.model.revolut.RevolutPaymentRequest;
 import lt.visma.starter.service.HttpRequestService;
 import lt.visma.starter.service.PaymentService;
@@ -30,7 +29,8 @@ public class RevolutPaymentServiceImpl implements PaymentService {
 
     private String[] supportedBanks = new String[] {"REVOGB21"};
 
-    public RevolutPaymentServiceImpl(HttpRequestService httpRequestService, RevolutConfigurationProperties configurationProperties) {
+    public RevolutPaymentServiceImpl(HttpRequestService httpRequestService,
+                                     RevolutConfigurationProperties configurationProperties) {
         this.httpRequestService = httpRequestService;
         this.configurationProperties = configurationProperties;
     }

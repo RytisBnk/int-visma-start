@@ -1,6 +1,6 @@
 package lt.visma.starter.exception;
 
-import lt.visma.starter.model.swedbank.ResponseError;
+import lt.visma.starter.model.ResponseError;
 
 public class SwedbankApiException extends ApiException {
     private final ResponseError responseError;
