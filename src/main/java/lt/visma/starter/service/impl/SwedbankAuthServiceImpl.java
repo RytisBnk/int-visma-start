@@ -25,8 +25,6 @@ public class SwedbankAuthServiceImpl implements AuthenticationService {
     private SwedbankConfigurationProperties configurationProperties;
     private HttpRequestService httpRequestService;
 
-    private String[] supportedBanks = new String[] {"HABALT22", "SANDLT22"};
-
     @Autowired
     public SwedbankAuthServiceImpl(SwedbankConfigurationProperties configurationProperties, HttpRequestService httpRequestService) {
         this.configurationProperties = configurationProperties;
@@ -57,7 +55,7 @@ public class SwedbankAuthServiceImpl implements AuthenticationService {
 
     @Override
     public boolean supportsBank(String bankCode) {
-        return Arrays.asList(supportedBanks).contains(bankCode);
+        return Arrays.asList(configurationProperties.getSupportedBanks()).contains(bankCode);
     }
 
     private DecoupledAuthResponse getAuthorizationID(String psuID, String scaMethod)

@@ -25,8 +25,6 @@ public class RevolutTransactionServiceImpl implements TransactionService {
     private HttpRequestService httpRequestService;
     private RevolutConfigurationProperties configurationProperties;
 
-    private String[] supportedBanks = new String[] {"REVOGB21"};
-
     @Autowired
     public RevolutTransactionServiceImpl(HttpRequestService httpRequestService, RevolutConfigurationProperties configurationProperties) {
         this.httpRequestService = httpRequestService;
@@ -75,7 +73,7 @@ public class RevolutTransactionServiceImpl implements TransactionService {
 
     @Override
     public boolean supportsBank(String bankCode) {
-        return Arrays.asList(supportedBanks).contains(bankCode);
+        return Arrays.asList(configurationProperties.getSupportedBanks()).contains(bankCode);
     }
 
     private void checkIfResponseValid(ClientResponse response) throws GenericException, ApiException {

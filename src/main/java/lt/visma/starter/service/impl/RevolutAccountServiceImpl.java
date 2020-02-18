@@ -26,8 +26,6 @@ public class RevolutAccountServiceImpl implements BankingAccountsService {
     private RevolutConfigurationProperties configurationProperties;
     private HttpRequestService httpRequestService;
 
-    private String[] supportedBanks = new String[] {"REVOGB21"};
-
     @Autowired
     public RevolutAccountServiceImpl(RevolutConfigurationProperties configurationProperties, HttpRequestService httpRequestService) {
         this.configurationProperties = configurationProperties;
@@ -61,6 +59,6 @@ public class RevolutAccountServiceImpl implements BankingAccountsService {
 
     @Override
     public boolean supportsBank(String bankCode) {
-        return Arrays.asList(supportedBanks).contains(bankCode);
+        return Arrays.asList(configurationProperties.getSupportedBanks()).contains(bankCode);
     }
 }

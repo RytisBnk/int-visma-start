@@ -1,5 +1,6 @@
 package lt.visma.starter.configuration;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
@@ -17,6 +18,15 @@ public class RevolutConfigurationProperties {
     private String authenticationEndpointUrl;
     private String accountsEndpointUrl;
     private String paymentsEndpointUrl;
+    private String[] supportedBanks;
+
+    public String[] getSupportedBanks() {
+        return supportedBanks;
+    }
+
+    public void setSupportedBanks(String[] supportedBanks) {
+        this.supportedBanks = supportedBanks;
+    }
 
     public String getPaymentsEndpointUrl() {
         return paymentsEndpointUrl;

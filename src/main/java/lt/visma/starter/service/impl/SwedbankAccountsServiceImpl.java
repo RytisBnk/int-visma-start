@@ -23,11 +23,6 @@ public class SwedbankAccountsServiceImpl implements BankingAccountsService {
     private SwedbankConfigurationProperties configurationProperties;
     private HttpRequestService httpRequestService;
 
-    private String[] supportedBanks = new String[] {"SANDLT22", "HABALT22"};
-    private String[] requiredParameters = new String[] {
-            "psuID", "psuIPAddress", "psuUserAgent", "consentID"
-    };
-
     @Autowired
     public SwedbankAccountsServiceImpl(SwedbankConfigurationProperties configurationProperties, HttpRequestService httpRequestService) {
         this.configurationProperties = configurationProperties;
@@ -61,7 +56,7 @@ public class SwedbankAccountsServiceImpl implements BankingAccountsService {
 
     @Override
     public boolean supportsBank(String bankCode) {
-        return Arrays.asList(supportedBanks).contains(bankCode);
+        return Arrays.asList(configurationProperties.getSupportedBanks()).contains(bankCode);
     }
 
     private MultiValueMap<String, String> getRequiredHeaders(String accessToken, Map<String, String> parameters) {
