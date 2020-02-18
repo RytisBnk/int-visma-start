@@ -18,6 +18,24 @@ public class RevolutConfigurationProperties {
     private String accountsEndpointUrl;
     private String paymentsEndpointUrl;
     private String[] supportedBanks;
+    private String multipleTransactionsEndpoint;
+    private String individualTransactionEndpoint;
+
+    public String getMultipleTransactionsEndpoint() {
+        return multipleTransactionsEndpoint;
+    }
+
+    public void setMultipleTransactionsEndpoint(String multipleTransactionsEndpoint) {
+        this.multipleTransactionsEndpoint = multipleTransactionsEndpoint;
+    }
+
+    public String getIndividualTransactionEndpoint() {
+        return individualTransactionEndpoint;
+    }
+
+    public void setIndividualTransactionEndpoint(String individualTransactionEndpoint) {
+        this.individualTransactionEndpoint = individualTransactionEndpoint;
+    }
 
     public String[] getSupportedBanks() {
         return supportedBanks;

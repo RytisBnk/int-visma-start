@@ -42,7 +42,7 @@ public class RevolutTransactionServiceImpl implements TransactionService {
 
         ClientResponse response = httpRequestService.httpGetRequest(
                 configurationProperties.getApiURL(),
-                "/transactions",
+                configurationProperties.getMultipleTransactionsEndpoint(),
                 queryParams,
                 headers
         );
@@ -62,7 +62,7 @@ public class RevolutTransactionServiceImpl implements TransactionService {
 
         ClientResponse response = httpRequestService.httpGetRequest(
                 configurationProperties.getApiURL(),
-                "/transaction/" + transactionId,
+                configurationProperties.getIndividualTransactionEndpoint() + transactionId,
                 null,
                 headers
         );

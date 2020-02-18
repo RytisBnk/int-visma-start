@@ -17,6 +17,15 @@ public class SwedbankConfigurationProperties {
     private String authenticationEndpointUrl;
     private String tokenEndpointUrl;
     private String[] supportedBanks;
+    private String paymentsEndpointUrl;
+
+    public String getPaymentsEndpointUrl() {
+        return paymentsEndpointUrl;
+    }
+
+    public void setPaymentsEndpointUrl(String paymentsEndpointUrl) {
+        this.paymentsEndpointUrl = paymentsEndpointUrl;
+    }
 
     public String[] getSupportedBanks() {
         return supportedBanks;

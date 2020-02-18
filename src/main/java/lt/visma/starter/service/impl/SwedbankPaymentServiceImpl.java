@@ -48,7 +48,7 @@ public class SwedbankPaymentServiceImpl implements PaymentService {
 
         ClientResponse response = httpRequestService.httpPostRequest(
                 configurationProperties.getApiUrl(),
-                "/sandbox/v2/payments/instant-sepa-credit-transfers",
+                configurationProperties.getPaymentsEndpointUrl(),
                 queryparams,
                 headers,
                 swedbankPaymentRequest,
