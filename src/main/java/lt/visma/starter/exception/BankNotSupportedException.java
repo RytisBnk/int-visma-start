@@ -8,7 +8,4 @@ public class BankNotSupportedException extends Exception {
     public BankNotSupportedException(String message) {
         super(message);
     }
-
-    public BankNotSupportedException() {
-    }
 }
