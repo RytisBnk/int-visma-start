@@ -1,10 +1,7 @@
 package lt.visma.starter.controller;
 
 import lt.visma.starter.exception.*;
-import lt.visma.starter.model.BankingAccount;
-import lt.visma.starter.model.PaymentRequest;
-import lt.visma.starter.model.PaymentResponse;
-import lt.visma.starter.model.Transaction;
+import lt.visma.starter.model.*;
 import lt.visma.starter.model.swedbank.ConsentResponse;
 import lt.visma.starter.service.*;
 import lt.visma.starter.service.factory.AuthenticationServiceFactory;
@@ -30,14 +27,9 @@ public class BankingController {
     private PaymentServiceFactory paymentServiceFactory;
     private TransactionServiceFactory transactionServiceFactory;
 
-    @ExceptionHandler({SwedbankApiException.class})
-    public ResponseEntity<Object> handleSwedbankErrors(SwedbankApiException exc) {
-        return new ResponseEntity<>(exc.getResponseError(), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler({RevolutApiException.class})
-    private ResponseEntity<Object> handleRevolutErrors(RevolutApiException exc) {
-        return new ResponseEntity<>(exc.getResponseError(), HttpStatus.BAD_REQUEST);
+    @ExceptionHandler(value = ApiException.class)
+    public ResponseEntity<ResponseError> handleExternalApiError(ApiException exc) {
+       return new ResponseEntity<>(exc.getResponseError(), HttpStatus.BAD_REQUEST);
     }
 
     @Autowired
