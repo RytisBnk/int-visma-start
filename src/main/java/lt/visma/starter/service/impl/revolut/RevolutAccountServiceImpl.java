@@ -1,4 +1,4 @@
-package lt.visma.starter.service.impl;
+package lt.visma.starter.service.impl.revolut;
 
 import lt.visma.starter.configuration.RevolutConfigurationProperties;
 import lt.visma.starter.exception.ApiException;

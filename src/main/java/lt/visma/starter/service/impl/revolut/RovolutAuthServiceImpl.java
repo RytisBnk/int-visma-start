@@ -1,4 +1,4 @@
-package lt.visma.starter.service.impl;
+package lt.visma.starter.service.impl.revolut;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

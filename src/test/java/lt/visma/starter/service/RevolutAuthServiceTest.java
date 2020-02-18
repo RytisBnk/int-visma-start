@@ -4,14 +4,13 @@ import lt.visma.starter.configuration.RevolutConfigurationProperties;
 import lt.visma.starter.exception.ApiException;
 import lt.visma.starter.exception.GenericException;
 import lt.visma.starter.service.impl.HttpRequestServiceImpl;
-import lt.visma.starter.service.impl.RovolutAuthServiceImpl;
+import lt.visma.starter.service.impl.revolut.RovolutAuthServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.web.reactive.function.client.ClientResponse;
 
 import java.util.HashMap;
 
