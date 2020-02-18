@@ -11,6 +11,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.web.reactive.function.client.ClientResponse;
 
 import java.util.HashMap;
 
@@ -32,6 +33,10 @@ public class RevolutAuthServiceTest {
     private final String JWT_TEST_ISS = "test.com";
     private final String JWT_TEST_CLIENTID = "AAAA";
     private final String PRIVATE_KEY_FILEPATH = "./private_key.der";
+
+    private final String JWT_REAL_AUD = "https://revolut.com";
+    private final String JWT_REAL_ISS = "revolut-jwt-sandbox.glitch.me";
+    private final String JWT_REAL_CLIENTID = "izrqy076tTOfJt0AbLdKUqc231xlMUbe5MNbdO9lRwM";
 
     private final String CLIENT_ID = "izrqy076tTOfJt0AbLdKUqc231xlMUbe5MNbdO9lRwM";
     private final String CLIENT_ASSERTION_TYPE = "urn:ietf:params:oauth:client-assertion-type:jwt-bearer";
@@ -56,6 +61,11 @@ public class RevolutAuthServiceTest {
         when(configurationProperties.getRefreshToken()).thenReturn(REFRESH_TOKEN);
         when(configurationProperties.getApiURL()).thenReturn(API_URL);
         when(configurationProperties.getAuthenticationEndpointUrl()).thenReturn(AUTH_URL);
+        when(configurationProperties.getPrivateKeyFilepath()).thenReturn(PRIVATE_KEY_FILEPATH);
+
+        when(configurationProperties.getAud()).thenReturn(JWT_REAL_AUD);
+        when(configurationProperties.getIss()).thenReturn(JWT_REAL_ISS);
+        when(configurationProperties.getClientId()).thenReturn(JWT_REAL_CLIENTID);
         when(configurationProperties.getPrivateKeyFilepath()).thenReturn(PRIVATE_KEY_FILEPATH);
 
         String accessToken = revolutAuthenticationService.getAccessToken(new HashMap<>());

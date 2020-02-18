@@ -36,9 +36,9 @@ public class SwedbankAuthServiceImpl implements AuthenticationService {
 
     @Override
     public String getAccessToken(Map<String, String> parameters) throws GenericException, ApiException {
-        DecoupledAuthResponse authResponse = getAuthorizationID(parameters.get("psuID"), parameters.get("scaMethod"));
+        DecoupledAuthResponse authResponse = getAuthorizationID(parameters.get("psu-id"), parameters.get("sca-method"));
         AuthorizationCodeResponse authorizationCodeResponse =
-                getAuthorisationCode(authResponse.getAuthorizeId(), parameters.get("psuID"));
+                getAuthorisationCode(authResponse.getAuthorizeId(), parameters.get("psu-id"));
 
         MultiValueMap<String, String> queryParams =
                 getAccessTokenRequestQueryParams(authorizationCodeResponse.getAuthorizationCode())
@@ -133,7 +133,7 @@ public class SwedbankAuthServiceImpl implements AuthenticationService {
             throw new GenericException();
         }
         if (response.statusCode() != HttpStatus.OK) {
-            throw new SwedbankApiException(response.bodyToMono(ResponseError.class).block());
+            throw new SwedbankApiException(response.bodyToMono(SwedbankResponseError.class).block());
         }
     }
 }

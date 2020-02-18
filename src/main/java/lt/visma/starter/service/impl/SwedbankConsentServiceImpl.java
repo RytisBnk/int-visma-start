@@ -7,7 +7,7 @@ import lt.visma.starter.exception.SwedbankApiException;
 import lt.visma.starter.model.swedbank.Access;
 import lt.visma.starter.model.swedbank.ConsentRequest;
 import lt.visma.starter.model.swedbank.ConsentResponse;
-import lt.visma.starter.model.swedbank.ResponseError;
+import lt.visma.starter.model.swedbank.SwedbankResponseError;
 import lt.visma.starter.service.ConsentService;
 import lt.visma.starter.service.HttpRequestService;
 import lt.visma.starter.util.HTTPUtils;
@@ -44,8 +44,8 @@ public class SwedbankConsentServiceImpl implements ConsentService {
         HTTPUtils.addAuthorizationHeader(headers, accessToken);
         headers.add("Date", TimeUtils.getCurrentServerTimeAsString());
         headers.add("X-Request-ID", UUID.randomUUID().toString());
-        headers.add("PSU-IP-Address", params.get("psuIPAddress"));
-        headers.add("PSU-User-Agent", params.get("psuUserAgent"));
+        headers.add("PSU-IP-Address", params.get("host"));
+        headers.add("PSU-User-Agent", params.get("user-agent"));
 
         Access access = new Access(null, "allAccounts", null, null);
         ConsentRequest requestBody = new ConsentRequest(access,
@@ -63,7 +63,7 @@ public class SwedbankConsentServiceImpl implements ConsentService {
             throw new GenericException();
         }
         if (response.statusCode() == HttpStatus.BAD_REQUEST) {
-            throw new SwedbankApiException(response.bodyToMono(ResponseError.class).block());
+            throw new SwedbankApiException(response.bodyToMono(SwedbankResponseError.class).block());
         }
         return response.bodyToMono(ConsentResponse.class).block();
     }
