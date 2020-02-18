@@ -3,7 +3,6 @@ package lt.visma.starter.service.impl;
 import lt.visma.starter.configuration.SwedbankConfigurationProperties;
 import lt.visma.starter.exception.ApiException;
 import lt.visma.starter.exception.GenericException;
-import lt.visma.starter.exception.SwedbankApiException;
 import lt.visma.starter.model.swedbank.*;
 import lt.visma.starter.service.AuthenticationService;
 import lt.visma.starter.service.HttpRequestService;
@@ -25,8 +24,6 @@ import java.util.UUID;
 public class SwedbankAuthServiceImpl implements AuthenticationService {
     private SwedbankConfigurationProperties configurationProperties;
     private HttpRequestService httpRequestService;
-
-    private String[] supportedBanks = new String[] {"HABALT22", "SANDLT22"};
 
     @Autowired
     public SwedbankAuthServiceImpl(SwedbankConfigurationProperties configurationProperties, HttpRequestService httpRequestService) {
@@ -58,7 +55,7 @@ public class SwedbankAuthServiceImpl implements AuthenticationService {
 
     @Override
     public boolean supportsBank(String bankCode) {
-        return Arrays.asList(supportedBanks).contains(bankCode);
+        return Arrays.asList(configurationProperties.getSupportedBanks()).contains(bankCode);
     }
 
     private DecoupledAuthResponse getAuthorizationID(String psuID, String scaMethod)
@@ -133,7 +130,7 @@ public class SwedbankAuthServiceImpl implements AuthenticationService {
             throw new GenericException();
         }
         if (response.statusCode() != HttpStatus.OK) {
-            throw new SwedbankApiException(response.bodyToMono(SwedbankResponseError.class).block());
+            throw new ApiException(response.bodyToMono(SwedbankResponseError.class).block());
         }
     }
 }

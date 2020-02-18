@@ -3,12 +3,9 @@ package lt.visma.starter.service.impl;
 import lt.visma.starter.configuration.RevolutConfigurationProperties;
 import lt.visma.starter.exception.ApiException;
 import lt.visma.starter.exception.GenericException;
-import lt.visma.starter.exception.RevolutApiException;
-import lt.visma.starter.model.PaymentResponse;
 import lt.visma.starter.model.ResponseError;
 import lt.visma.starter.model.Transaction;
 import lt.visma.starter.model.revolut.RevolutApiError;
-import lt.visma.starter.model.revolut.RevolutPaymentResponse;
 import lt.visma.starter.model.revolut.RevolutTransaction;
 import lt.visma.starter.service.HttpRequestService;
 import lt.visma.starter.service.TransactionService;
@@ -28,8 +25,6 @@ public class RevolutTransactionServiceImpl implements TransactionService {
     private HttpRequestService httpRequestService;
     private RevolutConfigurationProperties configurationProperties;
 
-    private String[] supportedBanks = new String[] {"REVOGB21"};
-
     @Autowired
     public RevolutTransactionServiceImpl(HttpRequestService httpRequestService, RevolutConfigurationProperties configurationProperties) {
         this.httpRequestService = httpRequestService;
@@ -47,7 +42,7 @@ public class RevolutTransactionServiceImpl implements TransactionService {
 
         ClientResponse response = httpRequestService.httpGetRequest(
                 configurationProperties.getApiURL(),
-                "/transactions",
+                configurationProperties.getMultipleTransactionsEndpoint(),
                 queryParams,
                 headers
         );
@@ -67,7 +62,7 @@ public class RevolutTransactionServiceImpl implements TransactionService {
 
         ClientResponse response = httpRequestService.httpGetRequest(
                 configurationProperties.getApiURL(),
-                "/transaction/" + transactionId,
+                configurationProperties.getIndividualTransactionEndpoint() + transactionId,
                 null,
                 headers
         );
@@ -78,7 +73,7 @@ public class RevolutTransactionServiceImpl implements TransactionService {
 
     @Override
     public boolean supportsBank(String bankCode) {
-        return Arrays.asList(supportedBanks).contains(bankCode);
+        return Arrays.asList(configurationProperties.getSupportedBanks()).contains(bankCode);
     }
 
     private void checkIfResponseValid(ClientResponse response) throws GenericException, ApiException {
@@ -87,7 +82,7 @@ public class RevolutTransactionServiceImpl implements TransactionService {
         }
         if (response.statusCode() != HttpStatus.OK) {
             ResponseError responseError = response.bodyToMono(RevolutApiError.class).block();
-            throw new RevolutApiException(responseError);
+            throw new ApiException(responseError);
         }
     }
 }

@@ -3,7 +3,6 @@ package lt.visma.starter.service.impl;
 import lt.visma.starter.configuration.SwedbankConfigurationProperties;
 import lt.visma.starter.exception.ApiException;
 import lt.visma.starter.exception.GenericException;
-import lt.visma.starter.exception.SwedbankApiException;
 import lt.visma.starter.model.BankingAccount;
 import lt.visma.starter.model.swedbank.*;
 import lt.visma.starter.service.BankingAccountsService;
@@ -23,11 +22,6 @@ import java.util.*;
 public class SwedbankAccountsServiceImpl implements BankingAccountsService {
     private SwedbankConfigurationProperties configurationProperties;
     private HttpRequestService httpRequestService;
-
-    private String[] supportedBanks = new String[] {"SANDLT22", "HABALT22"};
-    private String[] requiredParameters = new String[] {
-            "psuID", "psuIPAddress", "psuUserAgent", "consentID"
-    };
 
     @Autowired
     public SwedbankAccountsServiceImpl(SwedbankConfigurationProperties configurationProperties, HttpRequestService httpRequestService) {
@@ -62,7 +56,7 @@ public class SwedbankAccountsServiceImpl implements BankingAccountsService {
 
     @Override
     public boolean supportsBank(String bankCode) {
-        return Arrays.asList(supportedBanks).contains(bankCode);
+        return Arrays.asList(configurationProperties.getSupportedBanks()).contains(bankCode);
     }
 
     private MultiValueMap<String, String> getRequiredHeaders(String accessToken, Map<String, String> parameters) {
@@ -84,7 +78,7 @@ public class SwedbankAccountsServiceImpl implements BankingAccountsService {
         }
         if (response.statusCode() == HttpStatus.BAD_REQUEST) {
             SwedbankResponseError swedbankResponseError = response.bodyToMono(SwedbankResponseError.class).block();
-            throw new SwedbankApiException(swedbankResponseError);
+            throw new ApiException(swedbankResponseError);
         }
     }
 }

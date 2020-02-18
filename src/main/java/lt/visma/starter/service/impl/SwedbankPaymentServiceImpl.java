@@ -3,7 +3,6 @@ package lt.visma.starter.service.impl;
 import lt.visma.starter.configuration.SwedbankConfigurationProperties;
 import lt.visma.starter.exception.ApiException;
 import lt.visma.starter.exception.GenericException;
-import lt.visma.starter.exception.SwedbankApiException;
 import lt.visma.starter.model.PaymentRequest;
 import lt.visma.starter.model.PaymentResponse;
 import lt.visma.starter.model.swedbank.SwedbankPaymentRequest;
@@ -29,8 +28,6 @@ public class SwedbankPaymentServiceImpl implements PaymentService {
     private HttpRequestService httpRequestService;
     private SwedbankConfigurationProperties configurationProperties;
 
-    private String[] supportedBanks = new String[] {"HABALT22", "SANDLT22"};
-
     @Autowired
     public SwedbankPaymentServiceImpl(HttpRequestService httpRequestService, SwedbankConfigurationProperties configurationProperties) {
         this.httpRequestService = httpRequestService;
@@ -51,7 +48,7 @@ public class SwedbankPaymentServiceImpl implements PaymentService {
 
         ClientResponse response = httpRequestService.httpPostRequest(
                 configurationProperties.getApiUrl(),
-                "/sandbox/v2/payments/instant-sepa-credit-transfers",
+                configurationProperties.getPaymentsEndpointUrl(),
                 queryparams,
                 headers,
                 swedbankPaymentRequest,
@@ -63,7 +60,7 @@ public class SwedbankPaymentServiceImpl implements PaymentService {
 
     @Override
     public boolean supportsBank(String bankCode) {
-        return Arrays.asList(supportedBanks).contains(bankCode);
+        return Arrays.asList(configurationProperties.getSupportedBanks()).contains(bankCode);
     }
 
     private MultiValueMap<String, String> getRequiredHeaders(String accessToken, SwedbankPaymentRequest paymentRequest) {
@@ -84,7 +81,7 @@ public class SwedbankPaymentServiceImpl implements PaymentService {
         }
         if (response.statusCode() != HttpStatus.CREATED) {
             SwedbankResponseError swedbankResponseError = response.bodyToMono(SwedbankResponseError.class).block();
-            throw new SwedbankApiException(swedbankResponseError);
+            throw new ApiException(swedbankResponseError);
         }
     }
 }

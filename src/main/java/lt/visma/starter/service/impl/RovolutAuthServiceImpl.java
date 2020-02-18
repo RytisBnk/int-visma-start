@@ -5,7 +5,6 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import lt.visma.starter.configuration.RevolutConfigurationProperties;
 import lt.visma.starter.exception.ApiException;
 import lt.visma.starter.exception.GenericException;
-import lt.visma.starter.exception.RevolutApiException;
 import lt.visma.starter.model.revolut.RevolutAccessToken;
 import lt.visma.starter.model.revolut.RevolutResponseError;
 import lt.visma.starter.service.AuthenticationService;
@@ -34,8 +33,6 @@ public class RovolutAuthServiceImpl implements AuthenticationService {
     private RevolutConfigurationProperties configurationProperties;
     private HttpRequestService httpRequestService;
 
-    private String[] supportedBanks = new String[] {"REVOGB21"};
-
     @Autowired
     public RovolutAuthServiceImpl(RevolutConfigurationProperties configurationProperties, HttpRequestService httpRequestService) {
         this.configurationProperties = configurationProperties;
@@ -53,7 +50,7 @@ public class RovolutAuthServiceImpl implements AuthenticationService {
 
     @Override
     public boolean supportsBank(String bankCode) {
-        return Arrays.asList(supportedBanks).contains(bankCode);
+        return Arrays.asList(configurationProperties.getSupportedBanks()).contains(bankCode);
     }
 
     public String getJWTToken() throws GenericException {
@@ -108,7 +105,7 @@ public class RovolutAuthServiceImpl implements AuthenticationService {
         }
         else {
             RevolutResponseError apiError = response.bodyToMono(RevolutResponseError.class).block();
-            throw new RevolutApiException(apiError);
+            throw new ApiException(apiError);
         }
     }
 }

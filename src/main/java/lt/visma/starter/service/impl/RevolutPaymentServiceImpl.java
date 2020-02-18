@@ -3,7 +3,6 @@ package lt.visma.starter.service.impl;
 import lt.visma.starter.configuration.RevolutConfigurationProperties;
 import lt.visma.starter.exception.ApiException;
 import lt.visma.starter.exception.GenericException;
-import lt.visma.starter.exception.RevolutApiException;
 import lt.visma.starter.model.PaymentRequest;
 import lt.visma.starter.model.PaymentResponse;
 import lt.visma.starter.model.revolut.RevolutApiError;
@@ -26,8 +25,6 @@ import java.util.UUID;
 public class RevolutPaymentServiceImpl implements PaymentService {
     private HttpRequestService httpRequestService;
     private RevolutConfigurationProperties configurationProperties;
-
-    private String[] supportedBanks = new String[] {"REVOGB21"};
 
     public RevolutPaymentServiceImpl(HttpRequestService httpRequestService,
                                      RevolutConfigurationProperties configurationProperties) {
@@ -61,7 +58,7 @@ public class RevolutPaymentServiceImpl implements PaymentService {
 
     @Override
     public boolean supportsBank(String bankCode) {
-        return Arrays.asList(supportedBanks).contains(bankCode);
+        return Arrays.asList(configurationProperties.getSupportedBanks()).contains(bankCode);
     }
 
     private void checkIfResponseValid(ClientResponse response) throws GenericException, ApiException {
@@ -70,7 +67,7 @@ public class RevolutPaymentServiceImpl implements PaymentService {
         }
         if (response.statusCode() == HttpStatus.BAD_REQUEST) {
             RevolutApiError revolutApiError = response.bodyToMono(RevolutApiError.class).block();
-            throw new RevolutApiException(revolutApiError);
+            throw new ApiException(revolutApiError);
         }
     }
 }

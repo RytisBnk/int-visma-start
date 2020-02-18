@@ -1,5 +1,6 @@
 package lt.visma.starter.configuration;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
@@ -15,6 +16,24 @@ public class SwedbankConfigurationProperties {
     private String accountsEndpointUrl;
     private String authenticationEndpointUrl;
     private String tokenEndpointUrl;
+    private String[] supportedBanks;
+    private String paymentsEndpointUrl;
+
+    public String getPaymentsEndpointUrl() {
+        return paymentsEndpointUrl;
+    }
+
+    public void setPaymentsEndpointUrl(String paymentsEndpointUrl) {
+        this.paymentsEndpointUrl = paymentsEndpointUrl;
+    }
+
+    public String[] getSupportedBanks() {
+        return supportedBanks;
+    }
+
+    public void setSupportedBanks(String[] supportedBanks) {
+        this.supportedBanks = supportedBanks;
+    }
 
     public String getConsentsEndpointUrl() {
         return consentsEndpointUrl;

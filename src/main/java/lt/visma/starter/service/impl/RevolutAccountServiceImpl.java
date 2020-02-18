@@ -3,7 +3,6 @@ package lt.visma.starter.service.impl;
 import lt.visma.starter.configuration.RevolutConfigurationProperties;
 import lt.visma.starter.exception.ApiException;
 import lt.visma.starter.exception.GenericException;
-import lt.visma.starter.exception.RevolutApiException;
 import lt.visma.starter.model.BankingAccount;
 import lt.visma.starter.model.revolut.RevolutAccount;
 import lt.visma.starter.model.revolut.RevolutResponseError;
@@ -26,8 +25,6 @@ import java.util.Map;
 public class RevolutAccountServiceImpl implements BankingAccountsService {
     private RevolutConfigurationProperties configurationProperties;
     private HttpRequestService httpRequestService;
-
-    private String[] supportedBanks = new String[] {"REVOGB21"};
 
     @Autowired
     public RevolutAccountServiceImpl(RevolutConfigurationProperties configurationProperties, HttpRequestService httpRequestService) {
@@ -56,12 +53,12 @@ public class RevolutAccountServiceImpl implements BankingAccountsService {
         }
         else {
             RevolutResponseError apiError = response.bodyToMono(RevolutResponseError.class).block();
-            throw new RevolutApiException(apiError);
+            throw new ApiException(apiError);
         }
     }
 
     @Override
     public boolean supportsBank(String bankCode) {
-        return Arrays.asList(supportedBanks).contains(bankCode);
+        return Arrays.asList(configurationProperties.getSupportedBanks()).contains(bankCode);
     }
 }

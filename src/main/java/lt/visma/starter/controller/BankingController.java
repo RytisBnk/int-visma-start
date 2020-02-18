@@ -14,7 +14,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -79,21 +78,23 @@ public class BankingController {
     @GetMapping("/transactions")
     public ResponseEntity<List<Transaction>> getTransactions(@RequestParam("bankCode") String bankCode,
                                                              @RequestParam("from") String from,
-                                                             @RequestParam("to") String to)
+                                                             @RequestParam("to") String to,
+                                                             @RequestHeader Map<String, String> headers)
             throws BankNotSupportedException, GenericException, ApiException {
         AuthenticationService authenticationService = authenticationServiceFactory.getAuthenticationService(bankCode);
         TransactionService transactionService = transactionServiceFactory.getTransactionService(bankCode);
-        String accessToken = authenticationService.getAccessToken(new HashMap<>());
+        String accessToken = authenticationService.getAccessToken(headers);
         return new ResponseEntity<>(transactionService.getTransactions(accessToken, from, to), HttpStatus.OK);
     }
 
     @GetMapping("/transactions/{id}")
     public ResponseEntity<Transaction> getTransactionById(@PathVariable("id") String id,
-                                                          @RequestParam("bankCode") String bankCode)
+                                                          @RequestParam("bankCode") String bankCode,
+                                                          @RequestHeader Map<String, String> headers)
             throws BankNotSupportedException, GenericException, ApiException {
         AuthenticationService authenticationService = authenticationServiceFactory.getAuthenticationService(bankCode);
         TransactionService transactionService = transactionServiceFactory.getTransactionService(bankCode);
-        String accessToken = authenticationService.getAccessToken(new HashMap<>());
+        String accessToken = authenticationService.getAccessToken(headers);
         return new ResponseEntity<>(transactionService.getTransactionById(accessToken, id), HttpStatus.OK);
     }
 }

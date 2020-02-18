@@ -22,7 +22,7 @@ public class BankingAccountsServiceFactory {
                 .filter(bankingAccountsService -> bankingAccountsService.supportsBank(bankCode))
                 .findFirst();
         if (!bankingAccountsServiceOptional.isPresent()) {
-            throw new BankNotSupportedException();
+            throw new BankNotSupportedException("Bank " + bankCode + " is not supported");
         }
         return bankingAccountsServiceOptional.get();
     }
