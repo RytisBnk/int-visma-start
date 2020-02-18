@@ -3,7 +3,6 @@ package lt.visma.starter.service.impl;
 import lt.visma.starter.configuration.RevolutConfigurationProperties;
 import lt.visma.starter.exception.ApiException;
 import lt.visma.starter.exception.GenericException;
-import lt.visma.starter.exception.RevolutApiException;
 import lt.visma.starter.model.BankingAccount;
 import lt.visma.starter.model.revolut.RevolutAccount;
 import lt.visma.starter.model.revolut.RevolutResponseError;
@@ -56,7 +55,7 @@ public class RevolutAccountServiceImpl implements BankingAccountsService {
         }
         else {
             RevolutResponseError apiError = response.bodyToMono(RevolutResponseError.class).block();
-            throw new RevolutApiException(apiError);
+            throw new ApiException(apiError);
         }
     }
 

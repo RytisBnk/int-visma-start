@@ -3,7 +3,6 @@ package lt.visma.starter.service.impl;
 import lt.visma.starter.configuration.SwedbankConfigurationProperties;
 import lt.visma.starter.exception.ApiException;
 import lt.visma.starter.exception.GenericException;
-import lt.visma.starter.exception.SwedbankApiException;
 import lt.visma.starter.model.BankingAccount;
 import lt.visma.starter.model.swedbank.*;
 import lt.visma.starter.service.BankingAccountsService;
@@ -84,7 +83,7 @@ public class SwedbankAccountsServiceImpl implements BankingAccountsService {
         }
         if (response.statusCode() == HttpStatus.BAD_REQUEST) {
             SwedbankResponseError swedbankResponseError = response.bodyToMono(SwedbankResponseError.class).block();
-            throw new SwedbankApiException(swedbankResponseError);
+            throw new ApiException(swedbankResponseError);
         }
     }
 }

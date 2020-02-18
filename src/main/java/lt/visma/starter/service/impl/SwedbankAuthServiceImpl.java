@@ -3,7 +3,6 @@ package lt.visma.starter.service.impl;
 import lt.visma.starter.configuration.SwedbankConfigurationProperties;
 import lt.visma.starter.exception.ApiException;
 import lt.visma.starter.exception.GenericException;
-import lt.visma.starter.exception.SwedbankApiException;
 import lt.visma.starter.model.swedbank.*;
 import lt.visma.starter.service.AuthenticationService;
 import lt.visma.starter.service.HttpRequestService;
@@ -133,7 +132,7 @@ public class SwedbankAuthServiceImpl implements AuthenticationService {
             throw new GenericException();
         }
         if (response.statusCode() != HttpStatus.OK) {
-            throw new SwedbankApiException(response.bodyToMono(SwedbankResponseError.class).block());
+            throw new ApiException(response.bodyToMono(SwedbankResponseError.class).block());
         }
     }
 }

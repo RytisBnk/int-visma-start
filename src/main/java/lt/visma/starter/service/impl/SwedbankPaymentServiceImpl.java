@@ -3,7 +3,6 @@ package lt.visma.starter.service.impl;
 import lt.visma.starter.configuration.SwedbankConfigurationProperties;
 import lt.visma.starter.exception.ApiException;
 import lt.visma.starter.exception.GenericException;
-import lt.visma.starter.exception.SwedbankApiException;
 import lt.visma.starter.model.PaymentRequest;
 import lt.visma.starter.model.PaymentResponse;
 import lt.visma.starter.model.swedbank.SwedbankPaymentRequest;
@@ -84,7 +83,7 @@ public class SwedbankPaymentServiceImpl implements PaymentService {
         }
         if (response.statusCode() != HttpStatus.CREATED) {
             SwedbankResponseError swedbankResponseError = response.bodyToMono(SwedbankResponseError.class).block();
-            throw new SwedbankApiException(swedbankResponseError);
+            throw new ApiException(swedbankResponseError);
         }
     }
 }

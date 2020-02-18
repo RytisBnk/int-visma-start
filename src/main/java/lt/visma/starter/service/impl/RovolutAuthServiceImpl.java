@@ -5,7 +5,6 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import lt.visma.starter.configuration.RevolutConfigurationProperties;
 import lt.visma.starter.exception.ApiException;
 import lt.visma.starter.exception.GenericException;
-import lt.visma.starter.exception.RevolutApiException;
 import lt.visma.starter.model.revolut.RevolutAccessToken;
 import lt.visma.starter.model.revolut.RevolutResponseError;
 import lt.visma.starter.service.AuthenticationService;
@@ -108,7 +107,7 @@ public class RovolutAuthServiceImpl implements AuthenticationService {
         }
         else {
             RevolutResponseError apiError = response.bodyToMono(RevolutResponseError.class).block();
-            throw new RevolutApiException(apiError);
+            throw new ApiException(apiError);
         }
     }
 }

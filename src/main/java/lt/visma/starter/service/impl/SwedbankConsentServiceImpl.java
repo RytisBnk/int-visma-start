@@ -3,7 +3,6 @@ package lt.visma.starter.service.impl;
 import lt.visma.starter.configuration.SwedbankConfigurationProperties;
 import lt.visma.starter.exception.ApiException;
 import lt.visma.starter.exception.GenericException;
-import lt.visma.starter.exception.SwedbankApiException;
 import lt.visma.starter.model.swedbank.Access;
 import lt.visma.starter.model.swedbank.ConsentRequest;
 import lt.visma.starter.model.swedbank.ConsentResponse;
@@ -63,7 +62,7 @@ public class SwedbankConsentServiceImpl implements ConsentService {
             throw new GenericException();
         }
         if (response.statusCode() == HttpStatus.BAD_REQUEST) {
-            throw new SwedbankApiException(response.bodyToMono(SwedbankResponseError.class).block());
+            throw new ApiException(response.bodyToMono(SwedbankResponseError.class).block());
         }
         return response.bodyToMono(ConsentResponse.class).block();
     }

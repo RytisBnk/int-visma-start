@@ -3,7 +3,6 @@ package lt.visma.starter.service.impl;
 import lt.visma.starter.configuration.RevolutConfigurationProperties;
 import lt.visma.starter.exception.ApiException;
 import lt.visma.starter.exception.GenericException;
-import lt.visma.starter.exception.RevolutApiException;
 import lt.visma.starter.model.ResponseError;
 import lt.visma.starter.model.Transaction;
 import lt.visma.starter.model.revolut.RevolutApiError;
@@ -85,7 +84,7 @@ public class RevolutTransactionServiceImpl implements TransactionService {
         }
         if (response.statusCode() != HttpStatus.OK) {
             ResponseError responseError = response.bodyToMono(RevolutApiError.class).block();
-            throw new RevolutApiException(responseError);
+            throw new ApiException(responseError);
         }
     }
 }
