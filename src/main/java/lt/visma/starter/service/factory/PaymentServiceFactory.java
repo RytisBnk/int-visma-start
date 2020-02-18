@@ -22,7 +22,7 @@ public class PaymentServiceFactory {
                 .filter(paymentService -> paymentService.supportsBank(bankCode))
                 .findFirst();
         if (!paymentServiceOptional.isPresent()) {
-            throw new BankNotSupportedException();
+            throw new BankNotSupportedException("Bank " + bankCode + " is not supported");
         }
         return paymentServiceOptional.get();
     }
