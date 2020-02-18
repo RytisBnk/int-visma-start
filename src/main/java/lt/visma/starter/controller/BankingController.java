@@ -80,7 +80,7 @@ public class BankingController {
                                                              @RequestParam("from") String from,
                                                              @RequestParam("to") String to,
                                                              @RequestHeader Map<String, String> headers)
-            throws BankNotSupportedException, GenericException, ApiException {
+            throws BankNotSupportedException, GenericException, ApiException, OperationNotSupportedException {
         AuthenticationService authenticationService = authenticationServiceFactory.getAuthenticationService(bankCode);
         TransactionService transactionService = transactionServiceFactory.getTransactionService(bankCode);
         String accessToken = authenticationService.getAccessToken(headers);
@@ -95,6 +95,6 @@ public class BankingController {
         AuthenticationService authenticationService = authenticationServiceFactory.getAuthenticationService(bankCode);
         TransactionService transactionService = transactionServiceFactory.getTransactionService(bankCode);
         String accessToken = authenticationService.getAccessToken(headers);
-        return new ResponseEntity<>(transactionService.getTransactionById(accessToken, id), HttpStatus.OK);
+        return new ResponseEntity<>(transactionService.getTransactionById(accessToken, id, bankCode), HttpStatus.OK);
     }
 }

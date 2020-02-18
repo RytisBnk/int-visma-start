@@ -1,4 +1,4 @@
-package lt.visma.starter.service.impl;
+package lt.visma.starter.service.impl.swedbank;
 
 import lt.visma.starter.configuration.SwedbankConfigurationProperties;
 import lt.visma.starter.exception.ApiException;

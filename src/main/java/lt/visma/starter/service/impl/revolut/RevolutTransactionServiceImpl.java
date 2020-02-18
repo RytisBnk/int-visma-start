@@ -1,4 +1,4 @@
-package lt.visma.starter.service.impl;
+package lt.visma.starter.service.impl.revolut;
 
 import lt.visma.starter.configuration.RevolutConfigurationProperties;
 import lt.visma.starter.exception.ApiException;
@@ -56,7 +56,7 @@ public class RevolutTransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public Transaction getTransactionById(String accessToken, String transactionId) throws GenericException, ApiException {
+    public Transaction getTransactionById(String accessToken, String transactionId, String bankCode) throws GenericException, ApiException {
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
         HTTPUtils.addAuthorizationHeader(headers, accessToken);
 
