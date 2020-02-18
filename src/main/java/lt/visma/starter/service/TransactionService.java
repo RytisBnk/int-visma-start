@@ -2,12 +2,13 @@ package lt.visma.starter.service;
 
 import lt.visma.starter.exception.ApiException;
 import lt.visma.starter.exception.GenericException;
+import lt.visma.starter.exception.OperationNotSupportedException;
 import lt.visma.starter.model.Transaction;
 
 import java.util.List;
 
 public interface TransactionService {
-    List<Transaction> getTransactions(String accessToken, String from, String to) throws GenericException, ApiException;
+    List<Transaction> getTransactions(String accessToken, String from, String to) throws GenericException, ApiException, OperationNotSupportedException;
     Transaction getTransactionById(String accessToken, String transactionId, String bankCode) throws GenericException, ApiException;
     boolean supportsBank(String bankCode);
 }

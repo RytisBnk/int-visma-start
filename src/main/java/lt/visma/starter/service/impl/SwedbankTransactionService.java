@@ -3,6 +3,7 @@ package lt.visma.starter.service.impl;
 import lt.visma.starter.configuration.SwedbankConfigurationProperties;
 import lt.visma.starter.exception.ApiException;
 import lt.visma.starter.exception.GenericException;
+import lt.visma.starter.exception.OperationNotSupportedException;
 import lt.visma.starter.model.Transaction;
 import lt.visma.starter.model.swedbank.SwedbankPaymentRequest;
 import lt.visma.starter.model.swedbank.SwedbankPaymentTransaction;
@@ -34,8 +35,8 @@ public class SwedbankTransactionService implements TransactionService {
     }
 
     @Override
-    public List<Transaction> getTransactions(String accessToken, String from, String to) throws GenericException, ApiException {
-        throw new GenericException();
+    public List<Transaction> getTransactions(String accessToken, String from, String to) throws GenericException, ApiException, OperationNotSupportedException {
+        throw new OperationNotSupportedException();
     }
 
     @Override
