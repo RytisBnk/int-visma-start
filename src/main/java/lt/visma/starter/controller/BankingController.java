@@ -95,6 +95,6 @@ public class BankingController {
         AuthenticationService authenticationService = authenticationServiceFactory.getAuthenticationService(bankCode);
         TransactionService transactionService = transactionServiceFactory.getTransactionService(bankCode);
         String accessToken = authenticationService.getAccessToken(headers);
-        return new ResponseEntity<>(transactionService.getTransactionById(accessToken, id), HttpStatus.OK);
+        return new ResponseEntity<>(transactionService.getTransactionById(accessToken, id, bankCode), HttpStatus.OK);
     }
 }

@@ -56,7 +56,7 @@ public class RevolutTransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public Transaction getTransactionById(String accessToken, String transactionId) throws GenericException, ApiException {
+    public Transaction getTransactionById(String accessToken, String transactionId, String bankCode) throws GenericException, ApiException {
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
         HTTPUtils.addAuthorizationHeader(headers, accessToken);
 
