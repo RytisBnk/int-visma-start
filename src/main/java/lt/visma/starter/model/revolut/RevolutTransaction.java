@@ -2,7 +2,6 @@ package lt.visma.starter.model.revolut;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lt.visma.starter.model.Transaction;
 
 import javax.persistence.*;
@@ -12,12 +11,7 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class RevolutTransaction implements Transaction {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @JsonProperty("databaseId")
-    private long id;
-
-    @JsonProperty("id")
-    private String transactionId;
+    private String id;
     private RevolutTransactionType type;
     @JsonAlias({"request_id"})
     private String reuestId;
@@ -41,8 +35,8 @@ public class RevolutTransaction implements Transaction {
     @OneToOne(cascade = CascadeType.ALL)
     private Card card;
 
-    public RevolutTransaction(String transactionId, RevolutTransactionType type, String reuestId, PaymentState state, String reasonCode, String createdAt, String updatedAt, String completedAt, String scheduledFor, String relatedTransactionId, Merchant merchant, List<TransactionLeg> legs, Card card) {
-        this.transactionId = transactionId;
+    public RevolutTransaction(String id, RevolutTransactionType type, String reuestId, PaymentState state, String reasonCode, String createdAt, String updatedAt, String completedAt, String scheduledFor, String relatedTransactionId, Merchant merchant, List<TransactionLeg> legs, Card card) {
+        this.id = id;
         this.type = type;
         this.reuestId = reuestId;
         this.state = state;
@@ -60,20 +54,12 @@ public class RevolutTransaction implements Transaction {
     public RevolutTransaction() {
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
-    }
-
-    public String getTransactionId() {
-        return transactionId;
-    }
-
-    public void setTransactionId(String transactionId) {
-        this.transactionId = transactionId;
     }
 
     public RevolutTransactionType getType() {

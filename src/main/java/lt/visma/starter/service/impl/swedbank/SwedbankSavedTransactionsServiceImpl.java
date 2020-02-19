@@ -32,7 +32,7 @@ public class SwedbankSavedTransactionsServiceImpl implements SavedTransactionsSe
     }
 
     @Override
-    public Optional<Transaction> getTransactionById(long id) throws TransactionNotFoundException {
+    public Optional<Transaction> getTransactionById(String id) throws TransactionNotFoundException {
         Optional<SwedbankPaymentTransaction> transactionOptional = swedbankPaymentRepositotory.findById(id);
         if (!transactionOptional.isPresent()) {
             throw new TransactionNotFoundException();

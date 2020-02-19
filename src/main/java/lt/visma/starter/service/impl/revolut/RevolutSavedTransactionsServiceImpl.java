@@ -32,7 +32,7 @@ public class RevolutSavedTransactionsServiceImpl implements SavedTransactionsSer
     }
 
     @Override
-    public Optional<Transaction> getTransactionById(long id) throws TransactionNotFoundException {
+    public Optional<Transaction> getTransactionById(String id) throws TransactionNotFoundException {
         Optional<RevolutTransaction> revolutTransaction = revolutPaymentRepository.findById(id);
         if (!revolutTransaction.isPresent()) {
             throw new TransactionNotFoundException();

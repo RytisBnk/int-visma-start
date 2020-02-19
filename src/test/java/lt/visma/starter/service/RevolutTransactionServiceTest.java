@@ -66,7 +66,7 @@ public class RevolutTransactionServiceTest extends MockWebServerTest {
 
         RevolutTransaction transaction = (RevolutTransaction) revolutTransactionService.getTransactionById("", "transactionId", "REVOGB21");
         assertNotNull(transaction);
-        assertNotNull(transaction.getTransactionId());
+        assertNotNull(transaction.getId());
         assertNotNull(transaction.getCreatedAt());
         assertNotNull(transaction.getReuestId());
         assertNotNull(transaction.getLegs());
