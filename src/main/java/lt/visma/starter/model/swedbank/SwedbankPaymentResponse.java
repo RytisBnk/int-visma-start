@@ -3,11 +3,10 @@ package lt.visma.starter.model.swedbank;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import lt.visma.starter.model.PaymentResponse;
 
-public class SwedbankPaymentResponse implements PaymentResponse {
+public class SwedbankPaymentResponse extends PaymentResponse {
     @JsonAlias({"_links"})
     private PaymentResponseLinks links;
     private String chosenScaMethod;
-    private String paymentId;
     private String scaMethods;
     private String transactionStatus;
 
@@ -25,14 +24,6 @@ public class SwedbankPaymentResponse implements PaymentResponse {
 
     public void setChosenScaMethod(String chosenScaMethod) {
         this.chosenScaMethod = chosenScaMethod;
-    }
-
-    public String getPaymentId() {
-        return paymentId;
-    }
-
-    public void setPaymentId(String paymentId) {
-        this.paymentId = paymentId;
     }
 
     public String getScaMethods() {

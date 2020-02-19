@@ -5,7 +5,6 @@ import lt.visma.starter.exception.ApiException;
 import lt.visma.starter.exception.GenericException;
 import lt.visma.starter.exception.OperationNotSupportedException;
 import lt.visma.starter.model.Transaction;
-import lt.visma.starter.model.swedbank.SwedbankPaymentRequest;
 import lt.visma.starter.model.swedbank.SwedbankPaymentTransaction;
 import lt.visma.starter.model.swedbank.SwedbankResponseError;
 import lt.visma.starter.service.HttpRequestService;
