@@ -1,12 +1,23 @@
 package lt.visma.starter.model.revolut;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lt.visma.starter.model.Transaction;
 
+import javax.persistence.*;
 import java.util.List;
 
+@Entity
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class RevolutTransaction implements Transaction {
-    private String id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @JsonProperty("databaseId")
+    private long id;
+
+    @JsonProperty("id")
+    private String transactionId;
     private RevolutTransactionType type;
     @JsonAlias({"request_id"})
     private String reuestId;
@@ -23,12 +34,15 @@ public class RevolutTransaction implements Transaction {
     private String scheduledFor;
     @JsonAlias({"related_transaction_id"})
     private String relatedTransactionId;
+    @ManyToOne(cascade = CascadeType.ALL)
     private Merchant merchant;
+    @OneToMany(cascade = CascadeType.ALL)
     private List<TransactionLeg> legs;
+    @OneToOne(cascade = CascadeType.ALL)
     private Card card;
 
-    public RevolutTransaction(String id, RevolutTransactionType type, String reuestId, PaymentState state, String reasonCode, String createdAt, String updatedAt, String completedAt, String scheduledFor, String relatedTransactionId, Merchant merchant, List<TransactionLeg> legs, Card card) {
-        this.id = id;
+    public RevolutTransaction(String transactionId, RevolutTransactionType type, String reuestId, PaymentState state, String reasonCode, String createdAt, String updatedAt, String completedAt, String scheduledFor, String relatedTransactionId, Merchant merchant, List<TransactionLeg> legs, Card card) {
+        this.transactionId = transactionId;
         this.type = type;
         this.reuestId = reuestId;
         this.state = state;
@@ -46,12 +60,20 @@ public class RevolutTransaction implements Transaction {
     public RevolutTransaction() {
     }
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
+    }
+
+    public String getTransactionId() {
+        return transactionId;
+    }
+
+    public void setTransactionId(String transactionId) {
+        this.transactionId = transactionId;
     }
 
     public RevolutTransactionType getType() {

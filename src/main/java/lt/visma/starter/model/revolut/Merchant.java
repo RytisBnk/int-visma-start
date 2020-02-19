@@ -2,7 +2,12 @@ package lt.visma.starter.model.revolut;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity
 public class Merchant {
+    @Id
     private String name;
     private String city;
     @JsonAlias({"category_code"})
