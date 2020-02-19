@@ -5,6 +5,15 @@ public class Counterparty {
     private String accountId;
     private CounterpartyType type;
 
+    public Counterparty(String id, String accountId, CounterpartyType type) {
+        this.id = id;
+        this.accountId = accountId;
+        this.type = type;
+    }
+
+    public Counterparty() {
+    }
+
     public String getId() {
         return id;
     }

@@ -11,16 +11,11 @@ import lt.visma.starter.model.revolut.RevolutResponseError;
 import lt.visma.starter.service.impl.HttpRequestServiceImpl;
 import lt.visma.starter.service.impl.revolut.RevolutAccountServiceImpl;
 import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.MockWebServer;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,27 +23,18 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-@RunWith(MockitoJUnitRunner.class)
-public class RevolutAccountServiceTest {
+public class RevolutAccountServiceTest extends MockWebServerTest {
     @Mock
     private RevolutConfigurationProperties configurationProperties;
     private RevolutAccountServiceImpl revolutAccountService;
-    private HttpRequestService httpRequestService;
 
-    private MockWebServer mockWebServer;
-
+    @Override
     @Before
     public void setUp() throws Exception {
-        mockWebServer = new MockWebServer();
-        mockWebServer.start();
+        super.setUp();
         initMocks(this);
-        httpRequestService = new HttpRequestServiceImpl();
+        HttpRequestService httpRequestService = new HttpRequestServiceImpl();
         revolutAccountService = new RevolutAccountServiceImpl(configurationProperties, httpRequestService);
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        mockWebServer.shutdown();
     }
 
     @Test
