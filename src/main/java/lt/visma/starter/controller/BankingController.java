@@ -64,6 +64,12 @@ public class BankingController {
         );
     }
 
+    @GetMapping("/payments")
+    public ResponseEntity<List<Transaction>> getPayments(@RequestParam String bankCode) throws BankNotSupportedException {
+        SavedTransactionsService savedTransactionsService = savedTransactionServiceFactory.getSavedTransactionService(bankCode);
+        return new ResponseEntity<>(savedTransactionsService.getAllTransactions(), HttpStatus.OK);
+    }
+
     @PostMapping(value = "/payments", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Transaction> createPayment(@RequestParam("bankCode") String bankCode,
                                                      @RequestBody PaymentRequest paymentRequest,
