@@ -11,4 +11,5 @@ public interface SavedTransactionsService {
     List<Transaction> getAllTransactions();
     Optional<Transaction> getTransactionById(long id) throws TransactionNotFoundException;
     Transaction saveTransaction(Transaction transaction) throws GenericException;
+    boolean supportsBank(String bankCode);
 }

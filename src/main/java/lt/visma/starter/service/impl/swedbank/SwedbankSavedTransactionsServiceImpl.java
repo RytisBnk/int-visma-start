@@ -1,5 +1,6 @@
 package lt.visma.starter.service.impl.swedbank;
 
+import lt.visma.starter.configuration.SwedbankConfigurationProperties;
 import lt.visma.starter.exception.GenericException;
 import lt.visma.starter.exception.TransactionNotFoundException;
 import lt.visma.starter.model.Transaction;
@@ -9,6 +10,7 @@ import lt.visma.starter.service.SavedTransactionsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -16,10 +18,12 @@ import java.util.Optional;
 @Service
 public class SwedbankSavedTransactionsServiceImpl implements SavedTransactionsService {
     private SwedbankPaymentRepositotory swedbankPaymentRepositotory;
+    private SwedbankConfigurationProperties configurationProperties;
 
     @Autowired
-    public SwedbankSavedTransactionsServiceImpl(SwedbankPaymentRepositotory swedbankPaymentRepositotory) {
+    public SwedbankSavedTransactionsServiceImpl(SwedbankPaymentRepositotory swedbankPaymentRepositotory, SwedbankConfigurationProperties configurationProperties) {
         this.swedbankPaymentRepositotory = swedbankPaymentRepositotory;
+        this.configurationProperties = configurationProperties;
     }
 
     @Override
@@ -43,5 +47,10 @@ public class SwedbankSavedTransactionsServiceImpl implements SavedTransactionsSe
         }
         SwedbankPaymentTransaction swedbankTransaction = (SwedbankPaymentTransaction) transaction;
         return swedbankPaymentRepositotory.save(swedbankTransaction);
+    }
+
+    @Override
+    public boolean supportsBank(String bankCode) {
+        return Arrays.asList(configurationProperties.getSupportedBanks()).contains(bankCode);
     }
 }
