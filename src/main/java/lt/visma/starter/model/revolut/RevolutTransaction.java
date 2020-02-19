@@ -27,6 +27,25 @@ public class RevolutTransaction implements Transaction {
     private List<TransactionLeg> legs;
     private Card card;
 
+    public RevolutTransaction(String id, RevolutTransactionType type, String reuestId, PaymentState state, String reasonCode, String createdAt, String updatedAt, String completedAt, String scheduledFor, String relatedTransactionId, Merchant merchant, List<TransactionLeg> legs, Card card) {
+        this.id = id;
+        this.type = type;
+        this.reuestId = reuestId;
+        this.state = state;
+        this.reasonCode = reasonCode;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.completedAt = completedAt;
+        this.scheduledFor = scheduledFor;
+        this.relatedTransactionId = relatedTransactionId;
+        this.merchant = merchant;
+        this.legs = legs;
+        this.card = card;
+    }
+
+    public RevolutTransaction() {
+    }
+
     public String getId() {
         return id;
     }

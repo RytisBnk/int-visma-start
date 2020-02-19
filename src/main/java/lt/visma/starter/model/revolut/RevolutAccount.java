@@ -16,6 +16,20 @@ public class RevolutAccount implements BankingAccount {
     @JsonAlias({"updated_at"})
     private String updatedAt;
 
+    public RevolutAccount(String id, String name, double balance, String currency, String state, boolean isPublic, String createdAt, String updatedAt) {
+        this.id = id;
+        this.name = name;
+        this.balance = balance;
+        this.currency = currency;
+        this.state = state;
+        this.isPublic = isPublic;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+
+    public RevolutAccount() {
+    }
+
     public String getId() {
         return id;
     }
