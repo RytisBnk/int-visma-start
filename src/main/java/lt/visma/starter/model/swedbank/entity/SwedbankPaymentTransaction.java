@@ -1,4 +1,4 @@
-package lt.visma.starter.model.swedbank;
+package lt.visma.starter.model.swedbank.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lt.visma.starter.model.Transaction;

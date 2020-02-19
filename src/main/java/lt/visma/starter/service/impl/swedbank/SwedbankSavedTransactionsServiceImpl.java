@@ -4,7 +4,7 @@ import lt.visma.starter.configuration.SwedbankConfigurationProperties;
 import lt.visma.starter.exception.GenericException;
 import lt.visma.starter.exception.TransactionNotFoundException;
 import lt.visma.starter.model.Transaction;
-import lt.visma.starter.model.swedbank.SwedbankPaymentTransaction;
+import lt.visma.starter.model.swedbank.entity.SwedbankPaymentTransaction;
 import lt.visma.starter.repository.SwedbankPaymentRepositotory;
 import lt.visma.starter.service.SavedTransactionsService;
 import org.springframework.beans.factory.annotation.Autowired;

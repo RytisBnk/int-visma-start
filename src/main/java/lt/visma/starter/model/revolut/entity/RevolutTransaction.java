@@ -1,8 +1,10 @@
-package lt.visma.starter.model.revolut;
+package lt.visma.starter.model.revolut.entity;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lt.visma.starter.model.Transaction;
+import lt.visma.starter.model.revolut.PaymentState;
+import lt.visma.starter.model.revolut.RevolutTransactionType;
 
 import javax.persistence.*;
 import java.util.List;

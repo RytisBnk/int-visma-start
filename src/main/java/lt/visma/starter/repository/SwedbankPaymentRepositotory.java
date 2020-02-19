@@ -1,6 +1,6 @@
 package lt.visma.starter.repository;
 
-import lt.visma.starter.model.swedbank.SwedbankPaymentTransaction;
+import lt.visma.starter.model.swedbank.entity.SwedbankPaymentTransaction;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

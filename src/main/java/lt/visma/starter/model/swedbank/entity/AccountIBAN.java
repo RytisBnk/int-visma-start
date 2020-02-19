@@ -1,4 +1,4 @@
-package lt.visma.starter.model.swedbank;
+package lt.visma.starter.model.swedbank.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;

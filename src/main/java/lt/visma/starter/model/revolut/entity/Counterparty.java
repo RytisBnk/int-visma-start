@@ -1,5 +1,6 @@
-package lt.visma.starter.model.revolut;
+package lt.visma.starter.model.revolut.entity;
 
+import lt.visma.starter.model.revolut.CounterpartyType;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Entity;

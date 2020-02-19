@@ -4,7 +4,7 @@ import lt.visma.starter.configuration.RevolutConfigurationProperties;
 import lt.visma.starter.exception.GenericException;
 import lt.visma.starter.exception.TransactionNotFoundException;
 import lt.visma.starter.model.Transaction;
-import lt.visma.starter.model.revolut.RevolutTransaction;
+import lt.visma.starter.model.revolut.entity.RevolutTransaction;
 import lt.visma.starter.repository.RevolutPaymentRepository;
 import lt.visma.starter.service.SavedTransactionsService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package lt.visma.starter.model.revolut;
+package lt.visma.starter.model.revolut.entity;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 
