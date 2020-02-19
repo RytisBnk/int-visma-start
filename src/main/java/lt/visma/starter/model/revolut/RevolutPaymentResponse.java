@@ -3,8 +3,7 @@ package lt.visma.starter.model.revolut;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import lt.visma.starter.model.PaymentResponse;
 
-public class RevolutPaymentResponse implements PaymentResponse {
-    private String id;
+public class RevolutPaymentResponse extends PaymentResponse {
     private PaymentState state;
     @JsonAlias({"created_at"})
     private String createdAt;
@@ -12,14 +11,6 @@ public class RevolutPaymentResponse implements PaymentResponse {
     private String completedAt;
     @JsonAlias({"reason_code"})
     private String reasonCode;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String requestId) {
-        this.id = requestId;
-    }
 
     public PaymentState getState() {
         return state;
