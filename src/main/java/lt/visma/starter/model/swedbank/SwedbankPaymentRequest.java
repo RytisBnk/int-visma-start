@@ -2,7 +2,8 @@ package lt.visma.starter.model.swedbank;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lt.visma.starter.model.PaymentRequest;
-import lt.visma.starter.model.Transaction;
+import lt.visma.starter.model.swedbank.entity.AccountIBAN;
+import lt.visma.starter.model.swedbank.entity.PaymentAmount;
 
 public class SwedbankPaymentRequest implements PaymentRequest {
     private AccountIBAN creditorAccount;

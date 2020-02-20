@@ -1,11 +1,18 @@
-package lt.visma.starter.model.revolut;
+package lt.visma.starter.model.revolut.entity;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lt.visma.starter.model.Transaction;
+import lt.visma.starter.model.revolut.PaymentState;
+import lt.visma.starter.model.revolut.RevolutTransactionType;
 
+import javax.persistence.*;
 import java.util.List;
 
+@Entity
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class RevolutTransaction implements Transaction {
+    @Id
     private String id;
     private RevolutTransactionType type;
     @JsonAlias({"request_id"})
@@ -23,8 +30,11 @@ public class RevolutTransaction implements Transaction {
     private String scheduledFor;
     @JsonAlias({"related_transaction_id"})
     private String relatedTransactionId;
+    @ManyToOne(cascade = CascadeType.ALL)
     private Merchant merchant;
+    @OneToMany(cascade = CascadeType.ALL)
     private List<TransactionLeg> legs;
+    @OneToOne(cascade = CascadeType.ALL)
     private Card card;
 
     public RevolutTransaction(String id, RevolutTransactionType type, String reuestId, PaymentState state, String reasonCode, String createdAt, String updatedAt, String completedAt, String scheduledFor, String relatedTransactionId, Merchant merchant, List<TransactionLeg> legs, Card card) {

@@ -1,9 +1,16 @@
-package lt.visma.starter.model.revolut;
+package lt.visma.starter.model.revolut.entity;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+
+@Entity
 public class TransactionLeg {
     @JsonAlias({"leg_id"})
+    @Id
     private String legId;
     private double amount;
     private String currency;
@@ -13,6 +20,7 @@ public class TransactionLeg {
     private String billCurrency;
     @JsonAlias({"account_id"})
     private String accountId;
+    @OneToOne(cascade = CascadeType.ALL)
     private Counterparty counterparty;
     private String description;
     private double balance;

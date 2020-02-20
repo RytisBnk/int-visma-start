@@ -4,10 +4,7 @@ import lt.visma.starter.exception.*;
 import lt.visma.starter.model.*;
 import lt.visma.starter.model.swedbank.ConsentResponse;
 import lt.visma.starter.service.*;
-import lt.visma.starter.service.factory.AuthenticationServiceFactory;
-import lt.visma.starter.service.factory.BankingAccountsServiceFactory;
-import lt.visma.starter.service.factory.PaymentServiceFactory;
-import lt.visma.starter.service.factory.TransactionServiceFactory;
+import lt.visma.starter.service.factory.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,6 +22,7 @@ public class BankingController {
     private ConsentService consentService;
     private PaymentServiceFactory paymentServiceFactory;
     private TransactionServiceFactory transactionServiceFactory;
+    private SavedTransactionServiceFactory savedTransactionServiceFactory;
 
     @ExceptionHandler(value = ApiException.class)
     public ResponseEntity<ResponseError> handleExternalApiError(ApiException exc) {
@@ -36,12 +34,14 @@ public class BankingController {
                              AuthenticationServiceFactory authenticationServiceFactory,
                              ConsentService consentService,
                              PaymentServiceFactory paymentServiceFactory,
-                             TransactionServiceFactory transactionServiceFactory) {
+                             TransactionServiceFactory transactionServiceFactory,
+                             SavedTransactionServiceFactory savedTransactionServiceFactory) {
         this.bankingAccountsServiceFactory = bankingAccountsServiceFactory;
         this.authenticationServiceFactory = authenticationServiceFactory;
         this.consentService = consentService;
         this.paymentServiceFactory = paymentServiceFactory;
         this.transactionServiceFactory = transactionServiceFactory;
+        this.savedTransactionServiceFactory = savedTransactionServiceFactory;
     }
 
     @PostMapping("/accounts")
@@ -64,15 +64,26 @@ public class BankingController {
         );
     }
 
+    @GetMapping("/payments")
+    public ResponseEntity<List<Transaction>> getPayments(@RequestParam String bankCode) throws BankNotSupportedException {
+        SavedTransactionsService savedTransactionsService = savedTransactionServiceFactory.getSavedTransactionService(bankCode);
+        return new ResponseEntity<>(savedTransactionsService.getAllTransactions(), HttpStatus.OK);
+    }
+
     @PostMapping(value = "/payments", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PaymentResponse> createPayment(@RequestParam("bankCode") String bankCode,
+    public ResponseEntity<Transaction> createPayment(@RequestParam("bankCode") String bankCode,
                                                      @RequestBody PaymentRequest paymentRequest,
                                                      @RequestHeader Map<String, String> headers)
             throws BankNotSupportedException, GenericException, ApiException {
         AuthenticationService authenticationService = authenticationServiceFactory.getAuthenticationService(bankCode);
         PaymentService paymentService = paymentServiceFactory.getPaymentService(bankCode);
+        TransactionService transactionService = transactionServiceFactory.getTransactionService(bankCode);
+        SavedTransactionsService savedTransactionsService = savedTransactionServiceFactory.getSavedTransactionService(bankCode);
+
         String accessToken = authenticationService.getAccessToken(headers);
-        return new ResponseEntity<>(paymentService.makePayment(accessToken, paymentRequest), HttpStatus.OK);
+        PaymentResponse paymentResponse = paymentService.makePayment(accessToken, paymentRequest);
+        Transaction paymentTransaction = transactionService.getTransactionById(accessToken, paymentResponse.getId(), bankCode);
+        return new ResponseEntity<>(savedTransactionsService.saveTransaction(paymentTransaction), HttpStatus.CREATED);
     }
 
     @GetMapping("/transactions")
