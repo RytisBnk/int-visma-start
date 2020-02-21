@@ -14,17 +14,27 @@ public class SwedbankPaymentTransaction implements Transaction {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     private AccountIBAN creditorAccount;
     private String creditorAgent;
     private String creditorName;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     private AccountIBAN debtorAccount;
     private String debtorIdentification;
     private String endToEndIdentification;
     @OneToOne(cascade = CascadeType.ALL)
     private PaymentAmount instructedAmount;
     private String remittanceInformationUnstructured;
+    @OneToOne(cascade = CascadeType.ALL)
+    private RemittanceInformation remittanceInformationStructured;
+
+    public RemittanceInformation getRemittanceInformationStructured() {
+        return remittanceInformationStructured;
+    }
+
+    public void setRemittanceInformationStructured(RemittanceInformation remittanceInformationStructured) {
+        this.remittanceInformationStructured = remittanceInformationStructured;
+    }
 
     public String getId() {
         return id;
