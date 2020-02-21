@@ -7,6 +7,7 @@ import lt.visma.starter.model.swedbank.ConsentResponse;
 import lt.visma.starter.service.AuthenticationService;
 import lt.visma.starter.service.ConsentService;
 import lt.visma.starter.service.factory.AuthenticationServiceFactory;
+import lt.visma.starter.service.impl.revolut.ConsentServiceFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,12 +19,12 @@ import java.util.Map;
 @RequestMapping("/v1/consents")
 public class ConsentsController {
     private AuthenticationServiceFactory authenticationServiceFactory;
-    private ConsentService consentService;
+    private ConsentServiceFactory consentServiceFactory;
 
     @Autowired
-    public ConsentsController(AuthenticationServiceFactory authenticationServiceFactory, ConsentService consentService) {
+    public ConsentsController(AuthenticationServiceFactory authenticationServiceFactory, ConsentServiceFactory consentServiceFactory) {
         this.authenticationServiceFactory = authenticationServiceFactory;
-        this.consentService = consentService;
+        this.consentServiceFactory = consentServiceFactory;
     }
 
     @PostMapping
@@ -31,6 +32,8 @@ public class ConsentsController {
                                                               @RequestHeader Map<String, String> params)
             throws BankNotSupportedException, GenericException, ApiException {
         AuthenticationService authenticationService = authenticationServiceFactory.getAuthenticationService(bankCode);
+        ConsentService consentService = consentServiceFactory.getConsentService(bankCode);
+
         return new ResponseEntity<>(consentService.createUserConsent(
                 authenticationService.getAccessToken(params),params), HttpStatus.OK
         );
