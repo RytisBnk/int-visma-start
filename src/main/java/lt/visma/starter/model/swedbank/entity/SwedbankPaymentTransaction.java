@@ -14,11 +14,11 @@ public class SwedbankPaymentTransaction implements Transaction {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String id;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne(cascade = CascadeType.ALL)
     private AccountIBAN creditorAccount;
     private String creditorAgent;
     private String creditorName;
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne(cascade = CascadeType.ALL)
     private AccountIBAN debtorAccount;
     private String debtorIdentification;
     private String endToEndIdentification;
