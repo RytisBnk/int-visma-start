@@ -25,6 +25,10 @@ public class Counterparty {
         this.type = type;
     }
 
+    public Counterparty(String accountId) {
+        this.accountId = accountId;
+    }
+
     public Counterparty() {
     }
 

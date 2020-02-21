@@ -16,6 +16,13 @@ public class AccountIBAN {
 
     private String iban;
 
+    public AccountIBAN() {
+    }
+
+    public AccountIBAN(String iban) {
+        this.iban = iban;
+    }
+
     public String getIban() {
         return iban;
     }

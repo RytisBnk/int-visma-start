@@ -20,6 +20,13 @@ public class RemittanceInformation {
     private String reference;
     private String referenceType;
 
+    public RemittanceInformation() {
+    }
+
+    public RemittanceInformation(String reference) {
+        this.reference = reference;
+    }
+
     public long getId() {
         return id;
     }
