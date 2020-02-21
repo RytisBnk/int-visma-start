@@ -1,4 +1,4 @@
-package lt.visma.starter.service;
+package lt.visma.starter.service.revolut;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,6 +11,8 @@ import lt.visma.starter.model.revolut.*;
 import lt.visma.starter.model.revolut.entity.Counterparty;
 import lt.visma.starter.model.revolut.entity.RevolutTransaction;
 import lt.visma.starter.model.revolut.entity.TransactionLeg;
+import lt.visma.starter.service.HttpRequestService;
+import lt.visma.starter.service.MockWebServerTest;
 import lt.visma.starter.service.impl.HttpRequestServiceImpl;
 import lt.visma.starter.service.impl.revolut.RevolutTransactionServiceImpl;
 import okhttp3.mockwebserver.MockResponse;
