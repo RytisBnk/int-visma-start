@@ -52,7 +52,11 @@ public class SwedbankTransactionService implements TransactionService {
                 headers
         );
         checkIfResponseValid(response);
-        return response.bodyToMono(SwedbankPaymentTransaction.class).block();
+        SwedbankPaymentTransaction transaction = response.bodyToMono(SwedbankPaymentTransaction.class).block();
+        if (transaction != null) {
+            transaction.setId(transactionId);
+        }
+        return transaction;
     }
 
     @Override
