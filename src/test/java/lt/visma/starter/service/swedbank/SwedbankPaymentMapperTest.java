@@ -7,7 +7,7 @@ import lt.visma.starter.model.swedbank.entity.AccountIBAN;
 import lt.visma.starter.model.swedbank.entity.PaymentAmount;
 import lt.visma.starter.model.swedbank.entity.RemittanceInformation;
 import lt.visma.starter.model.swedbank.entity.SwedbankPaymentTransaction;
-import lt.visma.starter.service.impl.swedbank.SwedbankPaymentMapperServiceImpl;
+import lt.visma.starter.mapper.impl.swedbank.SwedbankPaymentMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,8 +16,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 import static org.junit.jupiter.api.Assertions.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class SwedbankPaymentMapperServiceTest {
-    private SwedbankPaymentMapperServiceImpl swedbankPaymentMapperService;
+public class SwedbankPaymentMapperTest {
+    private SwedbankPaymentMapper swedbankPaymentMapperService;
 
     private final String TRANSACTION_ID = "1-1-1-1";
     private final String CREDITOR_ACCOUNT = "LT11112222333344";
@@ -29,7 +29,7 @@ public class SwedbankPaymentMapperServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        swedbankPaymentMapperService = new SwedbankPaymentMapperServiceImpl();
+        swedbankPaymentMapperService = new SwedbankPaymentMapper();
     }
 
     @Test
