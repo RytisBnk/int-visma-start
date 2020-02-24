@@ -23,12 +23,12 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-public class SwedbankTransactionService implements TransactionService {
+public class SwedbankTransactionServiceImpl implements TransactionService {
     private HttpRequestService httpRequestService;
     private SwedbankConfigurationProperties configurationProperties;
 
     @Autowired
-    public SwedbankTransactionService(HttpRequestService httpRequestService, SwedbankConfigurationProperties configurationProperties) {
+    public SwedbankTransactionServiceImpl(HttpRequestService httpRequestService, SwedbankConfigurationProperties configurationProperties) {
         this.httpRequestService = httpRequestService;
         this.configurationProperties = configurationProperties;
     }

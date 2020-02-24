@@ -1,5 +1,6 @@
 package lt.visma.starter.model.swedbank;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lt.visma.starter.model.BankingAccount;
 
@@ -11,6 +12,29 @@ public class SwedbankAccount implements BankingAccount {
     private String name;
     private String product;
     private String resourceId;
+
+    @JsonAlias({"_links"})
+    private AccountLinks accountLinks;
+
+    public SwedbankAccount(String cashAccountType, String currency, String iban, String name, String product, String resourceId) {
+        this.cashAccountType = cashAccountType;
+        this.currency = currency;
+        this.iban = iban;
+        this.name = name;
+        this.product = product;
+        this.resourceId = resourceId;
+    }
+
+    public SwedbankAccount() {
+    }
+
+    public AccountLinks getAccountLinks() {
+        return accountLinks;
+    }
+
+    public void setAccountLinks(AccountLinks accountLinks) {
+        this.accountLinks = accountLinks;
+    }
 
     public String getCashAccountType() {
         return cashAccountType;
