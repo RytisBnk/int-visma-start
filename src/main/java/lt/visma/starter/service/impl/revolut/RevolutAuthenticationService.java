@@ -29,12 +29,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class RovolutAuthServiceImpl implements AuthenticationService {
+public class RevolutAuthenticationService implements AuthenticationService {
     private RevolutConfigurationProperties configurationProperties;
     private HttpRequestService httpRequestService;
 
     @Autowired
-    public RovolutAuthServiceImpl(RevolutConfigurationProperties configurationProperties, HttpRequestService httpRequestService) {
+    public RevolutAuthenticationService(RevolutConfigurationProperties configurationProperties, HttpRequestService httpRequestService) {
         this.configurationProperties = configurationProperties;
         this.httpRequestService = httpRequestService;
     }

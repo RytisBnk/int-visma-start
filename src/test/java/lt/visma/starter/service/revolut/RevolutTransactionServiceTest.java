@@ -11,9 +11,11 @@ import lt.visma.starter.model.revolut.*;
 import lt.visma.starter.model.revolut.entity.Counterparty;
 import lt.visma.starter.model.revolut.entity.RevolutTransaction;
 import lt.visma.starter.model.revolut.entity.TransactionLeg;
+import lt.visma.starter.service.AuthenticationService;
 import lt.visma.starter.service.HttpRequestService;
 import lt.visma.starter.service.MockWebServerTest;
 import lt.visma.starter.service.impl.HttpRequestServiceImpl;
+import lt.visma.starter.service.impl.revolut.RevolutAuthenticationService;
 import lt.visma.starter.service.impl.revolut.RevolutTransactionServiceImpl;
 import okhttp3.mockwebserver.MockResponse;
 import org.junit.Before;
@@ -23,6 +25,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,12 +38,15 @@ public class RevolutTransactionServiceTest extends MockWebServerTest {
 
     private RevolutTransactionServiceImpl revolutTransactionService;
 
+    @Mock
+    private RevolutAuthenticationService authenticationService;
+
     @Override
     @Before
     public void setUp() throws Exception {
         super.setUp();
         HttpRequestService httpRequestService = new HttpRequestServiceImpl();
-        revolutTransactionService = new RevolutTransactionServiceImpl(httpRequestService, configurationProperties);
+        revolutTransactionService = new RevolutTransactionServiceImpl(httpRequestService, configurationProperties, authenticationService);
     }
 
     @Test
@@ -49,7 +55,7 @@ public class RevolutTransactionServiceTest extends MockWebServerTest {
 
         whenMockApiUrl();
 
-        List<Transaction> transactions = revolutTransactionService.getTransactions("", "", "");
+        List<Transaction> transactions = revolutTransactionService.getTransactions("", "", new HashMap<>());
         assertNotNull(transactions);
         assertTrue(transactions.size() != 0);
     }
@@ -60,7 +66,7 @@ public class RevolutTransactionServiceTest extends MockWebServerTest {
 
         whenMockApiUrl();
 
-        assertThrows(ApiException.class, () -> revolutTransactionService.getTransactions("", "", ""));
+        assertThrows(ApiException.class, () -> revolutTransactionService.getTransactions("", "", new HashMap<>()));
     }
 
     @Test
@@ -69,7 +75,8 @@ public class RevolutTransactionServiceTest extends MockWebServerTest {
 
         whenMockApiUrl();
 
-        RevolutTransaction transaction = (RevolutTransaction) revolutTransactionService.getTransactionById("", "transactionId", "REVOGB21");
+        RevolutTransaction transaction = (RevolutTransaction)
+                revolutTransactionService.getTransactionById("", "", new HashMap<>());
         assertNotNull(transaction);
         assertNotNull(transaction.getId());
         assertNotNull(transaction.getCreatedAt());
@@ -84,7 +91,7 @@ public class RevolutTransactionServiceTest extends MockWebServerTest {
         whenMockApiUrl();
 
         assertThrows(ApiException.class, () ->
-                revolutTransactionService.getTransactionById("", "transactionId", "REVOGB21"));
+                revolutTransactionService.getTransactionById("", "", new HashMap<>()));
     }
 
     private MockResponse getMockResponse(Object requestBody, int statusCode) throws JsonProcessingException {

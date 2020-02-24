@@ -6,9 +6,12 @@ import lt.visma.starter.exception.OperationNotSupportedException;
 import lt.visma.starter.model.Transaction;
 
 import java.util.List;
+import java.util.Map;
 
 public interface TransactionService {
-    List<Transaction> getTransactions(String accessToken, String from, String to) throws GenericException, ApiException, OperationNotSupportedException;
-    Transaction getTransactionById(String accessToken, String transactionId, String bankCode) throws GenericException, ApiException;
+    List<Transaction> getTransactions(String from, String to, Map<String, String> authParams)
+            throws GenericException, ApiException, OperationNotSupportedException;
+    Transaction getTransactionById(String transactionId, String bankCode, Map<String, String> authParams)
+            throws GenericException, ApiException;
     boolean supportsBank(String bankCode);
 }

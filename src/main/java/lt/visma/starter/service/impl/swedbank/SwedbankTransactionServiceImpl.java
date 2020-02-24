@@ -7,6 +7,7 @@ import lt.visma.starter.exception.OperationNotSupportedException;
 import lt.visma.starter.model.Transaction;
 import lt.visma.starter.model.swedbank.entity.SwedbankPaymentTransaction;
 import lt.visma.starter.model.swedbank.SwedbankResponseError;
+import lt.visma.starter.service.AuthenticationService;
 import lt.visma.starter.service.HttpRequestService;
 import lt.visma.starter.service.TransactionService;
 import lt.visma.starter.util.HTTPUtils;
@@ -20,26 +21,33 @@ import org.springframework.web.reactive.function.client.ClientResponse;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
 public class SwedbankTransactionServiceImpl implements TransactionService {
     private HttpRequestService httpRequestService;
     private SwedbankConfigurationProperties configurationProperties;
+    private AuthenticationService swedbankAuthenticationService;
 
     @Autowired
-    public SwedbankTransactionServiceImpl(HttpRequestService httpRequestService, SwedbankConfigurationProperties configurationProperties) {
+    public SwedbankTransactionServiceImpl(HttpRequestService httpRequestService,
+                                          SwedbankConfigurationProperties configurationProperties,
+                                          AuthenticationService swedbankAuthenticationService) {
         this.httpRequestService = httpRequestService;
         this.configurationProperties = configurationProperties;
+        this.swedbankAuthenticationService = swedbankAuthenticationService;
     }
 
     @Override
-    public List<Transaction> getTransactions(String accessToken, String from, String to) throws GenericException, ApiException, OperationNotSupportedException {
+    public List<Transaction> getTransactions(String from, String to, Map<String, String> authParams) throws GenericException, ApiException, OperationNotSupportedException {
         throw new OperationNotSupportedException();
     }
 
     @Override
-    public Transaction getTransactionById(String accessToken, String transactionId, String bankCode) throws GenericException, ApiException {
+    public Transaction getTransactionById(String transactionId, String bankCode, Map<String, String> authParams) throws GenericException, ApiException {
+        String accessToken = swedbankAuthenticationService.getAccessToken(authParams);
+
         MultiValueMap<String, String> headers = getRequiredHeaders(accessToken);
 
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();

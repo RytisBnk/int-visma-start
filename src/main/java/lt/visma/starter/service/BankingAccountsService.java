@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface BankingAccountsService {
-    List<BankingAccount> getBankingAccounts(String accessToken, Map<String, String> parameters)
+    List<BankingAccount> getBankingAccounts(Map<String, String> parameters)
             throws GenericException, ApiException;
     boolean supportsBank(String bankCode);
 }

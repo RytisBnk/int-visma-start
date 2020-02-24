@@ -5,9 +5,7 @@ import lt.visma.starter.exception.BankNotSupportedException;
 import lt.visma.starter.exception.GenericException;
 import lt.visma.starter.exception.OperationNotSupportedException;
 import lt.visma.starter.model.Transaction;
-import lt.visma.starter.service.AuthenticationService;
 import lt.visma.starter.service.TransactionService;
-import lt.visma.starter.service.factory.AuthenticationServiceFactory;
 import lt.visma.starter.service.factory.TransactionServiceFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,13 +18,10 @@ import java.util.Map;
 @RestController
 @RequestMapping("/v1/transactions")
 public class TransactionsController {
-    private AuthenticationServiceFactory authenticationServiceFactory;
     private TransactionServiceFactory transactionServiceFactory;
 
     @Autowired
-    public TransactionsController(AuthenticationServiceFactory authenticationServiceFactory,
-                                  TransactionServiceFactory transactionServiceFactory) {
-        this.authenticationServiceFactory = authenticationServiceFactory;
+    public TransactionsController(TransactionServiceFactory transactionServiceFactory) {
         this.transactionServiceFactory = transactionServiceFactory;
     }
 
@@ -36,10 +31,8 @@ public class TransactionsController {
                                                              @RequestParam("to") String to,
                                                              @RequestHeader Map<String, String> headers)
             throws BankNotSupportedException, GenericException, ApiException, OperationNotSupportedException {
-        AuthenticationService authenticationService = authenticationServiceFactory.getAuthenticationService(bankCode);
         TransactionService transactionService = transactionServiceFactory.getTransactionService(bankCode);
-        String accessToken = authenticationService.getAccessToken(headers);
-        return new ResponseEntity<>(transactionService.getTransactions(accessToken, from, to), HttpStatus.OK);
+        return new ResponseEntity<>(transactionService.getTransactions(from, to, headers), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -47,9 +40,7 @@ public class TransactionsController {
                                                           @RequestParam("bankCode") String bankCode,
                                                           @RequestHeader Map<String, String> headers)
             throws BankNotSupportedException, GenericException, ApiException {
-        AuthenticationService authenticationService = authenticationServiceFactory.getAuthenticationService(bankCode);
         TransactionService transactionService = transactionServiceFactory.getTransactionService(bankCode);
-        String accessToken = authenticationService.getAccessToken(headers);
-        return new ResponseEntity<>(transactionService.getTransactionById(accessToken, id, bankCode), HttpStatus.OK);
+        return new ResponseEntity<>(transactionService.getTransactionById(id, bankCode, headers), HttpStatus.OK);
     }
 }

@@ -5,7 +5,7 @@ import lt.visma.starter.exception.ApiException;
 import lt.visma.starter.exception.GenericException;
 import lt.visma.starter.service.HttpRequestService;
 import lt.visma.starter.service.impl.HttpRequestServiceImpl;
-import lt.visma.starter.service.impl.revolut.RovolutAuthServiceImpl;
+import lt.visma.starter.service.impl.revolut.RevolutAuthenticationService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,7 +25,7 @@ public class RevolutAuthServiceTest {
     private HttpRequestService httpRequestService = new HttpRequestServiceImpl();
     @Mock
     private RevolutConfigurationProperties configurationProperties;
-    private RovolutAuthServiceImpl revolutAuthenticationService;
+    private RevolutAuthenticationService revolutAuthenticationService;
 
     private final String TEST_EXPECTED_JWT_VALUE = "eyJhbGciOiJSUzI1NiJ9.eyJhdWQiOiJodHRwczovL2V4YW1wbGUuY29tIiwic3ViIjoiQUFBQSIsImlzcyI6InRlc3QuY29tIn0.jrOKOEzK4F4YXR8AWfEpu2Rl0N9NNDeBfZ3WhsXzImo-c6Muau_9BAnHw7gsyAUd4pmB2_5TIk0dtqgQZlTLbDs5QxtHIrhYp2Ja9QpKlML6v0-I3UZG_Kka7uczdEeV3wNn3kMW_VIz4WwxFCHRdvCrlIZ8x8uFNlCFyEp9M70";
     private final String SANDBOX_JWT_TOKEN = "eyJhbGciOiJSUzI1NiJ9.eyJhdWQiOiJodHRwczovL3Jldm9sdXQuY29tIiwic3ViIjoiaXpycXkwNzZ0VE9mSnQwQWJMZEtVcWMyMzF4bE1VYmU1TU5iZE85bFJ3TSIsImlzcyI6InJldm9sdXQtand0LXNhbmRib3guZ2xpdGNoLm1lIn0.n7n-VkgTXR1NHWg-AVuZdnlztCYIvfyWo5_RtcqgBTkl7ur17Ys5wlyZ8n9d9SJKSWZ_5ONLUrY4uUW9jH_S7_MT-YQYoia5rfmnLOMW1TZGNzMlxRvZ1Usi_oFbFbsppOi2ewimNSUEdCRW5UIilpV9zkZn7yxyVa0Vf3HwQnM";
@@ -75,6 +75,6 @@ public class RevolutAuthServiceTest {
     @Before
     public void init() {
         initMocks(this);
-        revolutAuthenticationService = new RovolutAuthServiceImpl(configurationProperties, httpRequestService);
+        revolutAuthenticationService = new RevolutAuthenticationService(configurationProperties, httpRequestService);
     }
 }

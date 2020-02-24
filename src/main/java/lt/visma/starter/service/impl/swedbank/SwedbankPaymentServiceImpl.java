@@ -8,6 +8,7 @@ import lt.visma.starter.model.PaymentResponse;
 import lt.visma.starter.model.swedbank.SwedbankPaymentRequest;
 import lt.visma.starter.model.swedbank.SwedbankPaymentResponse;
 import lt.visma.starter.model.swedbank.SwedbankResponseError;
+import lt.visma.starter.service.AuthenticationService;
 import lt.visma.starter.service.HttpRequestService;
 import lt.visma.starter.service.PaymentService;
 import lt.visma.starter.util.HTTPUtils;
@@ -21,21 +22,28 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.ClientResponse;
 
 import java.util.Arrays;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
 public class SwedbankPaymentServiceImpl implements PaymentService {
     private HttpRequestService httpRequestService;
     private SwedbankConfigurationProperties configurationProperties;
+    private AuthenticationService swedbankAuthenticationService;
 
     @Autowired
-    public SwedbankPaymentServiceImpl(HttpRequestService httpRequestService, SwedbankConfigurationProperties configurationProperties) {
+    public SwedbankPaymentServiceImpl(HttpRequestService httpRequestService,
+                                      SwedbankConfigurationProperties configurationProperties,
+                                      AuthenticationService swedbankAuthenticationService) {
         this.httpRequestService = httpRequestService;
         this.configurationProperties = configurationProperties;
+        this.swedbankAuthenticationService = swedbankAuthenticationService;
     }
 
     @Override
-    public PaymentResponse makePayment(String accessToken, PaymentRequest paymentRequest) throws GenericException, ApiException {
+    public PaymentResponse makePayment(PaymentRequest paymentRequest, Map<String, String> params) throws GenericException, ApiException {
+        String accessToken = swedbankAuthenticationService.getAccessToken(params);
+
         if (! (paymentRequest instanceof SwedbankPaymentRequest)) {
             throw new GenericException();
         }

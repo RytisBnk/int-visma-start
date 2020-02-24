@@ -21,12 +21,12 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Service
-public class SwedbankAuthServiceImpl implements AuthenticationService {
+public class SwedbankAuthenticationService implements AuthenticationService {
     private SwedbankConfigurationProperties configurationProperties;
     private HttpRequestService httpRequestService;
 
     @Autowired
-    public SwedbankAuthServiceImpl(SwedbankConfigurationProperties configurationProperties, HttpRequestService httpRequestService) {
+    public SwedbankAuthenticationService(SwedbankConfigurationProperties configurationProperties, HttpRequestService httpRequestService) {
         this.configurationProperties = configurationProperties;
         this.httpRequestService = httpRequestService;
     }

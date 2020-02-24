@@ -6,6 +6,7 @@ import lt.visma.starter.exception.GenericException;
 import lt.visma.starter.model.BankingAccount;
 import lt.visma.starter.model.revolut.RevolutAccount;
 import lt.visma.starter.model.revolut.RevolutResponseError;
+import lt.visma.starter.service.AuthenticationService;
 import lt.visma.starter.service.BankingAccountsService;
 import lt.visma.starter.service.HttpRequestService;
 import lt.visma.starter.util.HTTPUtils;
@@ -22,18 +23,24 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class RevolutAccountServiceImpl implements BankingAccountsService {
+public class RevolutAccountService implements BankingAccountsService {
     private RevolutConfigurationProperties configurationProperties;
     private HttpRequestService httpRequestService;
+    private AuthenticationService revolutAuthenticationService;
 
     @Autowired
-    public RevolutAccountServiceImpl(RevolutConfigurationProperties configurationProperties, HttpRequestService httpRequestService) {
+    public RevolutAccountService(RevolutConfigurationProperties configurationProperties,
+                                 HttpRequestService httpRequestService,
+                                 AuthenticationService revolutAuthenticationService) {
         this.configurationProperties = configurationProperties;
         this.httpRequestService = httpRequestService;
+        this.revolutAuthenticationService = revolutAuthenticationService;
     }
 
     @Override
-    public List<BankingAccount> getBankingAccounts(String accessToken, Map<String, String> parameters) throws GenericException, ApiException {
+    public List<BankingAccount> getBankingAccounts(Map<String, String> parameters) throws GenericException, ApiException {
+        String accessToken = revolutAuthenticationService.getAccessToken(parameters);
+
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
         HTTPUtils.addAuthorizationHeader(headers, accessToken);
 

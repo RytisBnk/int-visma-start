@@ -8,10 +8,11 @@ import lt.visma.starter.exception.GenericException;
 import lt.visma.starter.model.BankingAccount;
 import lt.visma.starter.model.revolut.RevolutAccount;
 import lt.visma.starter.model.revolut.RevolutResponseError;
+import lt.visma.starter.service.AuthenticationService;
 import lt.visma.starter.service.HttpRequestService;
 import lt.visma.starter.service.MockWebServerTest;
 import lt.visma.starter.service.impl.HttpRequestServiceImpl;
-import lt.visma.starter.service.impl.revolut.RevolutAccountServiceImpl;
+import lt.visma.starter.service.impl.revolut.RevolutAccountService;
 import okhttp3.mockwebserver.MockResponse;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +22,6 @@ import org.springframework.http.MediaType;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -30,7 +30,10 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class RevolutAccountServiceTest extends MockWebServerTest {
     @Mock
     private RevolutConfigurationProperties configurationProperties;
-    private RevolutAccountServiceImpl revolutAccountService;
+    private RevolutAccountService revolutAccountService;
+
+    @Mock
+    private AuthenticationService revolutAuthenticationService;
 
     @Override
     @Before
@@ -38,7 +41,7 @@ public class RevolutAccountServiceTest extends MockWebServerTest {
         super.setUp();
         initMocks(this);
         HttpRequestService httpRequestService = new HttpRequestServiceImpl();
-        revolutAccountService = new RevolutAccountServiceImpl(configurationProperties, httpRequestService);
+        revolutAccountService = new RevolutAccountService(configurationProperties, httpRequestService, revolutAuthenticationService);
     }
 
     @Test
@@ -51,7 +54,7 @@ public class RevolutAccountServiceTest extends MockWebServerTest {
 
         whenMockApiUrl();
 
-        List<BankingAccount> accounts = revolutAccountService.getBankingAccounts("", null);
+        List<BankingAccount> accounts = revolutAccountService.getBankingAccounts( null);
         assertNotNull(accounts);
         assertTrue(accounts.size() != 0);
     }
@@ -70,7 +73,7 @@ public class RevolutAccountServiceTest extends MockWebServerTest {
 
         whenMockApiUrl();
 
-        assertThrows(ApiException.class, () -> revolutAccountService.getBankingAccounts("", null));
+        assertThrows(ApiException.class, () -> revolutAccountService.getBankingAccounts( null));
     }
 
     private List<BankingAccount> getValidResponseBody() {
