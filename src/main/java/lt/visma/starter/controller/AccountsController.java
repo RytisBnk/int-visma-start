@@ -4,13 +4,10 @@ import lt.visma.starter.exception.ApiException;
 import lt.visma.starter.exception.BankNotSupportedException;
 import lt.visma.starter.exception.GenericException;
 import lt.visma.starter.model.BankingAccount;
-import lt.visma.starter.model.ResponseError;
 import lt.visma.starter.service.AuthenticationService;
 import lt.visma.starter.service.BankingAccountsService;
 import lt.visma.starter.service.factory.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

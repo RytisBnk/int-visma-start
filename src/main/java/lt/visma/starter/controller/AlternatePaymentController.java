@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/v1/alt/payments")
@@ -42,6 +43,13 @@ public class AlternatePaymentController {
     @GetMapping
     public ResponseEntity<List<Payment>> getSavedPayments() {
         return new ResponseEntity<>(savedPaymentService.getPayments(), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Payment> getPaymentById(@PathVariable String id) {
+        Optional<Payment> paymentOptional = savedPaymentService.getPaymentById(id);
+        return paymentOptional.map(payment ->
+                new ResponseEntity<>(payment, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
     }
 
     @PostMapping
