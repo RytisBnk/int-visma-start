@@ -102,29 +102,33 @@ public class RevolutTransactionServiceTest extends MockWebServerTest {
 
     private List<RevolutTransaction> getSampleTransactionList() {
         List<RevolutTransaction> transactions = new ArrayList<>();
-        TransactionLeg leg = new TransactionLeg(
-                UUID.randomUUID().toString(),
-                200,
-                "EUR",
-                "221.17",
-                "USD",
-                UUID.randomUUID().toString(),
-                new Counterparty(UUID.randomUUID().toString(), UUID.randomUUID().toString(), CounterpartyType.REVOLUT),
-                "Invoice payment #69",
-                20546.56
-        );
+
         List<TransactionLeg> legs = new ArrayList<>();
+        TransactionLeg leg = new TransactionLeg();
+        leg.setLegId("1-1-1-1");
+        leg.setAmount(200);
+        leg.setCurrency("EUR");
+        leg.setBillAmount("221.17");
+        leg.setBillCurrency("USD");
+        leg.setAccountId("1-1-1-1");
+        Counterparty counterparty = new Counterparty();
+        counterparty.setId("1-1-1-1");
+        counterparty.setAccountId("2-2-2-2");
+        counterparty.setType(CounterpartyType.REVOLUT);
+        leg.setCounterparty(counterparty);
+        leg.setDescription("Invoice payment #1");
+        leg.setBalance(20546.56);
         legs.add(leg);
 
-        RevolutTransaction transaction = new RevolutTransaction(
-                UUID.randomUUID().toString(),
-                RevolutTransactionType.CARD_PAYMENT,
-                UUID.randomUUID().toString(),
-                PaymentState.PENDING,
-                null,
-                "2020-01-01", "2020-01-01", null, null,
-                null, null, legs, null
-        );
+        RevolutTransaction transaction = new RevolutTransaction();
+        transaction.setLegs(legs);
+        transaction.setId(UUID.randomUUID().toString());
+        transaction.setType(RevolutTransactionType.CARD_PAYMENT);
+        transaction.setReuestId(UUID.randomUUID().toString());
+        transaction.setState(PaymentState.PENDING);
+        transaction.setCreatedAt("2020-01-01");
+        transaction.setUpdatedAt("202-01-01");
+
         transactions.add(transaction);
         return transactions;
     }

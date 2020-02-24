@@ -16,6 +16,8 @@ import okhttp3.mockwebserver.MockResponse;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,11 +45,11 @@ public class RevolutAccountServiceTest extends MockWebServerTest {
     public void getBankingAccounts_OKResponse_ReturnBankingAccounts()
             throws JsonProcessingException, GenericException, ApiException {
         MockResponse response = new MockResponse();
-        response.setHeader("Content-Type", "application/json");
+        response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         response.setBody((new ObjectMapper()).writeValueAsString(getValidResponseBody()));
         mockWebServer.enqueue(response);
 
-        when(configurationProperties.getApiURL()).thenReturn("http://localhost:" + mockWebServer.getPort());
+        whenMockApiUrl();
 
         List<BankingAccount> accounts = revolutAccountService.getBankingAccounts("", null);
         assertNotNull(accounts);
@@ -63,26 +65,31 @@ public class RevolutAccountServiceTest extends MockWebServerTest {
         MockResponse response = new MockResponse();
         response.setResponseCode(400);
         response.setBody((new ObjectMapper()).writeValueAsString(revolutResponseError));
-        response.setHeader("Content-type", "application/json");
+        response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         mockWebServer.enqueue(response);
 
-        when(configurationProperties.getApiURL()).thenReturn("http://localhost:" + mockWebServer.getPort());
+        whenMockApiUrl();
 
         assertThrows(ApiException.class, () -> revolutAccountService.getBankingAccounts("", null));
     }
 
     private List<BankingAccount> getValidResponseBody() {
         List<BankingAccount> bankingAccounts = new ArrayList<>();
-        bankingAccounts.add(new RevolutAccount(
-                UUID.randomUUID().toString(),
-                "Spending account",
-                20000,
-                "EUR",
-                "active",
-                true,
-                "2020-01-01", "2020-02-01"
-        ));
+
+        RevolutAccount account = new RevolutAccount();
+        account.setName("Spending account");
+        account.setBalance(20000);
+        account.setCurrency("EUR");
+        account.setState("active");
+        account.setPublic(true);
+        account.setCreatedAt("2020-01-01");
+        account.setUpdatedAt("2020-02-01");
+        bankingAccounts.add(account);
 
         return bankingAccounts;
+    }
+
+    private void whenMockApiUrl() {
+        when(configurationProperties.getApiURL()).thenReturn("http://localhost:" + mockWebServer.getPort());
     }
 }

@@ -72,16 +72,14 @@ public class SwedbankAccountsServiceTest extends MockWebServerTest {
 
     private AccountsListResponse getSampleAccountsList() {
         List<SwedbankAccount> accounts = new ArrayList<>();
-        SwedbankAccount account1 = new SwedbankAccount(
-                "CACC",
-                "EUR",
-                "LT1111222233331111",
-                "Name name",
-                null,
-                "1111-1111-1111-1111"
-        );
+        SwedbankAccount account = new SwedbankAccount();
+        account.setCashAccountType("CACC");
+        account.setCurrency("EUR");
+        account.setIban("LT1111222233331111");
+        account.setName("account name");
+        account.setResourceId("1111-1111-1111-1111");
 
-        accounts.add(account1);
+        accounts.add(account);
         AccountsListResponse accountsListResponse = new AccountsListResponse();
         accountsListResponse.setAccounts(accounts);
         return accountsListResponse;

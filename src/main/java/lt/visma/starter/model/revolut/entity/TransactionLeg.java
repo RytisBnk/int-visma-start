@@ -25,21 +25,6 @@ public class TransactionLeg {
     private String description;
     private double balance;
 
-    public TransactionLeg(String legId, double amount, String currency, String billAmount, String billCurrency, String accountId, Counterparty counterparty, String description, double balance) {
-        this.legId = legId;
-        this.amount = amount;
-        this.currency = currency;
-        this.billAmount = billAmount;
-        this.billCurrency = billCurrency;
-        this.accountId = accountId;
-        this.counterparty = counterparty;
-        this.description = description;
-        this.balance = balance;
-    }
-
-    public TransactionLeg() {
-    }
-
     public String getLegId() {
         return legId;
     }
