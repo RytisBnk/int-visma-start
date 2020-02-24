@@ -22,11 +22,6 @@ public class AccountsController {
     private BankingAccountsServiceFactory bankingAccountsServiceFactory;
     private AuthenticationServiceFactory authenticationServiceFactory;
 
-    @ExceptionHandler(value = ApiException.class)
-    public ResponseEntity<ResponseError> handleExternalApiError(ApiException exc) {
-       return new ResponseEntity<>(exc.getResponseError(), HttpStatus.BAD_REQUEST);
-    }
-
     @Autowired
     public AccountsController(BankingAccountsServiceFactory bankingAccountsServiceFactory,
                               AuthenticationServiceFactory authenticationServiceFactory) {

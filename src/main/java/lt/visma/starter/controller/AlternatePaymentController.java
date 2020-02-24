@@ -28,11 +28,6 @@ public class AlternatePaymentController {
     private TransactionServiceFactory transactionServiceFactory;
     private SavedPaymentService savedPaymentService;
 
-    @ExceptionHandler(value = ApiException.class)
-    public ResponseEntity<ResponseError> handleExternalApiError(ApiException exc) {
-        return new ResponseEntity<>(exc.getResponseError(), HttpStatus.BAD_REQUEST);
-    }
-
     @Autowired
     public AlternatePaymentController(AuthenticationServiceFactory authenticationServiceFactory,
                                       PaymentServiceFactory paymentServiceFactory,
