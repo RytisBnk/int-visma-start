@@ -31,7 +31,7 @@ public class PaymentsController {
     private TransactionServiceFactory transactionServiceFactory;
     private SavedTransactionServiceFactory savedTransactionServiceFactory;
 
-    @Autowired
+
     public PaymentsController(AuthenticationServiceFactory authenticationServiceFactory,
                               PaymentServiceFactory paymentServiceFactory,
                               TransactionServiceFactory transactionServiceFactory,
