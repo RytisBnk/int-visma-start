@@ -1,4 +1,4 @@
-package lt.visma.starter.service.impl.revolut;
+package lt.visma.starter.service.factory;
 
 import lt.visma.starter.exception.BankNotSupportedException;
 import lt.visma.starter.service.ConsentService;

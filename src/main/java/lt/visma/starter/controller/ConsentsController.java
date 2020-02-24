@@ -7,7 +7,7 @@ import lt.visma.starter.model.swedbank.ConsentResponse;
 import lt.visma.starter.service.AuthenticationService;
 import lt.visma.starter.service.ConsentService;
 import lt.visma.starter.service.factory.AuthenticationServiceFactory;
-import lt.visma.starter.service.impl.revolut.ConsentServiceFactory;
+import lt.visma.starter.service.factory.ConsentServiceFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
