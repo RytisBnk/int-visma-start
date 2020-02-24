@@ -20,19 +20,6 @@ public class Payment {
     private String currency;
     private String reference;
 
-    public Payment() {
-    }
-
-    public Payment(String bankName, String id, String debtorAccount, String creditorAccount, double amount, String currency, String reference) {
-        this.bankName = bankName;
-        this.id = id;
-        this.debtorAccount = debtorAccount;
-        this.creditorAccount = creditorAccount;
-        this.amount = amount;
-        this.currency = currency;
-        this.reference = reference;
-    }
-
     public String getBankName() {
         return bankName;
     }

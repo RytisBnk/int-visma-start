@@ -5,6 +5,7 @@ import lt.visma.starter.model.Payment;
 import lt.visma.starter.model.Transaction;
 import lt.visma.starter.model.revolut.entity.RevolutTransaction;
 import lt.visma.starter.mapper.PaymentMapper;
+import lt.visma.starter.model.revolut.entity.TransactionLeg;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -16,15 +17,18 @@ public class RevolutPaymentMapper implements PaymentMapper {
         }
         RevolutTransaction revolutTransaction = (RevolutTransaction) transaction;
 
-        return new Payment(
-                "Revolut",
-                revolutTransaction.getId(),
-                revolutTransaction.getLegs().get(0).getAccountId(),
-                revolutTransaction.getLegs().get(0).getCounterparty().getAccountId(),
-                revolutTransaction.getLegs().get(0).getAmount(),
-                revolutTransaction.getLegs().get(0).getCurrency(),
-                revolutTransaction.getLegs().get(0).getDescription()
-        );
+        Payment payment = new Payment();
+
+        TransactionLeg leg = revolutTransaction.getLegs().get(0);
+        payment.setBankName("Revolut");
+        payment.setDebtorAccount(leg.getAccountId());
+        payment.setCreditorAccount(leg.getCounterparty().getAccountId());
+        payment.setAmount(leg.getAmount());
+        payment.setCurrency(leg.getCurrency());
+        payment.setReference(leg.getDescription());
+        payment.setId(revolutTransaction.getId());
+
+        return payment;
     }
 
     @Override

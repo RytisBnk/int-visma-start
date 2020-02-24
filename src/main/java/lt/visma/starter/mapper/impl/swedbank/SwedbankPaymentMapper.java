@@ -15,15 +15,16 @@ public class SwedbankPaymentMapper implements PaymentMapper {
             throw new InvalidTransactionException();
         }
         SwedbankPaymentTransaction paymentTransaction = (SwedbankPaymentTransaction) transaction;
-        return new Payment(
-                "Swedbank",
-                paymentTransaction.getId(),
-                paymentTransaction.getDebtorAccount().getIban(),
-                paymentTransaction.getCreditorAccount().getIban(),
-                Double.parseDouble(paymentTransaction.getInstructedAmount().getAmount()),
-                paymentTransaction.getInstructedAmount().getCurrency(),
-                paymentTransaction.getRemittanceInformationStructured().getReference()
-        );
+        Payment payment = new Payment();
+        payment.setBankName("Swedbank");
+        payment.setId(paymentTransaction.getId());
+        payment.setCreditorAccount(paymentTransaction.getCreditorAccount().getIban());
+        payment.setDebtorAccount(paymentTransaction.getDebtorAccount().getIban());
+        payment.setAmount(Double.parseDouble(paymentTransaction.getInstructedAmount().getAmount()));
+        payment.setCurrency(paymentTransaction.getInstructedAmount().getCurrency());
+        payment.setReference(paymentTransaction.getRemittanceInformationStructured().getReference());
+
+        return payment;
     }
 
     @Override
