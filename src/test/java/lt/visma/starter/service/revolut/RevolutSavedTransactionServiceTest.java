@@ -1,4 +1,4 @@
-package lt.visma.starter.service;
+package lt.visma.starter.service.revolut;
 
 import lt.visma.starter.configuration.RevolutConfigurationProperties;
 import lt.visma.starter.exception.TransactionNotFoundException;

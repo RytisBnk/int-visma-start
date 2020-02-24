@@ -19,6 +19,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.ClientResponse;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.UUID;
 
@@ -65,5 +66,10 @@ public class SwedbankConsentServiceImpl implements ConsentService {
             throw new ApiException(response.bodyToMono(SwedbankResponseError.class).block());
         }
         return response.bodyToMono(ConsentResponse.class).block();
+    }
+
+    @Override
+    public boolean supportsBank(String bankCode) {
+        return Arrays.asList(configurationProperties.getSupportedBanks()).contains(bankCode);
     }
 }

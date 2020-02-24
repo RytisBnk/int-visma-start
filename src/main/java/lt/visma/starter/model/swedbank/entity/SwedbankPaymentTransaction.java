@@ -2,15 +2,12 @@ package lt.visma.starter.model.swedbank.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lt.visma.starter.model.Transaction;
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
 @Entity
 public class SwedbankPaymentTransaction implements Transaction {
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String id;
 
@@ -25,6 +22,16 @@ public class SwedbankPaymentTransaction implements Transaction {
     @OneToOne(cascade = CascadeType.ALL)
     private PaymentAmount instructedAmount;
     private String remittanceInformationUnstructured;
+    @OneToOne(cascade = CascadeType.ALL)
+    private RemittanceInformation remittanceInformationStructured;
+
+    public RemittanceInformation getRemittanceInformationStructured() {
+        return remittanceInformationStructured;
+    }
+
+    public void setRemittanceInformationStructured(RemittanceInformation remittanceInformationStructured) {
+        this.remittanceInformationStructured = remittanceInformationStructured;
+    }
 
     public String getId() {
         return id;

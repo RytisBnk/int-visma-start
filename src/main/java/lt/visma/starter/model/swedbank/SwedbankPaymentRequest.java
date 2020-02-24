@@ -1,10 +1,13 @@
 package lt.visma.starter.model.swedbank;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lt.visma.starter.model.PaymentRequest;
 import lt.visma.starter.model.swedbank.entity.AccountIBAN;
 import lt.visma.starter.model.swedbank.entity.PaymentAmount;
+import lt.visma.starter.model.swedbank.entity.RemittanceInformation;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class SwedbankPaymentRequest implements PaymentRequest {
     private AccountIBAN creditorAccount;
     private String creditorAgent;
@@ -14,6 +17,7 @@ public class SwedbankPaymentRequest implements PaymentRequest {
     private String endToEndIdentification;
     private PaymentAmount instructedAmount;
     private String remittanceInformationUnstructured;
+    private RemittanceInformation remittanceInformationStructured;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String psuIPAddress;
@@ -21,6 +25,14 @@ public class SwedbankPaymentRequest implements PaymentRequest {
     private String psuUserAgent;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String bic;
+
+    public RemittanceInformation getRemittanceInformationStructured() {
+        return remittanceInformationStructured;
+    }
+
+    public void setRemittanceInformationStructured(RemittanceInformation remittanceInformationStructured) {
+        this.remittanceInformationStructured = remittanceInformationStructured;
+    }
 
     public String getBic() {
         return bic;

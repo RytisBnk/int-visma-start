@@ -1,5 +1,6 @@
 package lt.visma.starter.model.revolut.entity;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import lt.visma.starter.model.revolut.CounterpartyType;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -13,13 +14,19 @@ public class Counterparty {
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
+    @JsonAlias({"account_id"})
     private String accountId;
+    @JsonAlias({"account_type"})
     private CounterpartyType type;
 
     public Counterparty(String id, String accountId, CounterpartyType type) {
         this.id = id;
         this.accountId = accountId;
         this.type = type;
+    }
+
+    public Counterparty(String accountId) {
+        this.accountId = accountId;
     }
 
     public Counterparty() {

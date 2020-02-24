@@ -17,6 +17,14 @@ public class PaymentAmount {
     private String amount;
     private String currency;
 
+    public PaymentAmount() {
+    }
+
+    public PaymentAmount(String amount, String currency) {
+        this.amount = amount;
+        this.currency = currency;
+    }
+
     public long getId() {
         return id;
     }

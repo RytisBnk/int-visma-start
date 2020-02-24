@@ -1,8 +1,9 @@
-package lt.visma.starter.service;
+package lt.visma.starter.service.revolut;
 
 import lt.visma.starter.configuration.RevolutConfigurationProperties;
 import lt.visma.starter.exception.ApiException;
 import lt.visma.starter.exception.GenericException;
+import lt.visma.starter.service.HttpRequestService;
 import lt.visma.starter.service.impl.HttpRequestServiceImpl;
 import lt.visma.starter.service.impl.revolut.RovolutAuthServiceImpl;
 import org.junit.Before;

@@ -1,4 +1,4 @@
-package lt.visma.starter.service;
+package lt.visma.starter.service.swedbank;
 
 import lt.visma.starter.exception.ApiException;
 import lt.visma.starter.service.impl.swedbank.SwedbankAuthServiceImpl;
