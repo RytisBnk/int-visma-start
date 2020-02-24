@@ -1,7 +1,7 @@
 package lt.visma.starter.service.revolut;
 
 import lt.visma.starter.exception.InvalidTransactionException;
-import lt.visma.starter.model.Payment;
+import lt.visma.starter.model.entity.Payment;
 import lt.visma.starter.model.revolut.entity.Counterparty;
 import lt.visma.starter.model.revolut.entity.RevolutTransaction;
 import lt.visma.starter.model.revolut.entity.TransactionLeg;

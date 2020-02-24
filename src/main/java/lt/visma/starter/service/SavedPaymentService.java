@@ -1,6 +1,6 @@
 package lt.visma.starter.service;
 import lt.visma.starter.exception.InvalidTransactionException;
-import lt.visma.starter.model.Payment;
+import lt.visma.starter.model.entity.Payment;
 import lt.visma.starter.model.Transaction;
 
 import java.util.List;

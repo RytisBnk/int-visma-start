@@ -1,7 +1,7 @@
 package lt.visma.starter.mapper;
 
 import lt.visma.starter.exception.InvalidTransactionException;
-import lt.visma.starter.model.Payment;
+import lt.visma.starter.model.entity.Payment;
 import lt.visma.starter.model.Transaction;
 
 public interface PaymentMapper {

@@ -1,7 +1,7 @@
 package lt.visma.starter.service.impl;
 
 import lt.visma.starter.exception.InvalidTransactionException;
-import lt.visma.starter.model.Payment;
+import lt.visma.starter.model.entity.Payment;
 import lt.visma.starter.model.Transaction;
 import lt.visma.starter.repository.PaymentRepository;
 import lt.visma.starter.mapper.PaymentMapper;

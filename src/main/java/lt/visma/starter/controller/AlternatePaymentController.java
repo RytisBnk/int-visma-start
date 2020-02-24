@@ -5,6 +5,7 @@ import lt.visma.starter.exception.BankNotSupportedException;
 import lt.visma.starter.exception.GenericException;
 import lt.visma.starter.exception.InvalidTransactionException;
 import lt.visma.starter.model.*;
+import lt.visma.starter.model.entity.Payment;
 import lt.visma.starter.service.AuthenticationService;
 import lt.visma.starter.service.PaymentService;
 import lt.visma.starter.service.SavedPaymentService;

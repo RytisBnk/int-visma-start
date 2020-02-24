@@ -1,7 +1,7 @@
 package lt.visma.starter.mapper.impl.revolut;
 
 import lt.visma.starter.exception.InvalidTransactionException;
-import lt.visma.starter.model.Payment;
+import lt.visma.starter.model.entity.Payment;
 import lt.visma.starter.model.Transaction;
 import lt.visma.starter.model.revolut.entity.RevolutTransaction;
 import lt.visma.starter.mapper.PaymentMapper;

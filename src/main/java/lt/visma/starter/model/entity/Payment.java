@@ -1,4 +1,4 @@
-package lt.visma.starter.model;
+package lt.visma.starter.model.entity;
 
 import org.hibernate.annotations.GenericGenerator;
 
