@@ -3,12 +3,15 @@ package lt.visma.starter.service.impl.revolut;
 import lt.visma.starter.configuration.RevolutConfigurationProperties;
 import lt.visma.starter.exception.ApiException;
 import lt.visma.starter.exception.GenericException;
+import lt.visma.starter.exception.InvalidPaymentResponseException;
+import lt.visma.starter.mapper.PaymentSubmissionMapper;
 import lt.visma.starter.model.PaymentRequest;
 import lt.visma.starter.model.PaymentResponse;
+import lt.visma.starter.model.entity.PaymentSubmission;
 import lt.visma.starter.model.revolut.RevolutApiError;
 import lt.visma.starter.model.revolut.RevolutPaymentResponse;
 import lt.visma.starter.model.revolut.RevolutPaymentRequest;
-import lt.visma.starter.service.AuthenticationService;
+import lt.visma.starter.repository.PaymentSubmissionRepository;
 import lt.visma.starter.service.HttpRequestService;
 import lt.visma.starter.service.PaymentService;
 import lt.visma.starter.util.HTTPUtils;
@@ -20,27 +23,28 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.ClientResponse;
 
 import java.util.Arrays;
-import java.util.Map;
 import java.util.UUID;
 
 @Service
-public class RevolutPaymentServiceImpl implements PaymentService {
+public class RevolutPaymentService implements PaymentService {
     private HttpRequestService httpRequestService;
     private RevolutConfigurationProperties configurationProperties;
-    private AuthenticationService revolutAuthenticationService;
+    private PaymentSubmissionRepository paymentSubmissionRepository;
+    private PaymentSubmissionMapper revolutPaymentSubmissionMapper;
 
-    public RevolutPaymentServiceImpl(HttpRequestService httpRequestService,
-                                     RevolutConfigurationProperties configurationProperties,
-                                     AuthenticationService revolutAuthenticationService) {
+    public RevolutPaymentService(HttpRequestService httpRequestService,
+                                 RevolutConfigurationProperties configurationProperties,
+                                 PaymentSubmissionMapper revolutPaymentSubmissionMapper,
+                                 PaymentSubmissionRepository paymentSubmissionRepository) {
         this.httpRequestService = httpRequestService;
         this.configurationProperties = configurationProperties;
-        this.revolutAuthenticationService = revolutAuthenticationService;
+        this.revolutPaymentSubmissionMapper = revolutPaymentSubmissionMapper;
+        this.paymentSubmissionRepository = paymentSubmissionRepository;
     }
 
     @Override
-    public PaymentResponse makePayment(PaymentRequest paymentRequest, Map<String, String> params) throws GenericException, ApiException {
-        String accessToken = revolutAuthenticationService.getAccessToken(params);
-
+    public PaymentSubmission makePayment(PaymentRequest paymentRequest, String accessToken)
+            throws GenericException, ApiException, InvalidPaymentResponseException {
         if (! (paymentRequest instanceof RevolutPaymentRequest)) {
             throw new GenericException();
         }
@@ -60,7 +64,8 @@ public class RevolutPaymentServiceImpl implements PaymentService {
         );
 
         checkIfResponseValid(response);
-        return response.bodyToMono(RevolutPaymentResponse.class).block();
+        PaymentResponse paymentResponse = response.bodyToMono(RevolutPaymentResponse.class).block();
+        return paymentSubmissionRepository.save(revolutPaymentSubmissionMapper.mapToPaymentSubmission(paymentResponse));
     }
 
     @Override

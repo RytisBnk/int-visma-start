@@ -3,12 +3,15 @@ package lt.visma.starter.service.impl.swedbank;
 import lt.visma.starter.configuration.SwedbankConfigurationProperties;
 import lt.visma.starter.exception.ApiException;
 import lt.visma.starter.exception.GenericException;
+import lt.visma.starter.exception.InvalidPaymentResponseException;
+import lt.visma.starter.mapper.PaymentSubmissionMapper;
 import lt.visma.starter.model.PaymentRequest;
 import lt.visma.starter.model.PaymentResponse;
+import lt.visma.starter.model.entity.PaymentSubmission;
 import lt.visma.starter.model.swedbank.SwedbankPaymentRequest;
 import lt.visma.starter.model.swedbank.SwedbankPaymentResponse;
 import lt.visma.starter.model.swedbank.SwedbankResponseError;
-import lt.visma.starter.service.AuthenticationService;
+import lt.visma.starter.repository.PaymentSubmissionRepository;
 import lt.visma.starter.service.HttpRequestService;
 import lt.visma.starter.service.PaymentService;
 import lt.visma.starter.util.HTTPUtils;
@@ -22,48 +25,49 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.ClientResponse;
 
 import java.util.Arrays;
-import java.util.Map;
 import java.util.UUID;
 
 @Service
 public class SwedbankPaymentService implements PaymentService {
     private HttpRequestService httpRequestService;
     private SwedbankConfigurationProperties configurationProperties;
-    private AuthenticationService swedbankAuthenticationService;
+    private PaymentSubmissionRepository paymentSubmissionRepository;
+    private PaymentSubmissionMapper swedbankPaymentSubmissionMapper;
 
     @Autowired
     public SwedbankPaymentService(HttpRequestService httpRequestService,
                                   SwedbankConfigurationProperties configurationProperties,
-                                  AuthenticationService swedbankAuthenticationService) {
+                                  PaymentSubmissionRepository paymentSubmissionRepository,
+                                  PaymentSubmissionMapper swedbankPaymentSubmissionMapper) {
         this.httpRequestService = httpRequestService;
         this.configurationProperties = configurationProperties;
-        this.swedbankAuthenticationService = swedbankAuthenticationService;
+        this.paymentSubmissionRepository = paymentSubmissionRepository;
+        this.swedbankPaymentSubmissionMapper = swedbankPaymentSubmissionMapper;
     }
 
     @Override
-    public PaymentResponse makePayment(PaymentRequest paymentRequest, Map<String, String> params) throws GenericException, ApiException {
-        String accessToken = swedbankAuthenticationService.getAccessToken(params);
-
+    public PaymentSubmission makePayment(PaymentRequest paymentRequest, String accessToken) throws GenericException, ApiException, InvalidPaymentResponseException {
         if (! (paymentRequest instanceof SwedbankPaymentRequest)) {
             throw new GenericException();
         }
         SwedbankPaymentRequest swedbankPaymentRequest = (SwedbankPaymentRequest) paymentRequest;
 
-        MultiValueMap<String, String> queryparams = new LinkedMultiValueMap<>();
-        queryparams.add("bic", swedbankPaymentRequest.getBic());
+        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+        queryParams.add("bic", swedbankPaymentRequest.getBic());
 
         MultiValueMap<String, String> headers = getRequiredHeaders(accessToken, swedbankPaymentRequest);
 
         ClientResponse response = httpRequestService.httpPostRequest(
                 configurationProperties.getApiUrl(),
                 configurationProperties.getPaymentsEndpointUrl(),
-                queryparams,
+                queryParams,
                 headers,
                 swedbankPaymentRequest,
                 MediaType.APPLICATION_JSON
         );
         checkIfResponseValid(response);
-        return response.bodyToMono(SwedbankPaymentResponse.class).block();
+        PaymentResponse paymentResponse = response.bodyToMono(SwedbankPaymentResponse.class).block();
+        return paymentSubmissionRepository.save(swedbankPaymentSubmissionMapper.mapToPaymentSubmission(paymentResponse));
     }
 
     @Override

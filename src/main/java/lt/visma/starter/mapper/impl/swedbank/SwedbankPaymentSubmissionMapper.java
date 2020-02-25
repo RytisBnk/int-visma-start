@@ -5,7 +5,9 @@ import lt.visma.starter.mapper.PaymentSubmissionMapper;
 import lt.visma.starter.model.PaymentResponse;
 import lt.visma.starter.model.entity.PaymentSubmission;
 import lt.visma.starter.model.swedbank.SwedbankPaymentResponse;
+import org.springframework.stereotype.Component;
 
+@Component
 public class SwedbankPaymentSubmissionMapper implements PaymentSubmissionMapper {
     @Override
     public PaymentSubmission mapToPaymentSubmission(PaymentResponse paymentResponse) throws InvalidPaymentResponseException {
