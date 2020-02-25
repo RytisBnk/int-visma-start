@@ -4,7 +4,6 @@ import lt.visma.starter.exception.ApiException;
 import lt.visma.starter.exception.GenericException;
 import lt.visma.starter.model.PaymentRequest;
 import lt.visma.starter.model.PaymentResponse;
-import lt.visma.starter.model.Transaction;
 
 import java.util.Map;
 
