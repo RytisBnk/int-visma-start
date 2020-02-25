@@ -9,7 +9,7 @@ import lt.visma.starter.model.swedbank.entity.SwedbankPaymentTransaction;
 import lt.visma.starter.model.swedbank.SwedbankResponseError;
 import lt.visma.starter.service.AuthenticationService;
 import lt.visma.starter.service.HttpRequestService;
-import lt.visma.starter.service.BankingAPITransactionService;
+import lt.visma.starter.service.TransactionService;
 import lt.visma.starter.util.HTTPUtils;
 import lt.visma.starter.util.TimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,15 +25,15 @@ import java.util.Map;
 import java.util.UUID;
 
 @Service
-public class SwedbankBankingAPITransactionService implements BankingAPITransactionService {
+public class SwedbankTransactionService implements TransactionService {
     private HttpRequestService httpRequestService;
     private SwedbankConfigurationProperties configurationProperties;
     private AuthenticationService swedbankAuthenticationService;
 
     @Autowired
-    public SwedbankBankingAPITransactionService(HttpRequestService httpRequestService,
-                                                SwedbankConfigurationProperties configurationProperties,
-                                                AuthenticationService swedbankAuthenticationService) {
+    public SwedbankTransactionService(HttpRequestService httpRequestService,
+                                      SwedbankConfigurationProperties configurationProperties,
+                                      AuthenticationService swedbankAuthenticationService) {
         this.httpRequestService = httpRequestService;
         this.configurationProperties = configurationProperties;
         this.swedbankAuthenticationService = swedbankAuthenticationService;

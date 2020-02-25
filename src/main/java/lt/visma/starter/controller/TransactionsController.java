@@ -5,7 +5,7 @@ import lt.visma.starter.exception.BankNotSupportedException;
 import lt.visma.starter.exception.GenericException;
 import lt.visma.starter.exception.OperationNotSupportedException;
 import lt.visma.starter.model.Transaction;
-import lt.visma.starter.service.BankingAPITransactionService;
+import lt.visma.starter.service.TransactionService;
 import lt.visma.starter.service.factory.TransactionServiceFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,8 +31,8 @@ public class TransactionsController {
                                                              @RequestParam("to") String to,
                                                              @RequestHeader Map<String, String> headers)
             throws BankNotSupportedException, GenericException, ApiException, OperationNotSupportedException {
-        BankingAPITransactionService bankingAPITransactionService = transactionServiceFactory.getTransactionService(bankCode);
-        return new ResponseEntity<>(bankingAPITransactionService.getTransactions(from, to, headers), HttpStatus.OK);
+        TransactionService transactionService = transactionServiceFactory.getTransactionService(bankCode);
+        return new ResponseEntity<>(transactionService.getTransactions(from, to, headers), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -40,7 +40,7 @@ public class TransactionsController {
                                                           @RequestParam("bankCode") String bankCode,
                                                           @RequestHeader Map<String, String> headers)
             throws BankNotSupportedException, GenericException, ApiException {
-        BankingAPITransactionService bankingAPITransactionService = transactionServiceFactory.getTransactionService(bankCode);
-        return new ResponseEntity<>(bankingAPITransactionService.getTransactionById(id, bankCode, headers), HttpStatus.OK);
+        TransactionService transactionService = transactionServiceFactory.getTransactionService(bankCode);
+        return new ResponseEntity<>(transactionService.getTransactionById(id, bankCode, headers), HttpStatus.OK);
     }
 }

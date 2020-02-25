@@ -8,7 +8,7 @@ import lt.visma.starter.model.*;
 import lt.visma.starter.model.entity.Payment;
 import lt.visma.starter.service.PaymentService;
 import lt.visma.starter.service.SavedPaymentService;
-import lt.visma.starter.service.BankingAPITransactionService;
+import lt.visma.starter.service.TransactionService;
 import lt.visma.starter.service.factory.PaymentServiceFactory;
 import lt.visma.starter.service.factory.TransactionServiceFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,10 +54,10 @@ public class PaymentsController {
                                                @RequestBody PaymentRequest paymentRequest)
             throws BankNotSupportedException, GenericException, ApiException, InvalidTransactionException {
         PaymentService paymentService = paymentServiceFactory.getPaymentService(bankCode);
-        BankingAPITransactionService bankingAPITransactionService = transactionServiceFactory.getTransactionService(bankCode);
+        TransactionService transactionService = transactionServiceFactory.getTransactionService(bankCode);
 
         PaymentResponse paymentResponse = paymentService.makePayment(paymentRequest, headers);
-        Transaction transaction = bankingAPITransactionService.getTransactionById(paymentResponse.getId(), bankCode, headers);
+        Transaction transaction = transactionService.getTransactionById(paymentResponse.getId(), bankCode, headers);
         return new ResponseEntity<>(savedPaymentService.savePayment(transaction), HttpStatus.CREATED);
     }
 }

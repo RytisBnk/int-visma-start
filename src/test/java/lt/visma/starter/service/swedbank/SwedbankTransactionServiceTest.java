@@ -12,7 +12,7 @@ import lt.visma.starter.service.HttpRequestService;
 import lt.visma.starter.service.MockWebServerTest;
 import lt.visma.starter.service.impl.HttpRequestServiceImpl;
 import lt.visma.starter.service.impl.swedbank.SwedbankAuthenticationService;
-import lt.visma.starter.service.impl.swedbank.SwedbankBankingAPITransactionService;
+import lt.visma.starter.service.impl.swedbank.SwedbankTransactionService;
 import okhttp3.mockwebserver.MockResponse;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,11 +25,11 @@ import java.util.HashMap;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
-public class SwedbankBankingAPITransactionServiceTest extends MockWebServerTest {
+public class SwedbankTransactionServiceTest extends MockWebServerTest {
     @Mock
     private SwedbankConfigurationProperties configurationProperties;
 
-    private SwedbankBankingAPITransactionService swedbankTransactionService;
+    private SwedbankTransactionService swedbankTransactionService;
 
     @Mock
     private SwedbankAuthenticationService authenticationService;
@@ -41,7 +41,7 @@ public class SwedbankBankingAPITransactionServiceTest extends MockWebServerTest 
     public void setUp() throws Exception {
         super.setUp();
         HttpRequestService httpRequestService = new HttpRequestServiceImpl();
-        swedbankTransactionService = new SwedbankBankingAPITransactionService(httpRequestService, configurationProperties, authenticationService);
+        swedbankTransactionService = new SwedbankTransactionService(httpRequestService, configurationProperties, authenticationService);
     }
 
     @Test
