@@ -3,13 +3,14 @@ package lt.visma.starter.service.impl.swedbank;
 import lt.visma.starter.configuration.SwedbankConfigurationProperties;
 import lt.visma.starter.exception.ApiException;
 import lt.visma.starter.exception.GenericException;
-import lt.visma.starter.model.swedbank.Access;
-import lt.visma.starter.model.swedbank.ConsentRequest;
-import lt.visma.starter.model.swedbank.ConsentResponse;
+import lt.visma.starter.model.PaymentRequest;
+import lt.visma.starter.model.PaymentResponse;
+import lt.visma.starter.model.swedbank.SwedbankPaymentRequest;
+import lt.visma.starter.model.swedbank.SwedbankPaymentResponse;
 import lt.visma.starter.model.swedbank.SwedbankResponseError;
 import lt.visma.starter.service.AuthenticationService;
-import lt.visma.starter.service.ConsentService;
 import lt.visma.starter.service.HttpRequestService;
+import lt.visma.starter.service.PaymentService;
 import lt.visma.starter.util.HTTPUtils;
 import lt.visma.starter.util.TimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,44 +26,44 @@ import java.util.Map;
 import java.util.UUID;
 
 @Service
-public class SwedbankConsentServiceImpl implements ConsentService {
+public class SwedbankPaymentService implements PaymentService {
     private HttpRequestService httpRequestService;
     private SwedbankConfigurationProperties configurationProperties;
     private AuthenticationService swedbankAuthenticationService;
 
     @Autowired
-    public SwedbankConsentServiceImpl(HttpRequestService httpRequestService,
-                                      SwedbankConfigurationProperties configurationProperties,
-                                      AuthenticationService swedbankAuthenticationService) {
+    public SwedbankPaymentService(HttpRequestService httpRequestService,
+                                  SwedbankConfigurationProperties configurationProperties,
+                                  AuthenticationService swedbankAuthenticationService) {
         this.httpRequestService = httpRequestService;
         this.configurationProperties = configurationProperties;
         this.swedbankAuthenticationService = swedbankAuthenticationService;
     }
 
     @Override
-    public ConsentResponse createUserConsent(Map<String, String> params) throws GenericException, ApiException {
+    public PaymentResponse makePayment(PaymentRequest paymentRequest, Map<String, String> params) throws GenericException, ApiException {
         String accessToken = swedbankAuthenticationService.getAccessToken(params);
 
-        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-        queryParams.add("bic", configurationProperties.getBic());
-        queryParams.add("app-id", configurationProperties.getClientId());
+        if (! (paymentRequest instanceof SwedbankPaymentRequest)) {
+            throw new GenericException();
+        }
+        SwedbankPaymentRequest swedbankPaymentRequest = (SwedbankPaymentRequest) paymentRequest;
 
-        MultiValueMap<String, String> headers = getRequiredHeaders(accessToken, params);
+        MultiValueMap<String, String> queryparams = new LinkedMultiValueMap<>();
+        queryparams.add("bic", swedbankPaymentRequest.getBic());
 
-        Access access = new Access(null, "allAccounts", null, null);
-        ConsentRequest requestBody = new ConsentRequest(access,
-                false,0,false, "2020-04-10");
+        MultiValueMap<String, String> headers = getRequiredHeaders(accessToken, swedbankPaymentRequest);
 
         ClientResponse response = httpRequestService.httpPostRequest(
                 configurationProperties.getApiUrl(),
-                configurationProperties.getConsentsEndpointUrl(),
-                queryParams,
+                configurationProperties.getPaymentsEndpointUrl(),
+                queryparams,
                 headers,
-                requestBody,
+                swedbankPaymentRequest,
                 MediaType.APPLICATION_JSON
         );
         checkIfResponseValid(response);
-        return response.bodyToMono(ConsentResponse.class).block();
+        return response.bodyToMono(SwedbankPaymentResponse.class).block();
     }
 
     @Override
@@ -70,23 +71,25 @@ public class SwedbankConsentServiceImpl implements ConsentService {
         return Arrays.asList(configurationProperties.getSupportedBanks()).contains(bankCode);
     }
 
-    private MultiValueMap<String, String> getRequiredHeaders(String accessToken, Map<String, String> params) {
+    private MultiValueMap<String, String> getRequiredHeaders(String accessToken, SwedbankPaymentRequest paymentRequest) {
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
         HTTPUtils.addAuthorizationHeader(headers, accessToken);
+        headers.add("PSU-IP-Address", paymentRequest.getPsuIPAddress());
+        headers.add("PSU-User-Agent", paymentRequest.getPsuUserAgent());
         headers.add("Date", TimeUtils.getCurrentServerTimeAsString());
         headers.add("X-Request-ID", UUID.randomUUID().toString());
-        headers.add("PSU-IP-Address", params.get("host"));
-        headers.add("PSU-User-Agent", params.get("user-agent"));
+        headers.add("Tpp-Redirect-URI", configurationProperties.getRedirectUrl());
 
         return headers;
     }
 
-    private void checkIfResponseValid(ClientResponse response) throws ApiException, GenericException {
+    private void checkIfResponseValid(ClientResponse response) throws GenericException, ApiException {
         if (response == null) {
             throw new GenericException();
         }
-        if (response.statusCode() == HttpStatus.BAD_REQUEST) {
-            throw new ApiException(response.bodyToMono(SwedbankResponseError.class).block());
+        if (response.statusCode() != HttpStatus.CREATED) {
+            SwedbankResponseError swedbankResponseError = response.bodyToMono(SwedbankResponseError.class).block();
+            throw new ApiException(swedbankResponseError);
         }
     }
 }
