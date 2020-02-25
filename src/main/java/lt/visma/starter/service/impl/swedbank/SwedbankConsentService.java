@@ -26,9 +26,9 @@ import java.util.UUID;
 
 @Service
 public class SwedbankConsentService implements ConsentService {
-    private HttpRequestService httpRequestService;
-    private SwedbankConfigurationProperties configurationProperties;
-    private AuthenticationService swedbankAuthenticationService;
+    private final HttpRequestService httpRequestService;
+    private final SwedbankConfigurationProperties configurationProperties;
+    private final AuthenticationService swedbankAuthenticationService;
 
     @Autowired
     public SwedbankConsentService(HttpRequestService httpRequestService,

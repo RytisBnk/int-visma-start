@@ -24,12 +24,12 @@ import java.util.stream.Collectors;
 
 @Service
 public class RevolutPaymentTransactionService implements PaymentTransactionService {
-    private AuthenticationService revolutAuthenticationService;
-    private PaymentService revolutPaymentService;
-    private TransactionService revolutTransactionService;
-    private PaymentRepository paymentRepository;
-    private PaymentMapper revolutPaymentMapper;
-    private RevolutConfigurationProperties configurationProperties;
+    private final AuthenticationService revolutAuthenticationService;
+    private final PaymentService revolutPaymentService;
+    private final TransactionService revolutTransactionService;
+    private final PaymentRepository paymentRepository;
+    private final PaymentMapper revolutPaymentMapper;
+    private final RevolutConfigurationProperties configurationProperties;
 
     public RevolutPaymentTransactionService(AuthenticationService revolutAuthenticationService,
                                             PaymentService revolutPaymentService,

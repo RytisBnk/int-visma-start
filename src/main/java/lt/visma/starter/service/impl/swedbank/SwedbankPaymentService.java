@@ -29,10 +29,10 @@ import java.util.UUID;
 
 @Service
 public class SwedbankPaymentService implements PaymentService {
-    private HttpRequestService httpRequestService;
-    private SwedbankConfigurationProperties configurationProperties;
-    private PaymentSubmissionRepository paymentSubmissionRepository;
-    private PaymentSubmissionMapper swedbankPaymentSubmissionMapper;
+    private final HttpRequestService httpRequestService;
+    private final SwedbankConfigurationProperties configurationProperties;
+    private final PaymentSubmissionRepository paymentSubmissionRepository;
+    private final PaymentSubmissionMapper swedbankPaymentSubmissionMapper;
 
     @Autowired
     public SwedbankPaymentService(HttpRequestService httpRequestService,

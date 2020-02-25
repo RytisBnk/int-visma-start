@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Component
 public class TransactionServiceFactory {
-    private List<TransactionService> transactionServices;
+    private final List<TransactionService> transactionServices;
 
     @Autowired
     public TransactionServiceFactory(List<TransactionService> transactionServices) {

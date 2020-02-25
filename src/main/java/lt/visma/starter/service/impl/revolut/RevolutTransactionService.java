@@ -24,9 +24,9 @@ import java.util.Map;
 
 @Service
 public class RevolutTransactionService implements TransactionService {
-    private HttpRequestService httpRequestService;
-    private RevolutConfigurationProperties configurationProperties;
-    private AuthenticationService revolutAuthenticationService;
+    private final HttpRequestService httpRequestService;
+    private final RevolutConfigurationProperties configurationProperties;
+    private final AuthenticationService revolutAuthenticationService;
 
     @Autowired
     public RevolutTransactionService(HttpRequestService httpRequestService,

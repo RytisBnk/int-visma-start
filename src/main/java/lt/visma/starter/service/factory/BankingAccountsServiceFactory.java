@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Component
 public class BankingAccountsServiceFactory {
-    private List<BankingAccountsService> bankingAccountsServices;
+    private final List<BankingAccountsService> bankingAccountsServices;
 
     @Autowired
     public BankingAccountsServiceFactory(List<BankingAccountsService> bankingAccountsServices) {

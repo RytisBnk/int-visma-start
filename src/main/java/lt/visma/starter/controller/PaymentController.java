@@ -15,7 +15,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/v1/payments")
 public class PaymentController {
-    private PaymentTransactionServiceFactory paymentTransactionServiceFactory;
+    private final PaymentTransactionServiceFactory paymentTransactionServiceFactory;
 
     public PaymentController(PaymentTransactionServiceFactory paymentTransactionServiceFactory) {
         this.paymentTransactionServiceFactory = paymentTransactionServiceFactory;

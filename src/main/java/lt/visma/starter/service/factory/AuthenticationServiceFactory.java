@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Component
 public class AuthenticationServiceFactory {
-    private List<AuthenticationService> authenticationServices;
+    private final List<AuthenticationService> authenticationServices;
 
     @Autowired
     public AuthenticationServiceFactory(List<AuthenticationService> authenticationServices) {

@@ -22,8 +22,8 @@ import java.util.UUID;
 
 @Service
 public class SwedbankAuthenticationService implements AuthenticationService {
-    private SwedbankConfigurationProperties configurationProperties;
-    private HttpRequestService httpRequestService;
+    private final SwedbankConfigurationProperties configurationProperties;
+    private final HttpRequestService httpRequestService;
 
     @Autowired
     public SwedbankAuthenticationService(SwedbankConfigurationProperties configurationProperties, HttpRequestService httpRequestService) {

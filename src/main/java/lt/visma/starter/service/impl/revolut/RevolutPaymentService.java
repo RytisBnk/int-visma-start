@@ -27,10 +27,10 @@ import java.util.UUID;
 
 @Service
 public class RevolutPaymentService implements PaymentService {
-    private HttpRequestService httpRequestService;
-    private RevolutConfigurationProperties configurationProperties;
-    private PaymentSubmissionRepository paymentSubmissionRepository;
-    private PaymentSubmissionMapper revolutPaymentSubmissionMapper;
+    private final HttpRequestService httpRequestService;
+    private final RevolutConfigurationProperties configurationProperties;
+    private final PaymentSubmissionRepository paymentSubmissionRepository;
+    private final PaymentSubmissionMapper revolutPaymentSubmissionMapper;
 
     public RevolutPaymentService(HttpRequestService httpRequestService,
                                  RevolutConfigurationProperties configurationProperties,

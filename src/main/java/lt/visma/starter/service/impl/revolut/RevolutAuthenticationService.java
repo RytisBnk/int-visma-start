@@ -30,8 +30,8 @@ import java.util.Map;
 
 @Service
 public class RevolutAuthenticationService implements AuthenticationService {
-    private RevolutConfigurationProperties configurationProperties;
-    private HttpRequestService httpRequestService;
+    private final RevolutConfigurationProperties configurationProperties;
+    private final HttpRequestService httpRequestService;
 
     @Autowired
     public RevolutAuthenticationService(RevolutConfigurationProperties configurationProperties, HttpRequestService httpRequestService) {

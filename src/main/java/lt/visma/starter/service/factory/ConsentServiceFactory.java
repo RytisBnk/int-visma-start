@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Component
 public class ConsentServiceFactory {
-    private List<ConsentService> consentServices;
+    private final List<ConsentService> consentServices;
 
     @Autowired
     public ConsentServiceFactory(List<ConsentService> consentServices) {

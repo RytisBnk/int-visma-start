@@ -24,12 +24,12 @@ import java.util.stream.Collectors;
 
 @Service
 public class SwedbankPaymentTransactionService implements PaymentTransactionService {
-    private SwedbankConfigurationProperties configurationProperties;
-    private AuthenticationService swedbankAuthenticationService;
-    private PaymentService swedbankPaymentService;
-    private PaymentRepository paymentRepository;
-    private TransactionService swedbankTransactionService;
-    private PaymentMapper swedbankPaymentMapper;
+    private final SwedbankConfigurationProperties configurationProperties;
+    private final AuthenticationService swedbankAuthenticationService;
+    private final PaymentService swedbankPaymentService;
+    private final PaymentRepository paymentRepository;
+    private final TransactionService swedbankTransactionService;
+    private final PaymentMapper swedbankPaymentMapper;
 
     public SwedbankPaymentTransactionService(SwedbankConfigurationProperties configurationProperties,
                                              AuthenticationService swedbankAuthenticationService,

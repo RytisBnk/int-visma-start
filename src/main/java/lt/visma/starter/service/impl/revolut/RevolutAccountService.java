@@ -24,9 +24,9 @@ import java.util.Map;
 
 @Service
 public class RevolutAccountService implements BankingAccountsService {
-    private RevolutConfigurationProperties configurationProperties;
-    private HttpRequestService httpRequestService;
-    private AuthenticationService revolutAuthenticationService;
+    private final RevolutConfigurationProperties configurationProperties;
+    private final HttpRequestService httpRequestService;
+    private final AuthenticationService revolutAuthenticationService;
 
     @Autowired
     public RevolutAccountService(RevolutConfigurationProperties configurationProperties,

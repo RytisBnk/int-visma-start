@@ -21,9 +21,9 @@ import java.util.*;
 
 @Service
 public class SwedbankAccountService implements BankingAccountsService {
-    private SwedbankConfigurationProperties configurationProperties;
-    private HttpRequestService httpRequestService;
-    private AuthenticationService swedbankAuthenticationService;
+    private final SwedbankConfigurationProperties configurationProperties;
+    private final HttpRequestService httpRequestService;
+    private final AuthenticationService swedbankAuthenticationService;
 
     @Autowired
     public SwedbankAccountService(SwedbankConfigurationProperties configurationProperties,

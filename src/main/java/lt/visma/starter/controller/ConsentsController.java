@@ -16,7 +16,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/v1/consents")
 public class ConsentsController {
-    private ConsentServiceFactory consentServiceFactory;
+    private final ConsentServiceFactory consentServiceFactory;
 
     @Autowired
     public ConsentsController(ConsentServiceFactory consentServiceFactory) {

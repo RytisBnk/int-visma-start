@@ -8,7 +8,7 @@ import java.util.List;
 
 @Component
 public class PaymentTransactionServiceFactory {
-    private List<PaymentTransactionService> paymentTransactionServices;
+    private final List<PaymentTransactionService> paymentTransactionServices;
 
     public PaymentTransactionServiceFactory(List<PaymentTransactionService> paymentTransactionServices) {
         this.paymentTransactionServices = paymentTransactionServices;

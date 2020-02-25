@@ -15,7 +15,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/v1/accounts")
 public class AccountsController {
-    private BankingAccountsServiceFactory bankingAccountsServiceFactory;
+    private final BankingAccountsServiceFactory bankingAccountsServiceFactory;
 
     @Autowired
     public AccountsController(BankingAccountsServiceFactory bankingAccountsServiceFactory) {
