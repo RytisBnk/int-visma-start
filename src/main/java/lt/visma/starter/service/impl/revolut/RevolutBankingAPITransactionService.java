@@ -9,7 +9,7 @@ import lt.visma.starter.model.revolut.RevolutApiError;
 import lt.visma.starter.model.revolut.entity.RevolutTransaction;
 import lt.visma.starter.service.AuthenticationService;
 import lt.visma.starter.service.HttpRequestService;
-import lt.visma.starter.service.TransactionService;
+import lt.visma.starter.service.BankingAPITransactionService;
 import lt.visma.starter.util.HTTPUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,15 +23,15 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class RevolutTransactionServiceImpl implements TransactionService {
+public class RevolutBankingAPITransactionService implements BankingAPITransactionService {
     private HttpRequestService httpRequestService;
     private RevolutConfigurationProperties configurationProperties;
     private AuthenticationService revolutAuthenticationService;
 
     @Autowired
-    public RevolutTransactionServiceImpl(HttpRequestService httpRequestService,
-                                         RevolutConfigurationProperties configurationProperties,
-                                         RevolutAuthenticationService revolutAuthenticationService) {
+    public RevolutBankingAPITransactionService(HttpRequestService httpRequestService,
+                                               RevolutConfigurationProperties configurationProperties,
+                                               RevolutAuthenticationService revolutAuthenticationService) {
         this.httpRequestService = httpRequestService;
         this.configurationProperties = configurationProperties;
         this.revolutAuthenticationService = revolutAuthenticationService;

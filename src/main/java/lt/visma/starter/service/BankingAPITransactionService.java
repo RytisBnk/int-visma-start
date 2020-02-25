@@ -8,7 +8,7 @@ import lt.visma.starter.model.Transaction;
 import java.util.List;
 import java.util.Map;
 
-public interface TransactionService {
+public interface BankingAPITransactionService {
     List<Transaction> getTransactions(String from, String to, Map<String, String> authParams)
             throws GenericException, ApiException, OperationNotSupportedException;
     Transaction getTransactionById(String transactionId, String bankCode, Map<String, String> authParams)

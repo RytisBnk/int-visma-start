@@ -11,12 +11,11 @@ import lt.visma.starter.model.revolut.*;
 import lt.visma.starter.model.revolut.entity.Counterparty;
 import lt.visma.starter.model.revolut.entity.RevolutTransaction;
 import lt.visma.starter.model.revolut.entity.TransactionLeg;
-import lt.visma.starter.service.AuthenticationService;
 import lt.visma.starter.service.HttpRequestService;
 import lt.visma.starter.service.MockWebServerTest;
 import lt.visma.starter.service.impl.HttpRequestServiceImpl;
 import lt.visma.starter.service.impl.revolut.RevolutAuthenticationService;
-import lt.visma.starter.service.impl.revolut.RevolutTransactionServiceImpl;
+import lt.visma.starter.service.impl.revolut.RevolutBankingAPITransactionService;
 import okhttp3.mockwebserver.MockResponse;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,11 +31,11 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
-public class RevolutTransactionServiceTest extends MockWebServerTest {
+public class RevolutBankingAPITransactionServiceTest extends MockWebServerTest {
     @Mock
     private RevolutConfigurationProperties configurationProperties;
 
-    private RevolutTransactionServiceImpl revolutTransactionService;
+    private RevolutBankingAPITransactionService revolutTransactionService;
 
     @Mock
     private RevolutAuthenticationService authenticationService;
@@ -46,7 +45,7 @@ public class RevolutTransactionServiceTest extends MockWebServerTest {
     public void setUp() throws Exception {
         super.setUp();
         HttpRequestService httpRequestService = new HttpRequestServiceImpl();
-        revolutTransactionService = new RevolutTransactionServiceImpl(httpRequestService, configurationProperties, authenticationService);
+        revolutTransactionService = new RevolutBankingAPITransactionService(httpRequestService, configurationProperties, authenticationService);
     }
 
     @Test

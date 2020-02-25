@@ -1,7 +1,7 @@
 package lt.visma.starter.service.factory;
 
 import lt.visma.starter.exception.BankNotSupportedException;
-import lt.visma.starter.service.TransactionService;
+import lt.visma.starter.service.BankingAPITransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -10,15 +10,15 @@ import java.util.Optional;
 
 @Component
 public class TransactionServiceFactory {
-    private List<TransactionService> transactionServices;
+    private List<BankingAPITransactionService> bankingAPITransactionServices;
 
     @Autowired
-    public TransactionServiceFactory(List<TransactionService> transactionServices) {
-        this.transactionServices = transactionServices;
+    public TransactionServiceFactory(List<BankingAPITransactionService> bankingAPITransactionServices) {
+        this.bankingAPITransactionServices = bankingAPITransactionServices;
     }
 
-    public TransactionService getTransactionService(String bankCode) throws BankNotSupportedException {
-        Optional<TransactionService> transactionServiceOptional = transactionServices.stream()
+    public BankingAPITransactionService getTransactionService(String bankCode) throws BankNotSupportedException {
+        Optional<BankingAPITransactionService> transactionServiceOptional = bankingAPITransactionServices.stream()
                 .filter(transactionService -> transactionService.supportsBank(bankCode))
                 .findFirst();
         if (!transactionServiceOptional.isPresent()) {
