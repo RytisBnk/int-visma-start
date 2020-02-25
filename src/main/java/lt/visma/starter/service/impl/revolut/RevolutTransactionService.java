@@ -11,7 +11,6 @@ import lt.visma.starter.service.AuthenticationService;
 import lt.visma.starter.service.HttpRequestService;
 import lt.visma.starter.service.TransactionService;
 import lt.visma.starter.util.HTTPUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -28,7 +27,6 @@ public class RevolutTransactionService implements TransactionService {
     private final RevolutConfigurationProperties configurationProperties;
     private final AuthenticationService revolutAuthenticationService;
 
-    @Autowired
     public RevolutTransactionService(HttpRequestService httpRequestService,
                                      RevolutConfigurationProperties configurationProperties,
                                      RevolutAuthenticationService revolutAuthenticationService) {

@@ -7,7 +7,6 @@ import lt.visma.starter.model.swedbank.*;
 import lt.visma.starter.service.AuthenticationService;
 import lt.visma.starter.service.HttpRequestService;
 import lt.visma.starter.util.TimeUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -25,7 +24,6 @@ public class SwedbankAuthenticationService implements AuthenticationService {
     private final SwedbankConfigurationProperties configurationProperties;
     private final HttpRequestService httpRequestService;
 
-    @Autowired
     public SwedbankAuthenticationService(SwedbankConfigurationProperties configurationProperties, HttpRequestService httpRequestService) {
         this.configurationProperties = configurationProperties;
         this.httpRequestService = httpRequestService;

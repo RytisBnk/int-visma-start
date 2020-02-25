@@ -10,7 +10,6 @@ import lt.visma.starter.service.AuthenticationService;
 import lt.visma.starter.service.BankingAccountsService;
 import lt.visma.starter.service.HttpRequestService;
 import lt.visma.starter.util.HTTPUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -28,7 +27,6 @@ public class RevolutAccountService implements BankingAccountsService {
     private final HttpRequestService httpRequestService;
     private final AuthenticationService revolutAuthenticationService;
 
-    @Autowired
     public RevolutAccountService(RevolutConfigurationProperties configurationProperties,
                                  HttpRequestService httpRequestService,
                                  AuthenticationService revolutAuthenticationService) {

@@ -5,14 +5,13 @@ import lt.visma.starter.exception.ApiException;
 import lt.visma.starter.exception.GenericException;
 import lt.visma.starter.exception.OperationNotSupportedException;
 import lt.visma.starter.model.Transaction;
-import lt.visma.starter.model.swedbank.entity.SwedbankPaymentTransaction;
 import lt.visma.starter.model.swedbank.SwedbankResponseError;
+import lt.visma.starter.model.swedbank.entity.SwedbankPaymentTransaction;
 import lt.visma.starter.service.AuthenticationService;
 import lt.visma.starter.service.HttpRequestService;
 import lt.visma.starter.service.TransactionService;
 import lt.visma.starter.util.HTTPUtils;
 import lt.visma.starter.util.TimeUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -30,7 +29,6 @@ public class SwedbankTransactionService implements TransactionService {
     private final SwedbankConfigurationProperties configurationProperties;
     private final AuthenticationService swedbankAuthenticationService;
 
-    @Autowired
     public SwedbankTransactionService(HttpRequestService httpRequestService,
                                       SwedbankConfigurationProperties configurationProperties,
                                       AuthenticationService swedbankAuthenticationService) {

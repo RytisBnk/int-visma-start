@@ -9,7 +9,6 @@ import lt.visma.starter.model.revolut.RevolutAccessToken;
 import lt.visma.starter.model.revolut.RevolutResponseError;
 import lt.visma.starter.service.AuthenticationService;
 import lt.visma.starter.service.HttpRequestService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -23,7 +22,9 @@ import java.nio.file.Paths;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPrivateKey;
-import java.security.spec.*;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.KeySpec;
+import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,7 +34,6 @@ public class RevolutAuthenticationService implements AuthenticationService {
     private final RevolutConfigurationProperties configurationProperties;
     private final HttpRequestService httpRequestService;
 
-    @Autowired
     public RevolutAuthenticationService(RevolutConfigurationProperties configurationProperties, HttpRequestService httpRequestService) {
         this.configurationProperties = configurationProperties;
         this.httpRequestService = httpRequestService;

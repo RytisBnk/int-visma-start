@@ -12,7 +12,6 @@ import lt.visma.starter.service.ConsentService;
 import lt.visma.starter.service.HttpRequestService;
 import lt.visma.starter.util.HTTPUtils;
 import lt.visma.starter.util.TimeUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -30,7 +29,6 @@ public class SwedbankConsentService implements ConsentService {
     private final SwedbankConfigurationProperties configurationProperties;
     private final AuthenticationService swedbankAuthenticationService;
 
-    @Autowired
     public SwedbankConsentService(HttpRequestService httpRequestService,
                                   SwedbankConfigurationProperties configurationProperties,
                                   AuthenticationService swedbankAuthenticationService) {

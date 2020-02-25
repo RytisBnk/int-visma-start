@@ -16,7 +16,6 @@ import lt.visma.starter.service.HttpRequestService;
 import lt.visma.starter.service.PaymentService;
 import lt.visma.starter.util.HTTPUtils;
 import lt.visma.starter.util.TimeUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -34,7 +33,6 @@ public class SwedbankPaymentService implements PaymentService {
     private final PaymentSubmissionRepository paymentSubmissionRepository;
     private final PaymentSubmissionMapper swedbankPaymentSubmissionMapper;
 
-    @Autowired
     public SwedbankPaymentService(HttpRequestService httpRequestService,
                                   SwedbankConfigurationProperties configurationProperties,
                                   PaymentSubmissionRepository paymentSubmissionRepository,

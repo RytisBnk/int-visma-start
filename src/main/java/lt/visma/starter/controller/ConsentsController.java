@@ -6,7 +6,6 @@ import lt.visma.starter.exception.GenericException;
 import lt.visma.starter.model.swedbank.ConsentResponse;
 import lt.visma.starter.service.ConsentService;
 import lt.visma.starter.service.factory.ConsentServiceFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +17,6 @@ import java.util.Map;
 public class ConsentsController {
     private final ConsentServiceFactory consentServiceFactory;
 
-    @Autowired
     public ConsentsController(ConsentServiceFactory consentServiceFactory) {
         this.consentServiceFactory = consentServiceFactory;
     }
