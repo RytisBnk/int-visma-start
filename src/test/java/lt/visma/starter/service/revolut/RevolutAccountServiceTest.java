@@ -8,18 +8,20 @@ import lt.visma.starter.exception.GenericException;
 import lt.visma.starter.model.BankingAccount;
 import lt.visma.starter.model.revolut.RevolutAccount;
 import lt.visma.starter.model.revolut.RevolutResponseError;
+import lt.visma.starter.service.AuthenticationService;
 import lt.visma.starter.service.HttpRequestService;
 import lt.visma.starter.service.MockWebServerTest;
 import lt.visma.starter.service.impl.HttpRequestServiceImpl;
-import lt.visma.starter.service.impl.revolut.RevolutAccountServiceImpl;
+import lt.visma.starter.service.impl.revolut.RevolutAccountService;
 import okhttp3.mockwebserver.MockResponse;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -28,7 +30,10 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class RevolutAccountServiceTest extends MockWebServerTest {
     @Mock
     private RevolutConfigurationProperties configurationProperties;
-    private RevolutAccountServiceImpl revolutAccountService;
+    private RevolutAccountService revolutAccountService;
+
+    @Mock
+    private AuthenticationService revolutAuthenticationService;
 
     @Override
     @Before
@@ -36,20 +41,20 @@ public class RevolutAccountServiceTest extends MockWebServerTest {
         super.setUp();
         initMocks(this);
         HttpRequestService httpRequestService = new HttpRequestServiceImpl();
-        revolutAccountService = new RevolutAccountServiceImpl(configurationProperties, httpRequestService);
+        revolutAccountService = new RevolutAccountService(configurationProperties, httpRequestService, revolutAuthenticationService);
     }
 
     @Test
     public void getBankingAccounts_OKResponse_ReturnBankingAccounts()
             throws JsonProcessingException, GenericException, ApiException {
         MockResponse response = new MockResponse();
-        response.setHeader("Content-Type", "application/json");
+        response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         response.setBody((new ObjectMapper()).writeValueAsString(getValidResponseBody()));
         mockWebServer.enqueue(response);
 
-        when(configurationProperties.getApiURL()).thenReturn("http://localhost:" + mockWebServer.getPort());
+        whenMockApiUrl();
 
-        List<BankingAccount> accounts = revolutAccountService.getBankingAccounts("", null);
+        List<BankingAccount> accounts = revolutAccountService.getBankingAccounts( null);
         assertNotNull(accounts);
         assertTrue(accounts.size() != 0);
     }
@@ -63,26 +68,31 @@ public class RevolutAccountServiceTest extends MockWebServerTest {
         MockResponse response = new MockResponse();
         response.setResponseCode(400);
         response.setBody((new ObjectMapper()).writeValueAsString(revolutResponseError));
-        response.setHeader("Content-type", "application/json");
+        response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         mockWebServer.enqueue(response);
 
-        when(configurationProperties.getApiURL()).thenReturn("http://localhost:" + mockWebServer.getPort());
+        whenMockApiUrl();
 
-        assertThrows(ApiException.class, () -> revolutAccountService.getBankingAccounts("", null));
+        assertThrows(ApiException.class, () -> revolutAccountService.getBankingAccounts( null));
     }
 
     private List<BankingAccount> getValidResponseBody() {
         List<BankingAccount> bankingAccounts = new ArrayList<>();
-        bankingAccounts.add(new RevolutAccount(
-                UUID.randomUUID().toString(),
-                "Spending account",
-                20000,
-                "EUR",
-                "active",
-                true,
-                "2020-01-01", "2020-02-01"
-        ));
+
+        RevolutAccount account = new RevolutAccount();
+        account.setName("Spending account");
+        account.setBalance(20000);
+        account.setCurrency("EUR");
+        account.setState("active");
+        account.setPublic(true);
+        account.setCreatedAt("2020-01-01");
+        account.setUpdatedAt("2020-02-01");
+        bankingAccounts.add(account);
 
         return bankingAccounts;
+    }
+
+    private void whenMockApiUrl() {
+        when(configurationProperties.getApiURL()).thenReturn("http://localhost:" + mockWebServer.getPort());
     }
 }

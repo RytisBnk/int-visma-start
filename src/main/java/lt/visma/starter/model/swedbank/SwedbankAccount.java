@@ -16,18 +16,6 @@ public class SwedbankAccount implements BankingAccount {
     @JsonAlias({"_links"})
     private AccountLinks accountLinks;
 
-    public SwedbankAccount(String cashAccountType, String currency, String iban, String name, String product, String resourceId) {
-        this.cashAccountType = cashAccountType;
-        this.currency = currency;
-        this.iban = iban;
-        this.name = name;
-        this.product = product;
-        this.resourceId = resourceId;
-    }
-
-    public SwedbankAccount() {
-    }
-
     public AccountLinks getAccountLinks() {
         return accountLinks;
     }

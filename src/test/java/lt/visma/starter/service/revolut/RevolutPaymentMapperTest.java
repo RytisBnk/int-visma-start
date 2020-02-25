@@ -1,12 +1,12 @@
 package lt.visma.starter.service.revolut;
 
 import lt.visma.starter.exception.InvalidTransactionException;
-import lt.visma.starter.model.Payment;
+import lt.visma.starter.model.entity.Payment;
 import lt.visma.starter.model.revolut.entity.Counterparty;
 import lt.visma.starter.model.revolut.entity.RevolutTransaction;
 import lt.visma.starter.model.revolut.entity.TransactionLeg;
 import lt.visma.starter.model.swedbank.entity.SwedbankPaymentTransaction;
-import lt.visma.starter.service.impl.revolut.RevolutPaymentMapperServiceImpl;
+import lt.visma.starter.mapper.impl.revolut.RevolutPaymentMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,8 +18,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class RevolutPaymentMapperServiceTest {
-    private RevolutPaymentMapperServiceImpl revolutPaymentMapperService;
+public class RevolutPaymentMapperTest {
+    private RevolutPaymentMapper revolutPaymentMapperService;
 
     private final String TRANSACTION_ID = "1-1-1-1";
     private final String CREDITOR_ID = "2-2-2-2";
@@ -31,7 +31,7 @@ public class RevolutPaymentMapperServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        revolutPaymentMapperService = new RevolutPaymentMapperServiceImpl();
+        revolutPaymentMapperService = new RevolutPaymentMapper();
     }
 
     @Test

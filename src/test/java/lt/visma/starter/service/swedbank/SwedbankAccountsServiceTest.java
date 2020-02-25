@@ -11,10 +11,11 @@ import lt.visma.starter.model.swedbank.AccountsListResponse;
 import lt.visma.starter.model.swedbank.SwedbankAccount;
 import lt.visma.starter.model.swedbank.SwedbankResponseError;
 import lt.visma.starter.model.swedbank.TppMessage;
+import lt.visma.starter.service.AuthenticationService;
 import lt.visma.starter.service.HttpRequestService;
 import lt.visma.starter.service.MockWebServerTest;
 import lt.visma.starter.service.impl.HttpRequestServiceImpl;
-import lt.visma.starter.service.impl.swedbank.SwedbankAccountsServiceImpl;
+import lt.visma.starter.service.impl.swedbank.SwedbankAccountService;
 import okhttp3.mockwebserver.MockResponse;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,14 +33,17 @@ import static org.mockito.Mockito.when;
 public class SwedbankAccountsServiceTest extends MockWebServerTest {
     @Mock
     private SwedbankConfigurationProperties configurationProperties;
-    private SwedbankAccountsServiceImpl swedbankAccountsService;
+    private SwedbankAccountService swedbankAccountsService;
+
+    @Mock
+    private AuthenticationService swedbankAuthenticationService;
 
     @Override
     @Before
     public void setUp() throws Exception {
         super.setUp();
         HttpRequestService httpRequestService = new HttpRequestServiceImpl();
-        swedbankAccountsService = new SwedbankAccountsServiceImpl(configurationProperties, httpRequestService);
+        swedbankAccountsService = new SwedbankAccountService(configurationProperties, httpRequestService, swedbankAuthenticationService);
     }
 
     @Test
@@ -52,7 +56,7 @@ public class SwedbankAccountsServiceTest extends MockWebServerTest {
 
         whenMockApiUrl();
 
-        List<BankingAccount> accounts = swedbankAccountsService.getBankingAccounts("", new HashMap<>());
+        List<BankingAccount> accounts = swedbankAccountsService.getBankingAccounts(new HashMap<>());
         assertNotNull(accounts);
         assertTrue(accounts.size() != 0);
     }
@@ -67,21 +71,19 @@ public class SwedbankAccountsServiceTest extends MockWebServerTest {
 
         whenMockApiUrl();
 
-        assertThrows(ApiException.class, () -> swedbankAccountsService.getBankingAccounts("", new HashMap<>()));
+        assertThrows(ApiException.class, () -> swedbankAccountsService.getBankingAccounts(new HashMap<>()));
     }
 
     private AccountsListResponse getSampleAccountsList() {
         List<SwedbankAccount> accounts = new ArrayList<>();
-        SwedbankAccount account1 = new SwedbankAccount(
-                "CACC",
-                "EUR",
-                "LT1111222233331111",
-                "Name name",
-                null,
-                "1111-1111-1111-1111"
-        );
+        SwedbankAccount account = new SwedbankAccount();
+        account.setCashAccountType("CACC");
+        account.setCurrency("EUR");
+        account.setIban("LT1111222233331111");
+        account.setName("account name");
+        account.setResourceId("1111-1111-1111-1111");
 
-        accounts.add(account1);
+        accounts.add(account);
         AccountsListResponse accountsListResponse = new AccountsListResponse();
         accountsListResponse.setAccounts(accounts);
         return accountsListResponse;

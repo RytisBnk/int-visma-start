@@ -4,34 +4,43 @@ import lt.visma.starter.configuration.SwedbankConfigurationProperties;
 import lt.visma.starter.exception.ApiException;
 import lt.visma.starter.exception.GenericException;
 import lt.visma.starter.model.BankingAccount;
-import lt.visma.starter.model.swedbank.*;
+import lt.visma.starter.model.swedbank.AccountsListResponse;
+import lt.visma.starter.model.swedbank.SwedbankResponseError;
+import lt.visma.starter.service.AuthenticationService;
 import lt.visma.starter.service.BankingAccountsService;
 import lt.visma.starter.service.HttpRequestService;
 import lt.visma.starter.util.HTTPUtils;
 import lt.visma.starter.util.TimeUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.ClientResponse;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @Service
-public class SwedbankAccountsServiceImpl implements BankingAccountsService {
-    private SwedbankConfigurationProperties configurationProperties;
-    private HttpRequestService httpRequestService;
+public class SwedbankAccountService implements BankingAccountsService {
+    private final SwedbankConfigurationProperties configurationProperties;
+    private final HttpRequestService httpRequestService;
+    private final AuthenticationService swedbankAuthenticationService;
 
-    @Autowired
-    public SwedbankAccountsServiceImpl(SwedbankConfigurationProperties configurationProperties, HttpRequestService httpRequestService) {
+    public SwedbankAccountService(SwedbankConfigurationProperties configurationProperties,
+                                  HttpRequestService httpRequestService,
+                                  AuthenticationService swedbankAuthenticationService) {
         this.configurationProperties = configurationProperties;
         this.httpRequestService = httpRequestService;
+        this.swedbankAuthenticationService = swedbankAuthenticationService;
     }
 
     @Override
-    public List<BankingAccount> getBankingAccounts(String accessToken, Map<String, String> parameters)
+    public List<BankingAccount> getBankingAccounts(Map<String, String> parameters)
             throws GenericException, ApiException {
+        String accessToken = swedbankAuthenticationService.getAccessToken(parameters);
+
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("bic", configurationProperties.getBic());
         queryParams.add("app-id", configurationProperties.getClientId());

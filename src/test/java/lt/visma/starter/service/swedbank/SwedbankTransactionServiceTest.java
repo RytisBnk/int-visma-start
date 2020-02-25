@@ -11,7 +11,8 @@ import lt.visma.starter.model.swedbank.entity.SwedbankPaymentTransaction;
 import lt.visma.starter.service.HttpRequestService;
 import lt.visma.starter.service.MockWebServerTest;
 import lt.visma.starter.service.impl.HttpRequestServiceImpl;
-import lt.visma.starter.service.impl.swedbank.SwedbankTransactionServiceImpl;
+import lt.visma.starter.service.impl.swedbank.SwedbankAuthenticationService;
+import lt.visma.starter.service.impl.swedbank.SwedbankTransactionService;
 import okhttp3.mockwebserver.MockResponse;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,14 +20,19 @@ import org.mockito.Mock;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
+import java.util.HashMap;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
-public class SwedbankTransactionServiceImplTest extends MockWebServerTest {
+public class SwedbankTransactionServiceTest extends MockWebServerTest {
     @Mock
     private SwedbankConfigurationProperties configurationProperties;
 
-    private SwedbankTransactionServiceImpl swedbankTransactionService;
+    private SwedbankTransactionService swedbankTransactionService;
+
+    @Mock
+    private SwedbankAuthenticationService authenticationService;
 
     private final String TARGET_TRANSACTION_ID = "1-1-1-1";
 
@@ -35,13 +41,13 @@ public class SwedbankTransactionServiceImplTest extends MockWebServerTest {
     public void setUp() throws Exception {
         super.setUp();
         HttpRequestService httpRequestService = new HttpRequestServiceImpl();
-        swedbankTransactionService = new SwedbankTransactionServiceImpl(httpRequestService, configurationProperties);
+        swedbankTransactionService = new SwedbankTransactionService(httpRequestService, configurationProperties, authenticationService);
     }
 
     @Test
     public void getTransactions_ThrowsOperationNotSupportedException() {
         assertThrows(OperationNotSupportedException.class,
-                () -> swedbankTransactionService.getTransactions("", "", ""));
+                () -> swedbankTransactionService.getTransactions("", "", new HashMap<>()));
     }
 
     @Test

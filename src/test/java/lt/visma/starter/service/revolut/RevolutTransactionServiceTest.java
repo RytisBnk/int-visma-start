@@ -14,7 +14,8 @@ import lt.visma.starter.model.revolut.entity.TransactionLeg;
 import lt.visma.starter.service.HttpRequestService;
 import lt.visma.starter.service.MockWebServerTest;
 import lt.visma.starter.service.impl.HttpRequestServiceImpl;
-import lt.visma.starter.service.impl.revolut.RevolutTransactionServiceImpl;
+import lt.visma.starter.service.impl.revolut.RevolutAuthenticationService;
+import lt.visma.starter.service.impl.revolut.RevolutTransactionService;
 import okhttp3.mockwebserver.MockResponse;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,6 +24,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,14 +35,17 @@ public class RevolutTransactionServiceTest extends MockWebServerTest {
     @Mock
     private RevolutConfigurationProperties configurationProperties;
 
-    private RevolutTransactionServiceImpl revolutTransactionService;
+    private RevolutTransactionService revolutTransactionService;
+
+    @Mock
+    private RevolutAuthenticationService authenticationService;
 
     @Override
     @Before
     public void setUp() throws Exception {
         super.setUp();
         HttpRequestService httpRequestService = new HttpRequestServiceImpl();
-        revolutTransactionService = new RevolutTransactionServiceImpl(httpRequestService, configurationProperties);
+        revolutTransactionService = new RevolutTransactionService(httpRequestService, configurationProperties, authenticationService);
     }
 
     @Test
@@ -49,7 +54,7 @@ public class RevolutTransactionServiceTest extends MockWebServerTest {
 
         whenMockApiUrl();
 
-        List<Transaction> transactions = revolutTransactionService.getTransactions("", "", "");
+        List<Transaction> transactions = revolutTransactionService.getTransactions("", "", new HashMap<>());
         assertNotNull(transactions);
         assertTrue(transactions.size() != 0);
     }
@@ -60,7 +65,7 @@ public class RevolutTransactionServiceTest extends MockWebServerTest {
 
         whenMockApiUrl();
 
-        assertThrows(ApiException.class, () -> revolutTransactionService.getTransactions("", "", ""));
+        assertThrows(ApiException.class, () -> revolutTransactionService.getTransactions("", "", new HashMap<>()));
     }
 
     @Test
@@ -69,7 +74,8 @@ public class RevolutTransactionServiceTest extends MockWebServerTest {
 
         whenMockApiUrl();
 
-        RevolutTransaction transaction = (RevolutTransaction) revolutTransactionService.getTransactionById("", "transactionId", "REVOGB21");
+        RevolutTransaction transaction = (RevolutTransaction)
+                revolutTransactionService.getTransactionById("", "", "");
         assertNotNull(transaction);
         assertNotNull(transaction.getId());
         assertNotNull(transaction.getCreatedAt());
@@ -84,7 +90,7 @@ public class RevolutTransactionServiceTest extends MockWebServerTest {
         whenMockApiUrl();
 
         assertThrows(ApiException.class, () ->
-                revolutTransactionService.getTransactionById("", "transactionId", "REVOGB21"));
+                revolutTransactionService.getTransactionById("", "", ""));
     }
 
     private MockResponse getMockResponse(Object requestBody, int statusCode) throws JsonProcessingException {
@@ -102,29 +108,33 @@ public class RevolutTransactionServiceTest extends MockWebServerTest {
 
     private List<RevolutTransaction> getSampleTransactionList() {
         List<RevolutTransaction> transactions = new ArrayList<>();
-        TransactionLeg leg = new TransactionLeg(
-                UUID.randomUUID().toString(),
-                200,
-                "EUR",
-                "221.17",
-                "USD",
-                UUID.randomUUID().toString(),
-                new Counterparty(UUID.randomUUID().toString(), UUID.randomUUID().toString(), CounterpartyType.REVOLUT),
-                "Invoice payment #69",
-                20546.56
-        );
+
         List<TransactionLeg> legs = new ArrayList<>();
+        TransactionLeg leg = new TransactionLeg();
+        leg.setLegId("1-1-1-1");
+        leg.setAmount(200);
+        leg.setCurrency("EUR");
+        leg.setBillAmount("221.17");
+        leg.setBillCurrency("USD");
+        leg.setAccountId("1-1-1-1");
+        Counterparty counterparty = new Counterparty();
+        counterparty.setId("1-1-1-1");
+        counterparty.setAccountId("2-2-2-2");
+        counterparty.setType(CounterpartyType.REVOLUT);
+        leg.setCounterparty(counterparty);
+        leg.setDescription("Invoice payment #1");
+        leg.setBalance(20546.56);
         legs.add(leg);
 
-        RevolutTransaction transaction = new RevolutTransaction(
-                UUID.randomUUID().toString(),
-                RevolutTransactionType.CARD_PAYMENT,
-                UUID.randomUUID().toString(),
-                PaymentState.PENDING,
-                null,
-                "2020-01-01", "2020-01-01", null, null,
-                null, null, legs, null
-        );
+        RevolutTransaction transaction = new RevolutTransaction();
+        transaction.setLegs(legs);
+        transaction.setId(UUID.randomUUID().toString());
+        transaction.setType(RevolutTransactionType.CARD_PAYMENT);
+        transaction.setReuestId(UUID.randomUUID().toString());
+        transaction.setState(PaymentState.PENDING);
+        transaction.setCreatedAt("2020-01-01");
+        transaction.setUpdatedAt("202-01-01");
+
         transactions.add(transaction);
         return transactions;
     }

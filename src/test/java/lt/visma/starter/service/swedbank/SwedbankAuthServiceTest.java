@@ -1,7 +1,7 @@
 package lt.visma.starter.service.swedbank;
 
 import lt.visma.starter.exception.ApiException;
-import lt.visma.starter.service.impl.swedbank.SwedbankAuthServiceImpl;
+import lt.visma.starter.service.impl.swedbank.SwedbankAuthenticationService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @RunWith(SpringRunner.class)
 public class SwedbankAuthServiceTest {
     @Autowired
-    private SwedbankAuthServiceImpl authenticationService;
+    private SwedbankAuthenticationService authenticationService;
 
     @Test
     public void getAccessTokenTest() throws Exception {
