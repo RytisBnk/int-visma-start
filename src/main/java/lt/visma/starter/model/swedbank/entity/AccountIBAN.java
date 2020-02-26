@@ -6,9 +6,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.io.Serializable;
 
 @Entity
-public class AccountIBAN {
+public class AccountIBAN implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonIgnore

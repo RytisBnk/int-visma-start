@@ -1,5 +1,6 @@
 package lt.visma.starter.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -17,6 +18,16 @@ public class PaymentQueueEntry {
 
     private String paymentId;
     private QueueEntryState status;
+    @JsonIgnore
+    private String bankCode;
+
+    public String getBankCode() {
+        return bankCode;
+    }
+
+    public void setBankCode(String bankCode) {
+        this.bankCode = bankCode;
+    }
 
     public QueueEntryState getStatus() {
         return status;
