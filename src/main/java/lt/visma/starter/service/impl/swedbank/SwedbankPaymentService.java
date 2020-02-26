@@ -7,15 +7,19 @@ import lt.visma.starter.exception.InvalidPaymentResponseException;
 import lt.visma.starter.mapper.PaymentSubmissionMapper;
 import lt.visma.starter.model.PaymentRequest;
 import lt.visma.starter.model.PaymentResponse;
+import lt.visma.starter.model.dto.PaymentQueueMessage;
 import lt.visma.starter.model.entity.PaymentSubmission;
 import lt.visma.starter.model.swedbank.SwedbankPaymentRequest;
 import lt.visma.starter.model.swedbank.SwedbankPaymentResponse;
 import lt.visma.starter.model.swedbank.SwedbankResponseError;
 import lt.visma.starter.repository.PaymentSubmissionRepository;
+import lt.visma.starter.service.AuthenticationService;
 import lt.visma.starter.service.HttpRequestService;
 import lt.visma.starter.service.PaymentService;
 import lt.visma.starter.util.HTTPUtils;
 import lt.visma.starter.util.TimeUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -24,6 +28,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.ClientResponse;
 
 import java.util.Arrays;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -32,29 +37,53 @@ public class SwedbankPaymentService implements PaymentService {
     private final SwedbankConfigurationProperties configurationProperties;
     private final PaymentSubmissionRepository paymentSubmissionRepository;
     private final PaymentSubmissionMapper swedbankPaymentSubmissionMapper;
+    private final AuthenticationService swedbankAuthenticationService;
+
+    private final Logger LOGGER = LoggerFactory.getLogger("SwedbankPaymentService");
 
     public SwedbankPaymentService(HttpRequestService httpRequestService,
                                   SwedbankConfigurationProperties configurationProperties,
                                   PaymentSubmissionRepository paymentSubmissionRepository,
-                                  PaymentSubmissionMapper swedbankPaymentSubmissionMapper) {
+                                  PaymentSubmissionMapper swedbankPaymentSubmissionMapper,
+                                  AuthenticationService swedbankAuthenticationService) {
         this.httpRequestService = httpRequestService;
         this.configurationProperties = configurationProperties;
         this.paymentSubmissionRepository = paymentSubmissionRepository;
         this.swedbankPaymentSubmissionMapper = swedbankPaymentSubmissionMapper;
+        this.swedbankAuthenticationService = swedbankAuthenticationService;
     }
 
     @Override
-    public PaymentSubmission makePayment(PaymentRequest paymentRequest, String accessToken) throws GenericException, ApiException, InvalidPaymentResponseException {
+    public void makePayment(PaymentQueueMessage paymentQueueMessage) throws GenericException, ApiException, InvalidPaymentResponseException {
+        LOGGER.info("Called SwedbankPaymentService.makePayment");
+
+        PaymentRequest paymentRequest = paymentQueueMessage.getPaymentRequest();
         if (! (paymentRequest instanceof SwedbankPaymentRequest)) {
             throw new GenericException();
         }
         SwedbankPaymentRequest swedbankPaymentRequest = (SwedbankPaymentRequest) paymentRequest;
+
+        String accessToken = swedbankAuthenticationService.getAccessToken(paymentQueueMessage.getAuthParams());
 
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("bic", swedbankPaymentRequest.getBic());
 
         MultiValueMap<String, String> headers = getRequiredHeaders(accessToken, swedbankPaymentRequest);
 
+        PaymentResponse paymentResponse = getPaymentResponseFromAPI(queryParams, headers, swedbankPaymentRequest);
+        PaymentSubmission paymentSubmission =
+                paymentSubmissionRepository.save(swedbankPaymentSubmissionMapper.mapToPaymentSubmission(paymentResponse));
+    }
+
+    @Override
+    public boolean supportsBank(String bankCode) {
+        return Arrays.asList(configurationProperties.getSupportedBanks()).contains(bankCode);
+    }
+
+    private PaymentResponse getPaymentResponseFromAPI(MultiValueMap<String, String> queryParams,
+                                                      MultiValueMap<String, String> headers,
+                                                      SwedbankPaymentRequest swedbankPaymentRequest)
+            throws GenericException, ApiException {
         ClientResponse response = httpRequestService.httpPostRequest(
                 configurationProperties.getApiUrl(),
                 configurationProperties.getPaymentsEndpointUrl(),
@@ -64,13 +93,7 @@ public class SwedbankPaymentService implements PaymentService {
                 MediaType.APPLICATION_JSON
         );
         checkIfResponseValid(response);
-        PaymentResponse paymentResponse = response.bodyToMono(SwedbankPaymentResponse.class).block();
-        return paymentSubmissionRepository.save(swedbankPaymentSubmissionMapper.mapToPaymentSubmission(paymentResponse));
-    }
-
-    @Override
-    public boolean supportsBank(String bankCode) {
-        return Arrays.asList(configurationProperties.getSupportedBanks()).contains(bankCode);
+        return response.bodyToMono(SwedbankPaymentResponse.class).block();
     }
 
     private MultiValueMap<String, String> getRequiredHeaders(String accessToken, SwedbankPaymentRequest paymentRequest) {

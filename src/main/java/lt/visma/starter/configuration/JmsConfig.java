@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.annotation.EnableJms;
 import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
-import org.springframework.jms.config.JmsListenerContainerFactory;
 import org.springframework.jms.connection.CachingConnectionFactory;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.support.converter.MappingJackson2MessageConverter;
@@ -22,8 +21,11 @@ public class JmsConfig {
     @Value("${activemq.broker-url}")
     private String brokerUrl;
 
-    @Value(("${jms.paymentProcessingDestination}"))
-    private String paymentProcessingDestination;
+    @Value("${jms.paymentQueueDestination}")
+    private String paymentQueueDestination;
+
+    @Value("${jms.transactionQueueDestination}")
+    private String transactionQueueDestination;
 
     @Bean
     public ActiveMQConnectionFactory connectionFactory() {
@@ -68,6 +70,11 @@ public class JmsConfig {
 
     @Bean
     public Destination paymentQueueDestination() {
-        return new ActiveMQQueue(paymentProcessingDestination);
+        return new ActiveMQQueue(paymentQueueDestination);
+    }
+
+    @Bean
+    public Destination transactionQueueDestination() {
+        return new ActiveMQQueue(transactionQueueDestination);
     }
 }
