@@ -12,9 +12,9 @@ import java.util.Map;
 
 @Component
 public class PaymentQueueMessageSender {
-    private JmsTemplate jmsTemplate;
-    private Destination paymentQueueDestination;
-    private final Logger LOGGER = LoggerFactory.getLogger("PaymentQueueMessageSenderLogger");
+    private final JmsTemplate jmsTemplate;
+    private final Destination paymentQueueDestination;
+    private final Logger LOGGER = LoggerFactory.getLogger("PaymentQueueMessageSender");
 
     public PaymentQueueMessageSender(JmsTemplate jmsTemplate, Destination paymentQueueDestination) {
         this.jmsTemplate = jmsTemplate;

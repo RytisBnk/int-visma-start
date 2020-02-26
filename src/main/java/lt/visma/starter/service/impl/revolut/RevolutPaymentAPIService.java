@@ -4,6 +4,7 @@ import lt.visma.starter.configuration.RevolutConfigurationProperties;
 import lt.visma.starter.exception.ApiException;
 import lt.visma.starter.exception.GenericException;
 import lt.visma.starter.exception.InvalidPaymentResponseException;
+import lt.visma.starter.jms.TransactionQueueMessageSender;
 import lt.visma.starter.mapper.PaymentSubmissionMapper;
 import lt.visma.starter.model.PaymentRequest;
 import lt.visma.starter.model.PaymentResponse;
@@ -15,7 +16,7 @@ import lt.visma.starter.model.revolut.RevolutPaymentRequest;
 import lt.visma.starter.repository.PaymentSubmissionRepository;
 import lt.visma.starter.service.AuthenticationService;
 import lt.visma.starter.service.HttpRequestService;
-import lt.visma.starter.service.PaymentService;
+import lt.visma.starter.service.PaymentAPIService;
 import lt.visma.starter.util.HTTPUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -29,27 +30,30 @@ import java.util.Map;
 import java.util.UUID;
 
 @Service
-public class RevolutPaymentService implements PaymentService {
+public class RevolutPaymentAPIService implements PaymentAPIService {
     private final HttpRequestService httpRequestService;
     private final RevolutConfigurationProperties configurationProperties;
     private final PaymentSubmissionRepository paymentSubmissionRepository;
     private final PaymentSubmissionMapper revolutPaymentSubmissionMapper;
     private final AuthenticationService revolutAuthenticationService;
+    private final TransactionQueueMessageSender transactionQueueMessageSender;
 
-    public RevolutPaymentService(HttpRequestService httpRequestService,
-                                 RevolutConfigurationProperties configurationProperties,
-                                 PaymentSubmissionMapper revolutPaymentSubmissionMapper,
-                                 PaymentSubmissionRepository paymentSubmissionRepository,
-                                 AuthenticationService revolutAuthenticationService) {
+    public RevolutPaymentAPIService(HttpRequestService httpRequestService,
+                                    RevolutConfigurationProperties configurationProperties,
+                                    PaymentSubmissionMapper revolutPaymentSubmissionMapper,
+                                    PaymentSubmissionRepository paymentSubmissionRepository,
+                                    AuthenticationService revolutAuthenticationService,
+                                    TransactionQueueMessageSender transactionQueueMessageSender) {
         this.httpRequestService = httpRequestService;
         this.configurationProperties = configurationProperties;
         this.revolutPaymentSubmissionMapper = revolutPaymentSubmissionMapper;
         this.paymentSubmissionRepository = paymentSubmissionRepository;
         this.revolutAuthenticationService = revolutAuthenticationService;
+        this.transactionQueueMessageSender = transactionQueueMessageSender;
     }
 
     @Override
-    public void makePayment(PaymentQueueMessage paymentQueueMessage)
+    public void makePayment(PaymentQueueMessage paymentQueueMessage, String queueEntryId)
             throws GenericException, ApiException, InvalidPaymentResponseException {
         PaymentRequest paymentRequest = paymentQueueMessage.getPaymentRequest();
         if (! (paymentRequest instanceof RevolutPaymentRequest)) {
@@ -58,7 +62,8 @@ public class RevolutPaymentService implements PaymentService {
         RevolutPaymentRequest revolutPaymentRequest = (RevolutPaymentRequest) paymentRequest;
         revolutPaymentRequest.setRequestId(UUID.randomUUID().toString());
 
-        String accessToken = revolutAuthenticationService.getAccessToken(paymentQueueMessage.getAuthParams());
+        Map<String, String> authParams = paymentQueueMessage.getAuthParams();
+        String accessToken = revolutAuthenticationService.getAccessToken(authParams);
 
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
         HTTPUtils.addAuthorizationHeader(headers, accessToken);
@@ -66,6 +71,9 @@ public class RevolutPaymentService implements PaymentService {
         PaymentResponse paymentResponse = getPaymentResponseFromAPI(headers, revolutPaymentRequest);
         PaymentSubmission paymentSubmission =
                 paymentSubmissionRepository.save(revolutPaymentSubmissionMapper.mapToPaymentSubmission(paymentResponse));
+        transactionQueueMessageSender.sendTransactionQueueMessage(
+                paymentQueueMessage.getBankCode(), authParams, paymentSubmission, queueEntryId
+        );
     }
 
     @Override

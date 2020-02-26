@@ -43,7 +43,8 @@ public class SwedbankTransactionService implements TransactionService {
     }
 
     @Override
-    public Transaction getTransactionById(String transactionId, String bankCode, String accessToken) throws GenericException, ApiException {
+    public Transaction getTransactionById(String transactionId, String bankCode, Map<String, String> authParams) throws GenericException, ApiException {
+        String accessToken = swedbankAuthenticationService.getAccessToken(authParams);
         MultiValueMap<String, String> headers = getRequiredHeaders(accessToken);
 
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();

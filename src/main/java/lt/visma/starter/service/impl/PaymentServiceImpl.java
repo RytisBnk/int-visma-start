@@ -5,7 +5,7 @@ import lt.visma.starter.model.entity.Payment;
 import lt.visma.starter.model.Transaction;
 import lt.visma.starter.repository.PaymentRepository;
 import lt.visma.starter.mapper.PaymentMapper;
-import lt.visma.starter.service.SavedPaymentService;
+import lt.visma.starter.service.PaymentService;
 import lt.visma.starter.mapper.factory.PaymentMapperFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,12 +14,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class SavedPaymentServiceImpl implements SavedPaymentService {
+public class PaymentServiceImpl implements PaymentService {
     private PaymentMapperFactory paymentMapperFactory;
     private PaymentRepository paymentRepository;
 
     @Autowired
-    public SavedPaymentServiceImpl(PaymentMapperFactory paymentMapperFactory, PaymentRepository paymentRepository) {
+    public PaymentServiceImpl(PaymentMapperFactory paymentMapperFactory, PaymentRepository paymentRepository) {
         this.paymentMapperFactory = paymentMapperFactory;
         this.paymentRepository = paymentRepository;
     }

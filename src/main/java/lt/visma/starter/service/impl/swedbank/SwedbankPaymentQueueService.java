@@ -40,6 +40,11 @@ public class SwedbankPaymentQueueService implements PaymentQueueService {
         return queueEntry;
     }
 
+    @Override
+    public PaymentQueueEntry getQueueEntryById(String id) {
+        return paymentQueueEntryRepository.findById(id).orElse(null);
+    }
+
     private PaymentQueueEntry getQueueEntryObject(String bankCode) {
         PaymentQueueEntry queueEntry = new PaymentQueueEntry();
         queueEntry.setStatus(QueueEntryState.PROCESSING);

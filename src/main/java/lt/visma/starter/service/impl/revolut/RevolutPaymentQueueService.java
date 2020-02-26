@@ -37,6 +37,11 @@ public class RevolutPaymentQueueService implements PaymentQueueService {
     }
 
     @Override
+    public PaymentQueueEntry getQueueEntryById(String id) {
+        return paymentQueueEntryRepository.findById(id).orElse(null);
+    }
+
+    @Override
     public boolean supportsBank(String bankCode) {
         return Arrays.asList(configurationProperties.getSupportedBanks()).contains(bankCode);
     }

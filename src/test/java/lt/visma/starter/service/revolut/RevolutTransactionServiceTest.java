@@ -75,7 +75,7 @@ public class RevolutTransactionServiceTest extends MockWebServerTest {
         whenMockApiUrl();
 
         RevolutTransaction transaction = (RevolutTransaction)
-                revolutTransactionService.getTransactionById("", "", "");
+                revolutTransactionService.getTransactionById("", "", new HashMap<>());
         assertNotNull(transaction);
         assertNotNull(transaction.getId());
         assertNotNull(transaction.getCreatedAt());
@@ -90,7 +90,7 @@ public class RevolutTransactionServiceTest extends MockWebServerTest {
         whenMockApiUrl();
 
         assertThrows(ApiException.class, () ->
-                revolutTransactionService.getTransactionById("", "", ""));
+                revolutTransactionService.getTransactionById("", "", new HashMap<>()));
     }
 
     private MockResponse getMockResponse(Object requestBody, int statusCode) throws JsonProcessingException {

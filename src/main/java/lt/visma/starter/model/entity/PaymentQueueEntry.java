@@ -7,6 +7,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 @Entity
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -20,6 +21,16 @@ public class PaymentQueueEntry {
     private QueueEntryState status;
     @JsonIgnore
     private String bankCode;
+    @OneToOne
+    private PaymentProcessingError error;
+
+    public PaymentProcessingError getError() {
+        return error;
+    }
+
+    public void setError(PaymentProcessingError error) {
+        this.error = error;
+    }
 
     public String getBankCode() {
         return bankCode;

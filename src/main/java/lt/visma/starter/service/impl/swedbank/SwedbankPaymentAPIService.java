@@ -4,6 +4,7 @@ import lt.visma.starter.configuration.SwedbankConfigurationProperties;
 import lt.visma.starter.exception.ApiException;
 import lt.visma.starter.exception.GenericException;
 import lt.visma.starter.exception.InvalidPaymentResponseException;
+import lt.visma.starter.jms.TransactionQueueMessageSender;
 import lt.visma.starter.mapper.PaymentSubmissionMapper;
 import lt.visma.starter.model.PaymentRequest;
 import lt.visma.starter.model.PaymentResponse;
@@ -15,7 +16,7 @@ import lt.visma.starter.model.swedbank.SwedbankResponseError;
 import lt.visma.starter.repository.PaymentSubmissionRepository;
 import lt.visma.starter.service.AuthenticationService;
 import lt.visma.starter.service.HttpRequestService;
-import lt.visma.starter.service.PaymentService;
+import lt.visma.starter.service.PaymentAPIService;
 import lt.visma.starter.util.HTTPUtils;
 import lt.visma.starter.util.TimeUtils;
 import org.slf4j.Logger;
@@ -32,29 +33,32 @@ import java.util.Map;
 import java.util.UUID;
 
 @Service
-public class SwedbankPaymentService implements PaymentService {
+public class SwedbankPaymentAPIService implements PaymentAPIService {
     private final HttpRequestService httpRequestService;
     private final SwedbankConfigurationProperties configurationProperties;
     private final PaymentSubmissionRepository paymentSubmissionRepository;
     private final PaymentSubmissionMapper swedbankPaymentSubmissionMapper;
     private final AuthenticationService swedbankAuthenticationService;
+    private final TransactionQueueMessageSender transactionQueueMessageSender;
 
     private final Logger LOGGER = LoggerFactory.getLogger("SwedbankPaymentService");
 
-    public SwedbankPaymentService(HttpRequestService httpRequestService,
-                                  SwedbankConfigurationProperties configurationProperties,
-                                  PaymentSubmissionRepository paymentSubmissionRepository,
-                                  PaymentSubmissionMapper swedbankPaymentSubmissionMapper,
-                                  AuthenticationService swedbankAuthenticationService) {
+    public SwedbankPaymentAPIService(HttpRequestService httpRequestService,
+                                     SwedbankConfigurationProperties configurationProperties,
+                                     PaymentSubmissionRepository paymentSubmissionRepository,
+                                     PaymentSubmissionMapper swedbankPaymentSubmissionMapper,
+                                     AuthenticationService swedbankAuthenticationService,
+                                     TransactionQueueMessageSender transactionQueueMessageSender) {
         this.httpRequestService = httpRequestService;
         this.configurationProperties = configurationProperties;
         this.paymentSubmissionRepository = paymentSubmissionRepository;
         this.swedbankPaymentSubmissionMapper = swedbankPaymentSubmissionMapper;
         this.swedbankAuthenticationService = swedbankAuthenticationService;
+        this.transactionQueueMessageSender = transactionQueueMessageSender;
     }
 
     @Override
-    public void makePayment(PaymentQueueMessage paymentQueueMessage) throws GenericException, ApiException, InvalidPaymentResponseException {
+    public void makePayment(PaymentQueueMessage paymentQueueMessage, String queueEntryId) throws GenericException, ApiException, InvalidPaymentResponseException {
         LOGGER.info("Called SwedbankPaymentService.makePayment");
 
         PaymentRequest paymentRequest = paymentQueueMessage.getPaymentRequest();
@@ -63,7 +67,8 @@ public class SwedbankPaymentService implements PaymentService {
         }
         SwedbankPaymentRequest swedbankPaymentRequest = (SwedbankPaymentRequest) paymentRequest;
 
-        String accessToken = swedbankAuthenticationService.getAccessToken(paymentQueueMessage.getAuthParams());
+        Map<String, String> authParams = paymentQueueMessage.getAuthParams();
+        String accessToken = swedbankAuthenticationService.getAccessToken(authParams);
 
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("bic", swedbankPaymentRequest.getBic());
@@ -73,6 +78,9 @@ public class SwedbankPaymentService implements PaymentService {
         PaymentResponse paymentResponse = getPaymentResponseFromAPI(queryParams, headers, swedbankPaymentRequest);
         PaymentSubmission paymentSubmission =
                 paymentSubmissionRepository.save(swedbankPaymentSubmissionMapper.mapToPaymentSubmission(paymentResponse));
+        transactionQueueMessageSender.sendTransactionQueueMessage(
+                paymentQueueMessage.getBankCode(), authParams, paymentSubmission, queueEntryId
+        );
     }
 
     @Override

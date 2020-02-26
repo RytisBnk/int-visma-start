@@ -7,5 +7,6 @@ import java.util.Map;
 
 public interface PaymentQueueService {
     PaymentQueueEntry submitPaymentToQueue(String bankCode, Map<String, String> authParams, PaymentRequest paymentRequest);
+    PaymentQueueEntry getQueueEntryById(String id);
     boolean supportsBank(String bankCode);
 }
