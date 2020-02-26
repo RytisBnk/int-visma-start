@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -49,5 +50,11 @@ public class PaymentController {
     public ResponseEntity<Payment> getPaymentById(@PathVariable String id) {
         Payment payment = paymentService.getPaymentById(id).orElse(null);
         return new ResponseEntity<>(payment, HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Payment>> getPayments() {
+        List<Payment> payments = paymentService.getPayments();
+        return new ResponseEntity<>(payments, HttpStatus.OK);
     }
 }
