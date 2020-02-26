@@ -59,7 +59,7 @@ public class JmsConfig {
     }
 
     @Bean
-    public JmsListenerContainerFactory jmsListenerContainerFactory() {
+    public DefaultJmsListenerContainerFactory jmsListenerContainerFactory() {
         DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
         factory.setConnectionFactory(cachingConnectionFactory());
 
