@@ -1,28 +1,20 @@
-package lt.visma.starter.model.swedbank.entity;
+package lt.visma.starter.model.swedbank;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lt.visma.starter.model.Transaction;
 
-import javax.persistence.*;
-
-@Entity
 public class SwedbankPaymentTransaction implements Transaction {
-    @Id
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
     private AccountIBAN creditorAccount;
     private String creditorAgent;
     private String creditorName;
-    @ManyToOne(cascade = CascadeType.ALL)
     private AccountIBAN debtorAccount;
     private String debtorIdentification;
     private String endToEndIdentification;
-    @OneToOne(cascade = CascadeType.ALL)
     private PaymentAmount instructedAmount;
     private String remittanceInformationUnstructured;
-    @OneToOne(cascade = CascadeType.ALL)
     private RemittanceInformation remittanceInformationStructured;
 
     public RemittanceInformation getRemittanceInformationStructured() {

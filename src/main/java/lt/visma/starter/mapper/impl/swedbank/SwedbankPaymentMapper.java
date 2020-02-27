@@ -1,10 +1,10 @@
 package lt.visma.starter.mapper.impl.swedbank;
 
 import lt.visma.starter.exception.InvalidTransactionException;
-import lt.visma.starter.model.entity.Payment;
-import lt.visma.starter.model.Transaction;
-import lt.visma.starter.model.swedbank.entity.SwedbankPaymentTransaction;
 import lt.visma.starter.mapper.PaymentMapper;
+import lt.visma.starter.model.Transaction;
+import lt.visma.starter.model.entity.Payment;
+import lt.visma.starter.model.swedbank.SwedbankPaymentTransaction;
 import org.springframework.stereotype.Component;
 
 @Component

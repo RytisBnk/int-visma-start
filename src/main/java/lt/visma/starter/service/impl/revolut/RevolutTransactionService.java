@@ -6,7 +6,7 @@ import lt.visma.starter.exception.GenericException;
 import lt.visma.starter.model.ResponseError;
 import lt.visma.starter.model.Transaction;
 import lt.visma.starter.model.revolut.RevolutApiError;
-import lt.visma.starter.model.revolut.entity.RevolutTransaction;
+import lt.visma.starter.model.revolut.RevolutTransaction;
 import lt.visma.starter.service.AuthenticationService;
 import lt.visma.starter.service.HttpRequestService;
 import lt.visma.starter.service.TransactionService;

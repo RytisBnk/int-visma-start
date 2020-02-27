@@ -1,14 +1,9 @@
-package lt.visma.starter.model.revolut.entity;
+package lt.visma.starter.model.revolut;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-
-@Entity
 public class Card {
     @JsonAlias({"card_number"})
-    @Id
     private String cardNumber;
     @JsonAlias({"first_name"})
     private String firstName;

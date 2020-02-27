@@ -1,20 +1,8 @@
-package lt.visma.starter.model.swedbank.entity;
+package lt.visma.starter.model.swedbank;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import java.io.Serializable;
 
-@Entity
 public class PaymentAmount implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private long id;
-
     private String amount;
     private String currency;
 
@@ -24,14 +12,6 @@ public class PaymentAmount implements Serializable {
     public PaymentAmount(String amount, String currency) {
         this.amount = amount;
         this.currency = currency;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getAmount() {

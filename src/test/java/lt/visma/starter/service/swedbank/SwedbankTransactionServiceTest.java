@@ -7,7 +7,7 @@ import lt.visma.starter.exception.ApiException;
 import lt.visma.starter.exception.GenericException;
 import lt.visma.starter.exception.OperationNotSupportedException;
 import lt.visma.starter.model.Transaction;
-import lt.visma.starter.model.swedbank.entity.SwedbankPaymentTransaction;
+import lt.visma.starter.model.swedbank.SwedbankPaymentTransaction;
 import lt.visma.starter.service.HttpRequestService;
 import lt.visma.starter.service.MockWebServerTest;
 import lt.visma.starter.service.impl.HttpRequestServiceImpl;
