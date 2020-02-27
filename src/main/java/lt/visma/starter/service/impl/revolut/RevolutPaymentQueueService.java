@@ -14,9 +14,9 @@ import java.util.Map;
 
 @Service
 public class RevolutPaymentQueueService implements PaymentQueueService {
-    private RevolutConfigurationProperties configurationProperties;
-    private PaymentQueueEntryRepository paymentQueueEntryRepository;
-    private PaymentQueueMessageSender paymentQueueMessageSender;
+    private final RevolutConfigurationProperties configurationProperties;
+    private final PaymentQueueEntryRepository paymentQueueEntryRepository;
+    private final PaymentQueueMessageSender paymentQueueMessageSender;
 
 
     public RevolutPaymentQueueService(RevolutConfigurationProperties configurationProperties,

@@ -17,8 +17,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/v1/payments")
 public class PaymentController {
-    private PaymentQueueServiceFactory paymentQueueServiceFactory;
-    private PaymentService paymentService;
+    private final PaymentQueueServiceFactory paymentQueueServiceFactory;
+    private final PaymentService paymentService;
 
     public PaymentController(PaymentQueueServiceFactory paymentQueueServiceFactory,
                              PaymentService paymentService) {

@@ -15,9 +15,9 @@ import java.util.Map;
 
 @Service
 public class SwedbankPaymentQueueService implements PaymentQueueService {
-    private PaymentQueueMessageSender paymentQueueMessageSender;
-    private PaymentQueueEntryRepository paymentQueueEntryRepository;
-    private SwedbankConfigurationProperties configurationProperties;
+    private final PaymentQueueMessageSender paymentQueueMessageSender;
+    private final PaymentQueueEntryRepository paymentQueueEntryRepository;
+    private final SwedbankConfigurationProperties configurationProperties;
 
     public SwedbankPaymentQueueService(PaymentQueueMessageSender paymentQueueMessageSender,
                                        PaymentQueueEntryRepository paymentQueueEntryRepository,
