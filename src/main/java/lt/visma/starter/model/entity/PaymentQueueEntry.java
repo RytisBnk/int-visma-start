@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
 @Entity
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -21,7 +18,7 @@ public class PaymentQueueEntry {
     private QueueEntryState status;
     @JsonIgnore
     private String bankCode;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private PaymentProcessingError error;
 
     public PaymentProcessingError getError() {

@@ -1,5 +1,7 @@
 package lt.visma.starter.configuration;
 
+import lt.visma.starter.repository.PaymentQueueEntryRepository;
+import lt.visma.starter.service.impl.JmsErrorHandlerService;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.command.ActiveMQQueue;
 import org.springframework.beans.factory.annotation.Value;
@@ -61,9 +63,10 @@ public class JmsConfig {
     }
 
     @Bean
-    public DefaultJmsListenerContainerFactory jmsListenerContainerFactory() {
+    public DefaultJmsListenerContainerFactory jmsListenerContainerFactory(PaymentQueueEntryRepository paymentQueueEntryRepository) {
         DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
         factory.setConnectionFactory(cachingConnectionFactory());
+        factory.setErrorHandler(new JmsErrorHandlerService(paymentQueueEntryRepository));
 
         return factory;
     }
