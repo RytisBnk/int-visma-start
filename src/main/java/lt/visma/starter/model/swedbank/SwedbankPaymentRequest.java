@@ -7,8 +7,10 @@ import lt.visma.starter.model.swedbank.entity.AccountIBAN;
 import lt.visma.starter.model.swedbank.entity.PaymentAmount;
 import lt.visma.starter.model.swedbank.entity.RemittanceInformation;
 
+import java.io.Serializable;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class SwedbankPaymentRequest implements PaymentRequest {
+public class SwedbankPaymentRequest implements PaymentRequest, Serializable {
     private AccountIBAN creditorAccount;
     private String creditorAgent;
     private String creditorName;

@@ -1,7 +1,7 @@
 package lt.visma.starter.service.factory;
 
 import lt.visma.starter.exception.BankNotSupportedException;
-import lt.visma.starter.service.PaymentService;
+import lt.visma.starter.service.PaymentAPIService;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -9,15 +9,15 @@ import java.util.Optional;
 
 @Component
 public class PaymentServiceFactory {
-    private final List<PaymentService> paymentServices;
+    private final List<PaymentAPIService> paymentAPIServices;
 
-    public PaymentServiceFactory(List<PaymentService> paymentServices) {
-        this.paymentServices = paymentServices;
+    public PaymentServiceFactory(List<PaymentAPIService> paymentAPIServices) {
+        this.paymentAPIServices = paymentAPIServices;
     }
 
-    public PaymentService getPaymentService(String bankCode) throws BankNotSupportedException {
-        Optional<PaymentService> paymentServiceOptional = paymentServices.stream()
-                .filter(paymentService -> paymentService.supportsBank(bankCode))
+    public PaymentAPIService getPaymentService(String bankCode) throws BankNotSupportedException {
+        Optional<PaymentAPIService> paymentServiceOptional = paymentAPIServices.stream()
+                .filter(paymentAPIService -> paymentAPIService.supportsBank(bankCode))
                 .findFirst();
         if (!paymentServiceOptional.isPresent()) {
             throw new BankNotSupportedException("Bank " + bankCode + " is not supported");

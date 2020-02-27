@@ -11,7 +11,7 @@ import java.util.Map;
 public interface TransactionService {
     List<Transaction> getTransactions(String from, String to, Map<String, String> authParams)
             throws GenericException, ApiException, OperationNotSupportedException;
-    Transaction getTransactionById(String transactionId, String bankCode, String accessToken)
+    Transaction getTransactionById(String transactionId, String bankCode, Map<String, String> authParams)
             throws GenericException, ApiException;
     boolean supportsBank(String bankCode);
 }

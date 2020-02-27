@@ -59,7 +59,7 @@ public class SwedbankTransactionServiceTest extends MockWebServerTest {
 
         whenMockApiUrl();
 
-        Transaction transaction = swedbankTransactionService.getTransactionById("", TARGET_TRANSACTION_ID, "");
+        Transaction transaction = swedbankTransactionService.getTransactionById("", TARGET_TRANSACTION_ID, new HashMap<>());
         assertNotNull(transaction);
         assertEquals(TARGET_TRANSACTION_ID, ((SwedbankPaymentTransaction) transaction).getId());
     }

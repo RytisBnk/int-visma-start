@@ -1,13 +1,13 @@
 package lt.visma.starter.service;
+import lt.visma.starter.exception.InvalidTransactionException;
+import lt.visma.starter.model.entity.Payment;
+import lt.visma.starter.model.Transaction;
 
-import lt.visma.starter.exception.ApiException;
-import lt.visma.starter.exception.GenericException;
-import lt.visma.starter.exception.InvalidPaymentResponseException;
-import lt.visma.starter.model.PaymentRequest;
-import lt.visma.starter.model.entity.PaymentSubmission;
+import java.util.List;
+import java.util.Optional;
 
 public interface PaymentService {
-    PaymentSubmission makePayment(PaymentRequest paymentRequest, String accessToken)
-            throws GenericException, ApiException, InvalidPaymentResponseException;
-    boolean supportsBank(String bankCode);
+    Payment savePayment(Transaction payment) throws InvalidTransactionException;
+    Optional<Payment> getPaymentById(String id);
+    List<Payment> getPayments();
 }

@@ -2,7 +2,9 @@ package lt.visma.starter.model.revolut;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class PaymentReceiver {
+import java.io.Serializable;
+
+public class PaymentReceiver implements Serializable {
     @JsonProperty("counterparty_id")
     private String counterpartyId;
     @JsonProperty("account_id")
