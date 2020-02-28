@@ -1,23 +1,11 @@
-package lt.visma.starter.model.swedbank.entity;
+package lt.visma.starter.model.swedbank;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import java.io.Serializable;
 
-@Entity
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class RemittanceInformation implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @JsonIgnore
-    private long id;
-
     private String reference;
     private String referenceType;
 
@@ -26,14 +14,6 @@ public class RemittanceInformation implements Serializable {
 
     public RemittanceInformation(String reference) {
         this.reference = reference;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getReference() {

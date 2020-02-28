@@ -1,18 +1,8 @@
-package lt.visma.starter.model.revolut.entity;
+package lt.visma.starter.model.revolut;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
-import lt.visma.starter.model.revolut.CounterpartyType;
-import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-
-@Entity
 public class Counterparty {
-    @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
     @JsonAlias({"account_id"})
     private String accountId;

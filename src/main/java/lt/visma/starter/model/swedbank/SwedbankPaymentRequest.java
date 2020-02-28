@@ -3,9 +3,6 @@ package lt.visma.starter.model.swedbank;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lt.visma.starter.model.PaymentRequest;
-import lt.visma.starter.model.swedbank.entity.AccountIBAN;
-import lt.visma.starter.model.swedbank.entity.PaymentAmount;
-import lt.visma.starter.model.swedbank.entity.RemittanceInformation;
 
 import java.io.Serializable;
 

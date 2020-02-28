@@ -2,10 +2,10 @@ package lt.visma.starter.service.revolut;
 
 import lt.visma.starter.exception.InvalidTransactionException;
 import lt.visma.starter.model.entity.Payment;
-import lt.visma.starter.model.revolut.entity.Counterparty;
-import lt.visma.starter.model.revolut.entity.RevolutTransaction;
-import lt.visma.starter.model.revolut.entity.TransactionLeg;
-import lt.visma.starter.model.swedbank.entity.SwedbankPaymentTransaction;
+import lt.visma.starter.model.revolut.Counterparty;
+import lt.visma.starter.model.revolut.RevolutTransaction;
+import lt.visma.starter.model.revolut.TransactionLeg;
+import lt.visma.starter.model.swedbank.SwedbankPaymentTransaction;
 import lt.visma.starter.mapper.impl.revolut.RevolutPaymentMapper;
 import org.junit.Before;
 import org.junit.Test;

@@ -1,7 +1,6 @@
 package lt.visma.starter.model.swedbank;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lt.visma.starter.model.swedbank.entity.AccountIBAN;
 
 import java.util.List;
 

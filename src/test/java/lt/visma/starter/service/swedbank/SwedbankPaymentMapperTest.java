@@ -2,11 +2,11 @@ package lt.visma.starter.service.swedbank;
 
 import lt.visma.starter.exception.InvalidTransactionException;
 import lt.visma.starter.model.entity.Payment;
-import lt.visma.starter.model.revolut.entity.RevolutTransaction;
-import lt.visma.starter.model.swedbank.entity.AccountIBAN;
-import lt.visma.starter.model.swedbank.entity.PaymentAmount;
-import lt.visma.starter.model.swedbank.entity.RemittanceInformation;
-import lt.visma.starter.model.swedbank.entity.SwedbankPaymentTransaction;
+import lt.visma.starter.model.revolut.RevolutTransaction;
+import lt.visma.starter.model.swedbank.AccountIBAN;
+import lt.visma.starter.model.swedbank.PaymentAmount;
+import lt.visma.starter.model.swedbank.RemittanceInformation;
+import lt.visma.starter.model.swedbank.SwedbankPaymentTransaction;
 import lt.visma.starter.mapper.impl.swedbank.SwedbankPaymentMapper;
 import org.junit.Before;
 import org.junit.Test;
